@@ -1,0 +1,59 @@
+@font-face {
+    font-family: 'ManulifeJHSansOptimized';
+    src: url('/fonts/ManulifeJHSansOptimized-Demibold.ttf');
+    font-weight: 600;
+    font-style: normal;
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'ManulifeJHSansOptimized';
+    src: url('/fonts/ManulifeJHSansOptimized-Bold.ttf');
+    font-weight: bold;
+    font-style: normal;
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'ManulifeJHSansOptimized';
+    src: url('/fonts/ManulifeJHSansOptimized.ttf');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    -webkit-print-color-adjust: exact;
+}
+
+body {
+    font-size: 32px;
+}
+
+svg {
+    display: block;
+}
+
+.mlo {
+    font-family: 'ManulifeJHSansOptimized';
+}
+
+.mlo-semi {
+    font-family: 'ManulifeJHSansOptimized';
+    font-weight: 600;
+}
+
+.mlo-bold {
+    font-family: 'ManulifeJHSansOptimized';
+    font-weight: bold;
+}
