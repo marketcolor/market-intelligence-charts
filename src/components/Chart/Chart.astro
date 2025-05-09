@@ -1,0 +1,190 @@
+---
+import { extent, scaleLinear, scaleUtc, line, utcParse, format, timeFormat } from 'd3'
+
+import jsonData from './data.json'
+
+const dataDateFormat = '%d/%m/%Y'
+const dateParser = utcParse(dataDateFormat)
+
+const seriesTicksFormatter = format(',.2r')
+const xTicksFormatter = timeFormat('%m/%y')
+
+const [xKey, series1Key, series2Key] = Object.keys(jsonData[0])
+
+const data = jsonData.map((entry) => {
+	return { ...entry, [xKey]: dateParser(entry[xKey]) }
+})
+
+const width = 800
+const height = 500
+const marginTop = 50
+const marginRight = 50
+const marginBottom = 40
+const marginLeft = 60
+const plotWidth = width - marginLeft - marginRight
+const plotHeight = height - marginTop - marginBottom
+
+// Declare the x (horizontal position) scale.
+const x = scaleUtc(
+	extent(data, (d) => d[xKey]),
+	[marginLeft, width - marginRight]
+)
+
+// Declare the y (vertical position) scale.
+const y1 = scaleLinear(
+	extent(data, (d) => d[series1Key]),
+	[height - marginBottom, marginTop]
+).nice()
+const y2 = scaleLinear(
+	[120, 320],
+	// extent(data, (d) => d[series2Key]),
+	[height - marginBottom, marginTop]
+).nice()
+
+// // Declare the line generator.
+const seriesLine1 = line()
+	.x((d) => x(d[xKey]))
+	.y((d) => y1(d[series1Key]))
+
+const seriesLine2 = line()
+	.x((d) => x(d[xKey]))
+	.y((d) => y2(d[series2Key]))
+
+const d1 = seriesLine1(data)
+const d2 = seriesLine2(data)
+// console.log(d1)
+
+const leftAxisTicks = y1.ticks(height / 40)
+const rightAxisTicks = y2.ticks(height / 40)
+// const xAxisTicks = x.ticks(width / 40)
+const xAxisTicks = [
+	new Date('2015-03-31'),
+	new Date('2016-03-31'),
+	new Date('2017-03-31'),
+	new Date('2018-03-31'),
+	new Date('2019-03-31'),
+	new Date('2020-03-31'),
+	new Date('2021-03-31'),
+	new Date('2022-03-31'),
+	new Date('2023-03-31'),
+	new Date('2024-03-31'),
+	new Date('2025-03-31'),
+]
+
+const colors = {
+	darkNavy: '#282b3e',
+	darkNavy4: '#8e90a2',
+	seriesGreen: '#00A758',
+	seriesBlue: '#0000C1',
+}
+---
+
+<script>
+	import Chart from './Chart'
+
+	customElements.define('mi-chart', Chart)
+</script>
+
+<div class='container'>
+	<svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+		<g transform='translate(0, 15)'>
+			<g transform='translate(5)'>
+				<rect y='-7' width='10' height='10' fill={colors.seriesGreen}></rect>
+				<text
+					x='15'
+					font-family='ManulifeJHSansOptimized'
+					font-size='18'
+					alignment-baseline='middle'
+					fill={colors.darkNavy}>{series1Key}</text
+				>
+			</g>
+			<g transform='translate(150)'>
+				<rect y='-7' width='10' height='10' fill={colors.seriesBlue}></rect>
+				<text
+					x='15'
+					font-family='ManulifeJHSansOptimized'
+					font-size='18'
+					alignment-baseline='middle'
+					fill={colors.darkNavy}>{series2Key}</text
+				>
+			</g>
+		</g>
+		<g transform={`translate(${marginLeft})`}>
+			{
+				leftAxisTicks.map((tick, id) => (
+					<g transform={`translate(0, ${y1(tick)})`}>
+						<text
+							x='-10'
+							font-family='ManulifeJHSansOptimized'
+							font-size='18'
+							text-anchor='end'
+							alignment-baseline='middle'
+							fill={colors.darkNavy}
+						>
+							{seriesTicksFormatter(tick)}
+						</text>
+						<line
+							x2={plotWidth}
+							fill='none'
+							stroke={id === 0 ? colors.darkNavy : colors.darkNavy4}
+							stroke-width='.5'
+						/>
+					</g>
+				))
+			}
+		</g>
+		<g transform={`translate(${width - marginRight})`}>
+			{
+				rightAxisTicks.map((tick) => (
+					<g transform={`translate(${marginRight}, ${y2(tick)})`}>
+						<text
+							x='-2'
+							font-family='ManulifeJHSansOptimized'
+							font-size='18'
+							text-anchor='end'
+							alignment-baseline='middle'
+							fill={colors.darkNavy}
+						>
+							{seriesTicksFormatter(tick)}
+						</text>
+					</g>
+				))
+			}
+		</g>
+		<g transform={`translate(0, ${height - marginBottom})`}>
+			{
+				xAxisTicks.map((tick) => (
+					<g transform={`translate(${x(tick)})`}>
+						<text
+							y='20'
+							font-family='ManulifeJHSansOptimized'
+							font-size='18'
+							text-anchor='middle'
+							alignment-baseline='hanging'
+							fill={colors.darkNavy}
+						>
+							{xTicksFormatter(tick)}
+						</text>
+					</g>
+				))
+			}
+		</g>
+		<g>
+			<path d={d1} fill='none' stroke={colors.seriesGreen} stroke-width='3'></path>
+			<path d={d2} fill='none' stroke={colors.seriesBlue} stroke-width='3'></path>
+		</g>
+	</svg>
+</div>
+
+<style>
+	.container {
+		width: 100%;
+		height: 100%;
+		display: grid;
+		place-content: center;
+	}
+	svg {
+		outline: 1px solid tomato;
+		overflow: visible;
+	}
+</style>
