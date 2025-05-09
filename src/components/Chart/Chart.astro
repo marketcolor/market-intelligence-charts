@@ -80,13 +80,96 @@ const colors = {
 ---
 
 <script>
-	import Chart from './Chart'
+	import { actions } from 'astro:actions'
 
-	customElements.define('mi-chart', Chart)
+	import 'svg-text-to-path/dist/svg-text-to-path-fontkit.js'
+
+	const slug = 'MI-stock-prices'
+	const svgEl = document.querySelector<HTMLElement>('svg')!
+
+	// const svgButton = document.querySelector<HTMLButtonElement>('#svg-button')!
+	// svgButton.addEventListener('click', async () => {
+	// 	const { data, error } = await actions.saveSvg({ fileName: slug!, svgString: svgEl.outerHTML })
+	// 	console.log(data, error)
+	// })
+
+	const svgoButton = document.querySelector<HTMLButtonElement>('#svg-outline-button')!
+	svgoButton.addEventListener('click', async () => {
+		const cloneSvg = svgEl.cloneNode(true) as HTMLElement
+		const container = document.querySelector<HTMLElement>('.svgo-container')!
+		container.append(cloneSvg)
+
+		// @ts-ignore
+		let session = new SvgTextToPath(cloneSvg, {
+			fonts: {
+				ManulifeJHSansOptimized: [
+					{
+						source: '../fonts/ManulifeJHSansOptimized.ttf',
+					},
+				],
+			},
+		})
+		await session.replaceAll()
+
+		const { data, error } = await actions.saveSvg({
+			fileName: `${slug!}_o`,
+			svgString: cloneSvg.outerHTML,
+		})
+		container.removeChild(cloneSvg)
+		console.log(data, error)
+	})
+
+	const pdfButton = document.querySelector<HTMLButtonElement>('#pdf-button')!
+	pdfButton.addEventListener('click', async () => {
+		const result = await fetch('/api/savePdf', {
+			method: 'POST',
+			body: JSON.stringify({ slug }),
+		})
+		console.log(result)
+	})
+
+	const baselineElements = svgEl.querySelectorAll<SVGAElement>('[dominant-baseline]')
+	baselineElements.forEach((el) => {
+		const rect = el.getBoundingClientRect()
+		const { x, y } = rect
+		el.removeAttribute('dominant-baseline')
+
+		const newRect = el.getBoundingClientRect()
+
+		if (newRect.y !== y) {
+			const originalY = Number(el.getAttribute('y'))
+			el.setAttribute('y', `${y - newRect.y + (originalY || 0)}`)
+		}
+		if (newRect.x !== x) {
+			const originalY = Number(el.getAttribute('y'))
+			el.setAttribute('y', `${x - newRect.x + (originalY || 0)}`)
+		}
+	})
 </script>
 
 <div class='container'>
-	<svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+	<div class='toolbar'>
+		<!-- <button id='svg-button'>SVG</button> -->
+		<button id='svg-outline-button'>SVG-o</button>
+		<!-- <button id='png-button'>PNG</button> -->
+		<!-- <button id='png-bg-button'>PNG -bg</button> -->
+		<button id='pdf-button'>PDF</button>
+		<div class='svgo-container'></div>
+	</div>
+
+	<svg
+		xmlns='http://www.w3.org/2000/svg'
+		width={width}
+		height={height}
+		viewBox={`0 0 ${width} ${height}`}
+		class='chart-template'
+		alt='Stock prices and earnings estimates tend to move together over time'
+	>
+		<title>Stock prices and earnings estimates tend to move together over time</title>
+		<desc
+			>Stock prices have fallen during the first quarter, while earnings have continued their upward
+			trend.
+		</desc>
 		<g transform='translate(0, 15)'>
 			<g transform='translate(5)'>
 				<rect y='-7' width='10' height='10' fill={colors.seriesGreen}></rect>
@@ -94,18 +177,18 @@ const colors = {
 					x='15'
 					font-family='ManulifeJHSansOptimized'
 					font-size='18'
-					alignment-baseline='middle'
-					fill={colors.darkNavy}>{series1Key}</text
+					dominant-baseline='middle'
+					fill={colors.darkNavy}>{series1Key} (left axis)</text
 				>
 			</g>
-			<g transform='translate(150)'>
+			<g transform='translate(225)'>
 				<rect y='-7' width='10' height='10' fill={colors.seriesBlue}></rect>
 				<text
 					x='15'
 					font-family='ManulifeJHSansOptimized'
 					font-size='18'
-					alignment-baseline='middle'
-					fill={colors.darkNavy}>{series2Key}</text
+					dominant-baseline='middle'
+					fill={colors.darkNavy}>{series2Key} (right axis)</text
 				>
 			</g>
 		</g>
@@ -118,7 +201,7 @@ const colors = {
 							font-family='ManulifeJHSansOptimized'
 							font-size='18'
 							text-anchor='end'
-							alignment-baseline='middle'
+							dominant-baseline='middle'
 							fill={colors.darkNavy}
 						>
 							{seriesTicksFormatter(tick)}
@@ -142,7 +225,7 @@ const colors = {
 							font-family='ManulifeJHSansOptimized'
 							font-size='18'
 							text-anchor='end'
-							alignment-baseline='middle'
+							dominant-baseline='middle'
 							fill={colors.darkNavy}
 						>
 							{seriesTicksFormatter(tick)}
@@ -160,7 +243,7 @@ const colors = {
 							font-family='ManulifeJHSansOptimized'
 							font-size='18'
 							text-anchor='middle'
-							alignment-baseline='hanging'
+							dominant-baseline='hanging'
 							fill={colors.darkNavy}
 						>
 							{xTicksFormatter(tick)}
@@ -182,6 +265,37 @@ const colors = {
 		height: 100%;
 		display: grid;
 		place-content: center;
+	}
+
+	.toolbar {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		padding: 0.5rem;
+		display: flex;
+		align-items: flex-start;
+		gap: 1rem;
+		background-color: silver;
+
+		.svgo-container {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 0px;
+			height: 0px;
+			overflow: hidden;
+		}
+	}
+
+	@media print {
+		body {
+			display: block;
+		}
+
+		.toolbar {
+			display: none;
+		}
 	}
 	svg {
 		outline: 1px solid tomato;
