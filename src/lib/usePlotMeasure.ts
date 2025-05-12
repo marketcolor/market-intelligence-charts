@@ -1,6 +1,10 @@
-import { useState, useRef, useCallback } from 'react'
+import type { PlotDimensions } from '@/types'
+import { useState, useRef, useCallback, type RefObject } from 'react'
 
-export function usePlotMeasure(initialWidth, initialHeight) {
+export function usePlotMeasure(
+	initialWidth: number,
+	initialHeight: number
+): [(node: HTMLElement) => void, PlotDimensions] {
 	const [dimensions, setDimensions] = useState({
 		plotWidth: initialWidth,
 		plotHeight: initialHeight,
@@ -10,9 +14,9 @@ export function usePlotMeasure(initialWidth, initialHeight) {
 		bottomMargin: 0,
 	})
 
-	const previousObserver = useRef(null)
+	const previousObserver = useRef<ResizeObserver>(null)
 
-	const customRef = useCallback((node) => {
+	const customRef = useCallback((node: HTMLElement) => {
 		if (previousObserver.current) {
 			previousObserver.current.disconnect()
 			previousObserver.current = null
@@ -22,8 +26,9 @@ export function usePlotMeasure(initialWidth, initialHeight) {
 			const observer = new ResizeObserver(([entry]) => {
 				if (entry && entry.borderBoxSize) {
 					const { inlineSize: plotWidth, blockSize: plotHeight } = entry.borderBoxSize[0]
-					const { offsetLeft: leftMargin, offsetTop: topMargin } = entry.target
-					const { clientWidth: parentWidth, clientHeight: parentHeight } = entry.target.parentElement
+					const { offsetLeft: leftMargin, offsetTop: topMargin } = entry.target as HTMLElement
+					const { clientWidth: parentWidth, clientHeight: parentHeight } = entry.target
+						.parentElement as HTMLElement
 
 					setDimensions({
 						plotWidth,
