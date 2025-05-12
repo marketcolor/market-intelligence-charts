@@ -1,9 +1,9 @@
 import { useState, useRef, useCallback } from 'react'
 
-export function usePlotMeasure() {
+export function usePlotMeasure(initialWidth, initialHeight) {
 	const [dimensions, setDimensions] = useState({
-		plotWidth: null,
-		plotHeight: null,
+		plotWidth: initialWidth,
+		plotHeight: initialHeight,
 		leftMargin: 0,
 		rightMargin: 0,
 		topMargin: 0,

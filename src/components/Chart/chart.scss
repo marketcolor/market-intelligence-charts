@@ -20,10 +20,6 @@
 			[plot-end margin-bottom-start margin-left-end margin-right-end] auto
 			[chart-end margin-bottom-end];
 
-		> * {
-			outline: 1px solid tomato;
-		}
-
 		.left-margin-container {
 			grid-area: margin-left;
 			// min-width: var(--margin-left-width, 0);
@@ -44,14 +40,6 @@
 			// position: remslative;
 			grid-area: plot;
 		}
-
-		// background-image: linear-gradient(45deg, #cccccc80 25%, transparent 25%),
-		// 	linear-gradient(-45deg, #cccccc80 25%, transparent 25%),
-		// 	linear-gradient(45deg, transparent 75%, #cccccc80 75%),
-		// 	linear-gradient(-45deg, transparent 75%, #cccccc80 75%);
-		// background-size: 20px 20px;
-		// background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-		// background-repeat: repeat;
 	}
 
 	svg.chart {

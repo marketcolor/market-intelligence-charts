@@ -3,30 +3,40 @@ import { scaleLinear } from 'd3'
 import { usePlotMeasure } from '@lib/usePlotMeasure'
 
 import YAxis from './modules/YAxis'
+import XAxis from './modules/XAxis'
 
 import './chart.scss'
 import { useRef } from 'react'
 
 const moduleComponents = {
 	yAxis: (key, props) => <YAxis key={key} {...props}></YAxis>,
+	xAxis: (key, props) => <XAxis key={key} {...props}></XAxis>,
 }
+
 const getLinearScale = (domain, range) => {
 	return scaleLinear(domain, range)
 }
 
+const getTimeScale = (domain, range) => {
+	const timeDomain = domain.map((d) => new Date(d))
+	return scaleLinear(timeDomain, range)
+}
+
 const Chart = ({ data, config }) => {
-	const [plotRef, dimensions] = usePlotMeasure()
+	const { width, height, scales, modules } = config
+	const [plotRef, dimensions] = usePlotMeasure(width, height)
 
 	const htmlOverlay = useRef()
 
-	const { width, height, scales, modules } = config
-
 	const chartScales = {
 		y: {
-			left: scales.y.left ? getLinearScale(scales.y.left.domain, [height, 0]) : null,
-			right: scales.y.right ? getLinearScale(scales.y.right.domain, [height, 0]) : null,
+			left: scales.y.left ? getLinearScale(scales.y.left.domain, [dimensions.plotHeight, 0]) : null,
+			right: scales.y.right ? getLinearScale(scales.y.right.domain, [dimensions.plotHeight, 0]) : null,
 		},
+		x: getTimeScale(scales.x.domain, [0, dimensions.plotWidth]),
 	}
+	console.log(dimensions)
+
 	const measures = {
 		...dimensions,
 		width,

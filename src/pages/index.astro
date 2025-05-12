@@ -4,6 +4,14 @@ import Layout from '@layouts/Layout.astro'
 
 import data from './../data/data.json'
 
+// export type DateTicks = {
+// 	type: TickType.Date
+// 	startDate: string | Date
+// 	numTicks: number
+// 	dateInterval: DateInterval
+// 	intervalStep: number
+// 	dateFormat?: string
+// }
 const config = {
 	width: 800,
 	height: 500,
@@ -36,6 +44,14 @@ const config = {
 			ticksRange: [120, 320, 20],
 			ticksFormat: ',.2r',
 			guides: true,
+		},
+		{
+			type: 'xAxis',
+			startDate: '2015-03-01',
+			numTicks: 11,
+			dateInterval: 'year',
+			intervalStep: 1,
+			dateFormat: '%m/%y',
 		},
 	],
 }
