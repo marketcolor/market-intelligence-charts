@@ -9,11 +9,14 @@
 		"paths": {
 			"@/*": ["src/*"],
 			"@types": ["src/types.ts"],
+			"@lib/*": ["src/lib/*"],
 			"@assets/*": ["src/assets/*"],
 			"@styles/*": ["src/styles/*"],
 			"@components/*": ["src/components/*"],
 			"@layouts/*": ["src/layouts/*"],
 			"@pages/*": ["src/pages/*"]
-		}
+		},
+		"jsx": "react-jsx",
+		"jsxImportSource": "react"
 	}
 }

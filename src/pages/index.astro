@@ -1,9 +1,46 @@
 ---
-import Layout from '../layouts/Layout.astro'
+import Chart from '@components/Chart'
+import Layout from '@layouts/Layout.astro'
+
+import data from './../data/data.json'
+
+const config = {
+	width: 800,
+	height: 500,
+	scales: {
+		y: {
+			left: {
+				domain: [1500, 6500],
+			},
+			right: {
+				domain: [120, 320],
+			},
+		},
+		x: {
+			domain: ['2015-02-01', '2025-03-28'],
+		},
+	},
+	modules: [
+		{
+			type: 'yAxis',
+			side: 'left',
+			scale: 'left',
+			ticksRange: [1500, 7000, 500],
+			ticksFormat: ',.2r',
+			// guides: true,
+		},
+		{
+			type: 'yAxis',
+			side: 'right',
+			scale: 'right',
+			ticksRange: [120, 320, 20],
+			ticksFormat: ',.2r',
+			guides: true,
+		},
+	],
+}
 ---
 
 <Layout>
-	<div class='mlo'>Astro</div>
-	<div class='mlo-semi'>Astro</div>
-	<div class='mlo-bold'>Astro</div>
+	<Chart data={data} config={config} client:load />
 </Layout>

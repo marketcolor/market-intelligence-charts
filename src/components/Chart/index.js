@@ -1,3 +1,3 @@
-import AstroComponent from './Chart.astro'
+import Chart from './Chart'
 
-export default AstroComponent
+export default Chart
