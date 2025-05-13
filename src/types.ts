@@ -1,6 +1,5 @@
 import type { ScaleLinear, ScaleTime } from 'd3'
-import type { YAxisSide } from './enums'
-import type { RefObject } from 'react'
+import type { ChartColor, YAxisSide } from './enums'
 
 export type PlotDimensions = {
 	plotWidth: number
@@ -69,15 +68,15 @@ export type GeneralDataEntry = {
 	[key: string]: number
 }
 
-export type TimelineChartDataEntry = GeneralDataEntry & {
-	Date: Date
-}
-
+export type TimelineChartRawDataEntry = [string, ...number[]]
+export type TimelineChartDataEntry = [Date, ...number[]]
 //
 // modules config
 export type LineChartConfig = {
 	type: 'lineChart'
-	series: string[]
+	series: number[]
+	side: YAxisSide
+	colors: ChartColor[]
 	lineType?: 'solid' | 'dashed'
 	curve?: 'linear' | 'step' | 'natural'
 }
@@ -95,5 +94,5 @@ export type TimelineChartScales = {
 export type ChartModuleBasicProps = {
 	measures: ChartMeasures
 	scales: TimelineChartScales
-	htmlRef?: RefObject<HTMLElement | null>
+	htmlRef?: HTMLElement | null
 }

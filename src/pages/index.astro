@@ -1,11 +1,33 @@
 ---
+import Papa from 'papaparse'
+
 import TimelineChart from '@/components/Chart'
 import Layout from '@layouts/Layout.astro'
 
+import { data as rawData } from './../data/data'
 import jsonData from './../data/data.json'
 
-import type { TimelineChartConfig } from '@types'
+import type { TimelineChartConfig, TimelineChartDataEntry, TimelineChartRawDataEntry } from '@types'
 import { timeParse } from 'd3'
+import { ChartColor, YAxisSide } from '@/enums'
+
+const { errors, data: parsedData }: { errors: any[]; data: any[] } = Papa.parse(rawData, {
+	dynamicTyping: true,
+})
+
+if (errors.length) {
+	throw new Error(`Error parsing data: ${JSON.stringify(errors)}`)
+}
+
+const columns: string[] = parsedData[0]
+const dataset: TimelineChartRawDataEntry[] = parsedData.slice(1)
+
+const [dateKey, ...series] = columns
+const dateParser = timeParse('%d/%m/%Y')
+const data: TimelineChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
+	dateParser(dateStr)!,
+	...values,
+])
 
 const config: TimelineChartConfig = {
 	width: 800,
@@ -44,16 +66,23 @@ const config: TimelineChartConfig = {
 	modules: [
 		{
 			type: 'lineChart',
-			series: ['S&P 500 Index', 'S&P 500 EPS forecast, next 12 months'],
+			series: [0],
+			side: YAxisSide.Left,
+			colors: [ChartColor.Green],
+		},
+		{
+			type: 'lineChart',
+			series: [1],
+			side: YAxisSide.Right,
+			colors: [ChartColor.Blue],
 		},
 	],
 }
-const parser = timeParse('%d/%m/%Y')
-const [dateKey, ...seriesKeys] = Object.keys(jsonData[0])
-const data = jsonData.map((entry) => ({ ...entry, Date: parser(entry[dateKey]) }))
+// const [dateKey, ...seriesKeys] = Object.keys(jsonData[0])
+// const data = jsonData.map((entry) => ({ ...entry, Date: parser(entry[dateKey]) }))
 // console.log(data)
 ---
 
 <Layout>
-	<TimelineChart data={data} config={config} client:load />
+	<TimelineChart data={data} series={series} config={config} client:load />
 </Layout>

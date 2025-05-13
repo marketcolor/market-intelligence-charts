@@ -14,7 +14,12 @@ import {
 
 import type { ScaleBand, ScaleLinear, ScaleTime } from 'd3'
 
-import type { NumericTicksConfig, TickObject, TimelineTicksConfig } from '@types'
+import type {
+	NumericTicksConfig,
+	TickObject,
+	TimelineChartDataEntry,
+	TimelineTicksConfig,
+} from '@types'
 
 export const getLinearScale = (
 	domain: [number, number],
@@ -68,6 +73,20 @@ export function getDateTicks(config: TimelineTicksConfig): TickObject<Date>[] {
 		return { value, label }
 	})
 }
+export const getPathString = (
+	data: TimelineChartDataEntry[],
+	xSeries: number,
+	xScale: ScaleTime<number, number, never>,
+	ySeries: number,
+	yScale: LinearScale<number, number, never>
+): string | null => {
+	const lineFunc = line<TimelineChartDataEntry>()
+		.x((entry) => xScale(entry[xSeries] as any) as number)
+		.y((entry) => yScale(entry[ySeries] as any) as number)
+
+	return lineFunc(data)
+}
+
 // const chartBandScale = (config: BandScaleConfig, range: [number, number]): ScaleBand<string> => {
 // 	const { domain, bandwidth } = config
 // 	const totalRange = Math.abs(range[1] - range[0])
@@ -159,18 +178,4 @@ export function getDateTicks(config: TimelineTicksConfig): TickObject<Date>[] {
 // 		default:
 // 			return
 // 	}
-// }
-
-// export const getPathString = (
-// 	data: DataEntry[],
-// 	xSeries: keyof DataEntry,
-// 	xScale: ChartScaleFunction,
-// 	ySeries: keyof DataEntry,
-// 	yScale: ChartScaleFunction
-// ): string | null => {
-// 	const lineFunc = line<DataEntry>()
-// 		.x((entry) => xScale(entry[xSeries] as any) as number)
-// 		.y((entry) => yScale(entry[ySeries] as any) as number)
-
-// 	return lineFunc(data)
 // }

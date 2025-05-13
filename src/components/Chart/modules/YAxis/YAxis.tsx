@@ -44,7 +44,7 @@ const YAxis = ({ side, config, scales, measures, htmlRef }: Props) => {
 				label={label}
 				guides={!!guideLines}
 			></Svg>
-			{htmlRef?.current &&
+			{htmlRef &&
 				createPortal(
 					<Html
 						ticks={ticks}
@@ -54,7 +54,7 @@ const YAxis = ({ side, config, scales, measures, htmlRef }: Props) => {
 						label={label}
 						guides={!!guideLines}
 					></Html>,
-					htmlRef.current
+					htmlRef
 				)}
 		</>
 	)

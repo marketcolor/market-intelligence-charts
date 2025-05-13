@@ -6,6 +6,7 @@ import { getTimeScale, getLinearScale } from '@/lib/chartUtils'
 
 import YAxis from './modules/YAxis'
 import XAxis from './modules/XAxis'
+import LineChart from './modules/LineChart'
 
 import './chart.scss'
 
@@ -15,15 +16,17 @@ import { YAxisSide } from '@/enums'
 type Props = {
 	config: TimelineChartConfig
 	data: TimelineChartDataEntry[]
+	series: string[]
 }
 
-// const moduleComponents = {
-// 	yAxis: (key, props) => <YAxis key={key} {...props}></YAxis>,
-// 	xAxis: (key, props) => <XAxis key={key} {...props}></XAxis>,
-// }
+const moduleComponents = {
+	// yAxis: (key, props) => <YAxis key={key} {...props}></YAxis>,
+	// xAxis: (key, props) => <XAxis key={key} {...props}></XAxis>,
+	lineChart: (key: number, props: any) => <LineChart key={key} {...props}></LineChart>,
+}
 
-const TimelineChart = ({ data, config }: Props) => {
-	const { width, height, xAxisConfig, yAxisConfig } = config
+const TimelineChart = ({ data, series, config }: Props) => {
+	const { width, height, xAxisConfig, yAxisConfig, modules } = config
 	const [plotRef, dimensions] = usePlotMeasure(width, height)
 
 	const htmlOverlay = useRef<HTMLDivElement>(null)
@@ -46,8 +49,6 @@ const TimelineChart = ({ data, config }: Props) => {
 		height,
 	}
 
-	// console.log(width)
-
 	return (
 		<div className='chart' style={{ width, height }}>
 			<div className='overlay' ref={htmlOverlay}>
@@ -65,7 +66,7 @@ const TimelineChart = ({ data, config }: Props) => {
 						config={yAxisConfig.left}
 						scales={chartScales}
 						measures={measures}
-						htmlRef={htmlOverlay}
+						htmlRef={htmlOverlay.current}
 					></YAxis>
 				)}
 				{yAxisConfig.right && (
@@ -74,7 +75,7 @@ const TimelineChart = ({ data, config }: Props) => {
 						config={yAxisConfig.right}
 						scales={chartScales}
 						measures={measures}
-						htmlRef={htmlOverlay}
+						htmlRef={htmlOverlay.current}
 					></YAxis>
 				)}
 				{xAxisConfig && (
@@ -82,17 +83,19 @@ const TimelineChart = ({ data, config }: Props) => {
 						config={xAxisConfig}
 						scales={chartScales}
 						measures={measures}
-						htmlRef={htmlOverlay}
+						htmlRef={htmlOverlay.current}
 					></XAxis>
 				)}
-				{/* {modules.map((module, id) =>
-					moduleComponents[module.type](id, {
-						config: module,
-						scales: chartScales,
-						measures,
-						htmlRef: htmlOverlay.current,
-					})
-				)} */}
+				{modules &&
+					modules.map((module, id) =>
+						moduleComponents[module.type](id, {
+							config: module,
+							scales: chartScales,
+							measures,
+							data,
+							htmlRef: htmlOverlay.current,
+						})
+					)}
 			</svg>
 		</div>
 	)

@@ -34,10 +34,10 @@ const XAxis = ({ config, scales, measures, htmlRef }: Props) => {
 	return (
 		<>
 			<Svg ticks={ticks} scale={axisScale} measures={measures} guides={!!guideLines}></Svg>
-			{htmlRef?.current &&
+			{htmlRef &&
 				createPortal(
 					<Html ticks={ticks} scale={axisScale} guides={!!guideLines} measures={measures}></Html>,
-					htmlRef.current
+					htmlRef
 				)}
 		</>
 	)
