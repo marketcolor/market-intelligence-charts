@@ -25,6 +25,7 @@ export type TimelineChartConfig = BaseChartConfig & {
 	yAxisConfig: {
 		[key in YAxisSide]?: YAxisConfig
 	}
+	legend?: LegendConfig[]
 	modules?: Modules[]
 }
 
@@ -62,6 +63,11 @@ export type YAxisConfig = {
 	ticksConfig: NumericTicksConfig
 	label?: string
 	guideLines?: boolean
+}
+
+export type LegendConfig = {
+	text: string
+	color: ChartColor
 }
 // data entry
 export type GeneralDataEntry = {

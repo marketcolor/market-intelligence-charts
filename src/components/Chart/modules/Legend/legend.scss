@@ -1,0 +1,22 @@
+.legend {
+	grid-column: 1 / -1;
+	grid-row: 1 / 2;
+	padding-bottom: var(--bottom-offset);
+
+	display: flex;
+	align-items: center;
+	gap: 18px;
+
+	> .legend-item {
+		font-size: 18px;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+
+		.bullet {
+			width: 10px;
+			height: 10px;
+			background-color: var(--legend-color);
+		}
+	}
+}

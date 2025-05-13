@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { memo } from 'react'
 
 import { getNumericTicks } from '@lib/chartUtils'
-import { colors } from '@styles/theme'
+import { colors, fonts } from '@styles/theme'
 
 import type { CSSProperties } from 'react'
 import type { ScaleLinear } from 'd3'
@@ -61,16 +61,16 @@ const YAxis = ({ side, config, scales, measures, htmlRef }: Props) => {
 }
 
 const Svg = memo(({ side, ticks, scale, guides, measures }: SubProps) => {
-	const { leftMargin, rightMargin, plotWidth, width } = measures
+	const { leftMargin, rightMargin, topMargin, plotWidth, width } = measures
 
 	const tx = side === 'left' ? leftMargin : width
 	return (
-		<g transform={`translate(${tx}, 0)`}>
+		<g transform={`translate(${tx}, ${topMargin})`}>
 			{ticks.map(({ value, label }, id) => (
 				<g key={id} transform={`translate(0, ${scale(value)})`}>
 					<text
 						x={side === 'left' ? -tickAxisOffset : 0}
-						fontFamily='Manulife'
+						fontFamily={fonts.manulife}
 						fontSize='18'
 						textAnchor='end'
 						dominantBaseline='central'

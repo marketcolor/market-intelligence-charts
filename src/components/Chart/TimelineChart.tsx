@@ -12,6 +12,7 @@ import './chart.scss'
 
 import type { TimelineChartConfig, TimelineChartDataEntry, TimelineChartScales } from '@/types'
 import { YAxisSide } from '@/enums'
+import Legend from './modules/Legend'
 
 type Props = {
 	config: TimelineChartConfig
@@ -26,7 +27,7 @@ const moduleComponents = {
 }
 
 const TimelineChart = ({ data, series, config }: Props) => {
-	const { width, height, xAxisConfig, yAxisConfig, modules } = config
+	const { width, height, xAxisConfig, yAxisConfig, legend, modules } = config
 	const [plotRef, dimensions] = usePlotMeasure(width, height)
 
 	const htmlOverlay = useRef<HTMLDivElement>(null)
@@ -60,6 +61,7 @@ const TimelineChart = ({ data, series, config }: Props) => {
 				<div className='plot-container' ref={plotRef}></div>
 			</div>
 			<svg className='chart' xmlns='http://www.w3.org/2000/svg' width={width} height={height}>
+				{legend && <Legend config={legend} htmlRef={htmlOverlay.current}></Legend>}
 				{yAxisConfig.left && (
 					<YAxis
 						side={YAxisSide.Left}

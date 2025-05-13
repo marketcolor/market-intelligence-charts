@@ -8,7 +8,7 @@ import type { CSSProperties } from 'react'
 import type { ScaleTime } from 'd3'
 import type { ChartMeasures, ChartModuleBasicProps, TickObject, TimelineXAxisConfig } from '@/types'
 
-import { colors } from '@styles/theme'
+import { colors, fonts } from '@styles/theme'
 import './x-axis.scss'
 
 const tickAxisOffset = 20
@@ -68,7 +68,7 @@ const Svg = memo(({ ticks, scale, guides, measures }: SubProps) => {
 				<g key={id} transform={`translate(${scale(value)}, 0)`}>
 					<text
 						y={tickAxisOffset}
-						fontFamily='Manulife'
+						fontFamily={fonts.manulife}
 						fontSize='18'
 						textAnchor='middle'
 						dominantBaseline='text-before-edge'

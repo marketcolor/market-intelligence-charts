@@ -1,5 +1,5 @@
 @font-face {
-    font-family: 'Manulife';
+    font-family: 'Manulife JH Sans Optimized';
     src: url('/fonts/ManulifeJHSansOptimized-Demibold.ttf');
     font-weight: 600;
     font-style: normal;
@@ -7,7 +7,7 @@
 }
 
 @font-face {
-    font-family: 'Manulife';
+    font-family: 'Manulife JH Sans Optimized';
     src: url('/fonts/ManulifeJHSansOptimized-Bold.ttf');
     font-weight: bold;
     font-style: normal;
@@ -15,7 +15,7 @@
 }
 
 @font-face {
-    font-family: 'Manulife';
+    font-family: 'Manulife JH Sans Optimized';
     src: url('/fonts/ManulifeJHSansOptimized.ttf');
     font-weight: normal;
     font-style: normal;
@@ -33,7 +33,7 @@
 html,
 body {
     height: 100%;
-    font-family: Manulife;
+    font-family: 'Manulife JH Sans Optimized';
     -webkit-print-color-adjust: exact;
 }
 
@@ -43,18 +43,4 @@ body {
 
 svg {
     display: block;
-}
-
-.mlo {
-    font-family: 'ManulifeJHSansOptimized';
-}
-
-.mlo-semi {
-    font-family: 'ManulifeJHSansOptimized';
-    font-weight: 600;
-}
-
-.mlo-bold {
-    font-family: 'ManulifeJHSansOptimized';
-    font-weight: bold;
 }

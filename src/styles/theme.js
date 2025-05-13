@@ -4,3 +4,7 @@ export const colors = {
 	seriesGreen: '#00A758',
 	seriesBlue: '#0000C1',
 }
+
+export const fonts = {
+	manulife: 'Manulife JH Sans Optimized',
+}

@@ -32,7 +32,7 @@ const LineChart = ({ config, data, scales, measures }: Props) => {
 					d={getPathString(data, 0, xScale, key + 1, yScale)!}
 					fill='none'
 					stroke={colors[id]}
-					stroke-width='3'
+					strokeWidth='3'
 				></path>
 			))}
 		</g>
