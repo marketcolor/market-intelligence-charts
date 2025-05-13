@@ -7,6 +7,8 @@ import { getTimeScale, getLinearScale } from '@/lib/chartUtils'
 import YAxis from './modules/YAxis'
 import XAxis from './modules/XAxis'
 import LineChart from './modules/LineChart'
+import AreaChart from './modules/AreaChart'
+import PeriodAreas from './modules/PeriodAreas'
 
 import './chart.scss'
 
@@ -21,13 +23,13 @@ type Props = {
 }
 
 const moduleComponents = {
-	// yAxis: (key, props) => <YAxis key={key} {...props}></YAxis>,
-	// xAxis: (key, props) => <XAxis key={key} {...props}></XAxis>,
 	lineChart: (key: number, props: any) => <LineChart key={key} {...props}></LineChart>,
+	areaChart: (key: number, props: any) => <AreaChart key={key} {...props}></AreaChart>,
+	periodAreas: (key: number, props: any) => <PeriodAreas key={key} {...props}></PeriodAreas>,
 }
 
 const TimelineChart = ({ data, series, config }: Props) => {
-	const { width, height, xAxisConfig, yAxisConfig, legend, modules } = config
+	const { width, height, marginAdjust, xAxisConfig, yAxisConfig, legend, modules } = config
 	const [plotRef, dimensions] = usePlotMeasure(width, height)
 
 	const htmlOverlay = useRef<HTMLDivElement>(null)
@@ -50,8 +52,17 @@ const TimelineChart = ({ data, series, config }: Props) => {
 		height,
 	}
 
+	const style = {
+		width,
+		height,
+		'--margin-left': `${marginAdjust?.left || 0}px`,
+		'--margin-right': `${marginAdjust?.right || 0}px`,
+		'--margin-top': `${marginAdjust?.top || 0}px`,
+		'--margin-bottom': `${marginAdjust?.bottom || 0}px`,
+	}
+
 	return (
-		<div className='chart' style={{ width, height }}>
+		<div className='chart' style={style}>
 			<div className='overlay' ref={htmlOverlay}>
 				<div className='left-margin-container'></div>
 				<div className='right-margin-container'></div>

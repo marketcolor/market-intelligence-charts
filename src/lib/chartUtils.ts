@@ -1,4 +1,5 @@
 import {
+	area,
 	format,
 	line,
 	scaleBand,
@@ -10,6 +11,7 @@ import {
 	timeParse,
 	timeWeek,
 	timeYear,
+	curveStep,
 } from 'd3'
 
 import type { ScaleBand, ScaleLinear, ScaleTime } from 'd3'
@@ -73,16 +75,49 @@ export function getDateTicks(config: TimelineTicksConfig): TickObject<Date>[] {
 		return { value, label }
 	})
 }
+
 export const getPathString = (
 	data: TimelineChartDataEntry[],
 	xSeries: number,
 	xScale: ScaleTime<number, number, never>,
 	ySeries: number,
-	yScale: LinearScale<number, number, never>
+	yScale: ScaleLinear<number, number, never>
 ): string | null => {
 	const lineFunc = line<TimelineChartDataEntry>()
 		.x((entry) => xScale(entry[xSeries] as any) as number)
 		.y((entry) => yScale(entry[ySeries] as any) as number)
+
+	return lineFunc(data)
+}
+
+export const getAreaString = (
+	data: TimelineChartDataEntry[],
+	xSeries: number,
+	xScale: ScaleTime<number, number, never>,
+	ySeries: number,
+	yScale: ScaleLinear<number, number, never>,
+	baseline: number
+): string | null => {
+	const lineFunc = area<TimelineChartDataEntry>()
+		.x((entry) => xScale(entry[xSeries] as any) as number)
+		.y0((entry) => yScale(entry[ySeries] as any) as number)
+		.y1((entry) => baseline)
+
+	return lineFunc(data)
+}
+
+export const getPeriodAreaString = (
+	data: TimelineChartDataEntry[],
+	xSeries: number,
+	xScale: ScaleTime<number, number, never>,
+	ySeries: number,
+	height: number
+): string | null => {
+	const lineFunc = area<TimelineChartDataEntry>()
+		.x((entry) => xScale(entry[xSeries] as any) as number)
+		.y0((entry) => 0)
+		.y1((entry) => (entry[ySeries] === 1 ? height : 0))
+		.curve(curveStep)
 
 	return lineFunc(data)
 }

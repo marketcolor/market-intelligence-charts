@@ -2,12 +2,11 @@
 	position: relative;
 	margin: auto;
 	margin-top: 25vh;
-
-	outline: 1px solid tomato;
+	// outline: 1px solid tomato;
 	> .overlay {
 		position: absolute;
 		inset: 0;
-		// visibility: hidden;
+		visibility: hidden;
 
 		display: grid;
 		grid-template-columns:
@@ -23,19 +22,19 @@
 
 		.left-margin-container {
 			grid-area: margin-left;
-			// min-width: var(--margin-left-width, 0);
+			min-width: var(--margin-left, 0);
 		}
 		.right-margin-container {
 			grid-area: margin-right;
-			// min-width: var(--margin-right-width, 0);
+			min-width: var(--margin-right, 0);
 		}
 		.top-margin-container {
 			grid-area: margin-top;
-			// min-height: var(--margin-top-height, 0);
+			min-height: var(--margin-top, 0);
 		}
 		.bottom-margin-container {
 			grid-area: margin-bottom;
-			// min-height: var(--margin-bottom-height, 0);
+			min-height: var(--margin-bottom, 0);
 		}
 		.plot-container {
 			// position: remslative;

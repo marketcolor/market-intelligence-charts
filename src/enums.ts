@@ -17,4 +17,5 @@ export enum YAxisSide {
 export enum ChartColor {
 	Green = '#00A758',
 	Blue = '#0000C1',
+	Grey = '#dedede',
 }

@@ -2,7 +2,6 @@
 	display: grid;
 	grid-template-columns: auto auto;
 	grid-template-areas: 'left right';
-	gap: var(--y-axis-label-gap);
 
 	&[data-has-label='false'] {
 		gap: 0;
@@ -13,6 +12,7 @@
 
 		.label-container {
 			grid-area: left;
+			padding-right: var(--y-axis-tick-offset);
 		}
 		.ticks-container {
 			grid-area: right;
@@ -25,6 +25,7 @@
 
 		.label-container {
 			grid-area: right;
+			padding-left: var(--y-axis-tick-offset);
 		}
 		.ticks-container {
 			grid-area: left;
@@ -38,11 +39,10 @@
 		align-items: center;
 
 		.label {
-			font-size: var(--y-axis-text);
+			font-size: 18px;
 			writing-mode: sideways-lr;
 			text-align: center;
 			text-wrap: balance;
-			max-height: var(--y-axis-label-max-height, var(--plot-height));
 		}
 	}
 

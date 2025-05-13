@@ -18,6 +18,12 @@ export type ChartMeasures = PlotDimensions & {
 export type BaseChartConfig = {
 	width: number
 	height: number
+	marginAdjust?: {
+		top?: number
+		bottom?: number
+		left?: number
+		right?: number
+	}
 }
 
 export type TimelineChartConfig = BaseChartConfig & {
@@ -80,14 +86,31 @@ export type TimelineChartDataEntry = [Date, ...number[]]
 // modules config
 export type LineChartConfig = {
 	type: 'lineChart'
-	series: number[]
+	series: number
 	side: YAxisSide
-	colors: ChartColor[]
+	color: ChartColor
+	threshold?: {
+		value: number
+		bottomColor: ChartColor
+	}
 	lineType?: 'solid' | 'dashed'
 	curve?: 'linear' | 'step' | 'natural'
 }
 
-export type Modules = LineChartConfig
+export type PeriodAreasConfig = {
+	type: 'periodAreas'
+	series: number
+	color: ChartColor
+}
+
+export type AreaChartConfig = {
+	type: 'areaChart'
+	series: number
+	side: YAxisSide
+	color: ChartColor
+}
+
+export type Modules = LineChartConfig | AreaChartConfig | PeriodAreasConfig
 /////////////////
 export type TimelineChartScales = {
 	y: {

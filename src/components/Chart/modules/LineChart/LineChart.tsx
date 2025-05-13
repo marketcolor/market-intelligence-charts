@@ -1,14 +1,14 @@
 'use client'
 
+import { getPathString } from '@/lib/chartUtils'
+
+import { colors as themeColors } from '@styles/theme'
 import type {
 	ChartMeasures,
 	LineChartConfig,
 	TimelineChartDataEntry,
 	TimelineChartScales,
 } from '@/types'
-import './line-chart.scss'
-import { getPathString } from '@/lib/chartUtils'
-// import { colors } from '@/styles/theme'
 
 type Props = {
 	config: LineChartConfig
@@ -18,23 +18,50 @@ type Props = {
 }
 
 const LineChart = ({ config, data, scales, measures }: Props) => {
-	const { series, side, colors } = config
-	const { leftMargin, topMargin } = measures
+	const { series, side, color, threshold } = config
+	const { leftMargin, topMargin, plotHeight, plotWidth } = measures
 
-	const yScale = scales.y[side]
+	const yScale = scales.y[side]!
 	const xScale = scales.x
 
 	return (
-		<g transform={`translate(${leftMargin}, ${topMargin})`}>
-			{series.map((key, id) => (
+		<g>
+			<defs>
+				<mask id={`line-chart-mask-${series}`}>
+					<rect width={plotWidth} height={plotHeight} fill='white'></rect>
+				</mask>
+				{threshold && (
+					<linearGradient
+						gradientUnits='userSpaceOnUse'
+						id={`threshold-gradient-${series}`}
+						x1={0}
+						x2={0}
+						y1={0}
+						y2={plotHeight}
+					>
+						<stop offset={yScale(threshold.value) / plotHeight} stopColor={color}></stop>
+						<stop offset={yScale(threshold.value) / plotHeight} stopColor={threshold.bottomColor}></stop>
+					</linearGradient>
+				)}
+			</defs>
+			<g transform={`translate(${leftMargin}, ${topMargin})`} mask={`url(#line-chart-mask-${series})`}>
+				{threshold && (
+					<line
+						x2={plotWidth}
+						y1={yScale(threshold.value)}
+						y2={yScale(threshold.value)}
+						fill='none'
+						stroke={themeColors.dark}
+					></line>
+				)}
 				<path
-					key={key + 1}
-					d={getPathString(data, 0, xScale, key + 1, yScale)!}
+					key={series + 1}
+					d={getPathString(data, 0, xScale, series + 1, yScale)!}
 					fill='none'
-					stroke={colors[id]}
-					strokeWidth='3'
+					stroke={threshold ? `url(#threshold-gradient-${series})` : color}
+					strokeWidth='2.5'
 				></path>
-			))}
+			</g>
 		</g>
 	)
 }
