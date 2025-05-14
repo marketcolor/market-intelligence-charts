@@ -35,7 +35,7 @@ const YAxis = ({ side, config, scales, measures, htmlRef }: Props) => {
 
 	const { ticksConfig, label, guideLines } = config
 
-	const ticks = getNumericTicks(ticksConfig)
+	const ticks = ticksConfig ? getNumericTicks(ticksConfig) : []
 
 	const axisScale = scales.y[side]
 
@@ -132,14 +132,15 @@ const Html = memo(({ side, ticks, scale, label, updateTicksWidth }: SubProps) =>
 					<div className='label'>{label}</div>
 				</div>
 			)}
-			<div className='ticks-container' ref={ticksRef}>
-				{ticks &&
-					ticks.map(({ value, label }, id) => (
+			{!!ticks.length && (
+				<div className='ticks-container' ref={ticksRef}>
+					{ticks.map(({ value, label }, id) => (
 						<div className='tick' key={id} style={{ transform: `translate(0, ${scale(value)}px)` }}>
 							<div className='tick-inner'>{label}</div>
 						</div>
 					))}
-			</div>
+				</div>
+			)}
 		</div>
 	)
 })

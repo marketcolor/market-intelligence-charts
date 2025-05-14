@@ -1,7 +1,6 @@
 .chart {
 	position: relative;
-	margin: auto;
-	margin-top: 25vh;
+	font-family: 'Manulife JH Sans Optimized';
 	// outline: 1px solid tomato;
 	> .overlay {
 		position: absolute;
@@ -37,7 +36,6 @@
 			min-height: var(--margin-bottom, 0);
 		}
 		.plot-container {
-			// position: remslative;
 			grid-area: plot;
 		}
 	}

@@ -13,6 +13,7 @@ import PeriodAreas from './modules/PeriodAreas'
 import './chart.scss'
 
 import type { TimelineChartConfig, TimelineChartDataEntry, TimelineChartScales } from '@/types'
+
 import { YAxisSide } from '@/enums'
 import Legend from './modules/Legend'
 

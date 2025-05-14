@@ -15,15 +15,16 @@ export type ChartMeasures = PlotDimensions & {
 	height: number
 }
 
+export type ChartMargins = {
+	top?: number
+	bottom?: number
+	left?: number
+	right?: number
+}
 export type BaseChartConfig = {
 	width: number
 	height: number
-	marginAdjust?: {
-		top?: number
-		bottom?: number
-		left?: number
-		right?: number
-	}
+	marginAdjust?: ChartMargins
 }
 
 export type TimelineChartConfig = BaseChartConfig & {
@@ -58,7 +59,7 @@ export type TickObject<T extends number | string | Date> = {
 }
 
 export type TimelineXAxisConfig = {
-	domain: [string, string]
+	domain: [string, string] | [Date, Date]
 	ticksConfig: TimelineTicksConfig
 	label?: string
 	guideLines?: boolean
@@ -66,7 +67,7 @@ export type TimelineXAxisConfig = {
 
 export type YAxisConfig = {
 	domain: [number, number]
-	ticksConfig: NumericTicksConfig
+	ticksConfig?: NumericTicksConfig
 	label?: string
 	guideLines?: boolean
 }

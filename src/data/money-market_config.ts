@@ -4,10 +4,10 @@ import type { TimelineChartConfig } from '@/types'
 export const config: TimelineChartConfig = {
 	width: 1000,
 	height: 550,
-	marginAdjust: {
-		right: 30,
-		top: 20,
-	},
+	// marginAdjust: {
+	// 	right: 26,
+	// 	top: 12,
+	// },
 	// legend: [
 	// 	{
 	// 		text: 'Recessions',

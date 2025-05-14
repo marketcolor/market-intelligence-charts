@@ -12,6 +12,11 @@ import {
 	timeWeek,
 	timeYear,
 	curveStep,
+	extent,
+	max,
+	min,
+	ticks,
+	nice,
 } from 'd3'
 
 import type { ScaleBand, ScaleLinear, ScaleTime } from 'd3'
@@ -21,7 +26,9 @@ import type {
 	TickObject,
 	TimelineChartDataEntry,
 	TimelineTicksConfig,
+	YAxisConfig,
 } from '@types'
+import type { YAxisSide } from '@/enums'
 
 export const getLinearScale = (
 	domain: [number, number],
@@ -120,6 +127,43 @@ export const getPeriodAreaString = (
 		.curve(curveStep)
 
 	return lineFunc(data)
+}
+
+export const getTimeDomain = (data: TimelineChartDataEntry[], timeSeries: number) => {
+	return extent(data, (d) => d[timeSeries]) as [Date, Date]
+}
+
+export const getYAxisConfig = (data: TimelineChartDataEntry[], series: { side: YAxisSide }[]) => {
+	const sidesIndices = series.reduce((pv: { [key: string]: any }, s, id) => {
+		if (!Object.hasOwn(pv, s.side)) {
+			pv[s.side] = { dataIndices: [] }
+		}
+		pv[s.side].dataIndices.push(id + 1)
+		return pv
+	}, {})
+
+	const config: { [key in YAxisSide]?: YAxisConfig } = {}
+
+	for (const [key, { dataIndices }] of Object.entries(sidesIndices)) {
+		const domain: [number, number] = [
+			min(data, (d) => min(d.filter((e, id) => dataIndices.includes(id)))) as number,
+			max(data, (d) => max(d.filter((e, id) => dataIndices.includes(id)))) as number,
+		]
+
+		const cfgTicks = ticks(domain[0], domain[1], 6)
+
+		config[key as YAxisSide] = {
+			domain,
+			guideLines: key === 'left',
+			ticksConfig: {
+				startVal: cfgTicks[0],
+				numTicks: cfgTicks.length,
+				tickInterval: cfgTicks[1] - cfgTicks[0],
+				numberFormat: ',.0f',
+			},
+		}
+	}
+	return config
 }
 
 // const chartBandScale = (config: BandScaleConfig, range: [number, number]): ScaleBand<string> => {

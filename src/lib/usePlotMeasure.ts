@@ -1,5 +1,5 @@
 import type { PlotDimensions } from '@/types'
-import { useState, useRef, useCallback, type RefObject } from 'react'
+import { useState, useRef, useCallback } from 'react'
 
 export function usePlotMeasure(
 	initialWidth: number,
