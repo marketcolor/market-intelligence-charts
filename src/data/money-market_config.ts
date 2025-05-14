@@ -4,16 +4,6 @@ import type { TimelineChartConfig } from '@/types'
 export const config: TimelineChartConfig = {
 	width: 1000,
 	height: 550,
-	// marginAdjust: {
-	// 	right: 26,
-	// 	top: 12,
-	// },
-	// legend: [
-	// 	{
-	// 		text: 'Recessions',
-	// 		color: ChartColor.Grey,
-	// 	},
-	// ],
 	xAxisConfig: {
 		domain: ['2000-04-01', '2025-02-01'],
 		ticksConfig: {

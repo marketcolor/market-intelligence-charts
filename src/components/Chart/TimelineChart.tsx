@@ -1,5 +1,5 @@
 'use client'
-import { useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 
 import { usePlotMeasure } from '@lib/usePlotMeasure'
 import { getTimeScale, getLinearScale } from '@/lib/chartUtils'
@@ -16,6 +16,7 @@ import type { TimelineChartConfig, TimelineChartDataEntry, TimelineChartScales }
 
 import { YAxisSide } from '@/enums'
 import Legend from './modules/Legend'
+import { useSvgMeasure } from '@/lib/useSvgMeasure'
 
 type Props = {
 	config: TimelineChartConfig
@@ -32,6 +33,10 @@ const moduleComponents = {
 const TimelineChart = ({ data, series, config }: Props) => {
 	const { width, height, marginAdjust, xAxisConfig, yAxisConfig, legend, modules } = config
 	const [plotRef, dimensions] = usePlotMeasure(width, height)
+	const [svgRef, { svgWidth, svgHeight, svgLeft, svgRight, svgTop, svgBottom }] = useSvgMeasure(
+		width,
+		height
+	)
 
 	const htmlOverlay = useRef<HTMLDivElement>(null)
 
@@ -56,10 +61,10 @@ const TimelineChart = ({ data, series, config }: Props) => {
 	const style = {
 		width,
 		height,
-		'--margin-left': `${marginAdjust?.left || 0}px`,
-		'--margin-right': `${marginAdjust?.right || 0}px`,
-		'--margin-top': `${marginAdjust?.top || 0}px`,
-		'--margin-bottom': `${marginAdjust?.bottom || 0}px`,
+		'--margin-left': `${Math.max(marginAdjust?.left || 0, svgLeft || 0)}px`,
+		'--margin-right': `${Math.max(marginAdjust?.right || 0, svgRight || 0)}px`,
+		'--margin-top': `${Math.max(marginAdjust?.top || 0, svgTop || 0)}px`,
+		'--margin-bottom': `${Math.max(marginAdjust?.bottom || 0, svgBottom || 0)}px`,
 	}
 
 	return (
@@ -73,43 +78,45 @@ const TimelineChart = ({ data, series, config }: Props) => {
 				<div className='plot-container' ref={plotRef}></div>
 			</div>
 			<svg className='chart' xmlns='http://www.w3.org/2000/svg' width={width} height={height}>
-				{legend && <Legend config={legend} htmlRef={htmlOverlay.current}></Legend>}
-				{yAxisConfig.left && (
-					<YAxis
-						side={YAxisSide.Left}
-						config={yAxisConfig.left}
-						scales={chartScales}
-						measures={measures}
-						htmlRef={htmlOverlay.current}
-					></YAxis>
-				)}
-				{yAxisConfig.right && (
-					<YAxis
-						side={YAxisSide.Right}
-						config={yAxisConfig.right}
-						scales={chartScales}
-						measures={measures}
-						htmlRef={htmlOverlay.current}
-					></YAxis>
-				)}
-				{xAxisConfig && (
-					<XAxis
-						config={xAxisConfig}
-						scales={chartScales}
-						measures={measures}
-						htmlRef={htmlOverlay.current}
-					></XAxis>
-				)}
-				{modules &&
-					modules.map((module, id) =>
-						moduleComponents[module.type](id, {
-							config: module,
-							scales: chartScales,
-							measures,
-							data,
-							htmlRef: htmlOverlay.current,
-						})
+				<g ref={svgRef}>
+					{legend && <Legend config={legend} htmlRef={htmlOverlay.current}></Legend>}
+					{yAxisConfig.left && (
+						<YAxis
+							side={YAxisSide.Left}
+							config={yAxisConfig.left}
+							scales={chartScales}
+							measures={measures}
+							htmlRef={htmlOverlay.current}
+						></YAxis>
 					)}
+					{yAxisConfig.right && (
+						<YAxis
+							side={YAxisSide.Right}
+							config={yAxisConfig.right}
+							scales={chartScales}
+							measures={measures}
+							htmlRef={htmlOverlay.current}
+						></YAxis>
+					)}
+					{xAxisConfig && (
+						<XAxis
+							config={xAxisConfig}
+							scales={chartScales}
+							measures={measures}
+							htmlRef={htmlOverlay.current}
+						></XAxis>
+					)}
+					{modules &&
+						modules.map((module, id) =>
+							moduleComponents[module.type](id, {
+								config: module,
+								scales: chartScales,
+								measures,
+								data,
+								htmlRef: htmlOverlay.current,
+							})
+						)}
+				</g>
 			</svg>
 		</div>
 	)
