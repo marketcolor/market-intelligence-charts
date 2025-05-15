@@ -9,7 +9,7 @@ import { useList, useObjectState } from '@uidotdev/usehooks'
 import type { Modules, TimelineChartConfig, TimelineChartDataEntry } from '@/types'
 
 import './editor.scss'
-import { getTimeDomain, getYAxisConfig } from '@/lib/chartUtils'
+import { getTimeDomain, getXAxisConfig, getYAxisConfig } from '@/lib/chartUtils'
 import { ChartColor, YAxisSide } from '@/enums'
 import TimelineChart from '../Chart'
 
@@ -25,11 +25,6 @@ type SeriesConfigProps = {
 const dateParser = timeParse('%d/%m/%Y')
 
 const configColors = Object.values(ChartColor)
-
-const modulesOrder = ['periodAreas', 'areaChart', 'lineChart']
-const modulesSorter = (ma: Modules, mb: Modules) => {
-	return modulesOrder.indexOf(ma.type) - modulesOrder.indexOf(mb.type)
-}
 
 const SeriesConfig = ({
 	name,
@@ -72,9 +67,10 @@ const SeriesConfig = ({
 				<select
 					className='color-select'
 					value={config.color}
+					disabled={config.type === 'periodAreas'}
 					onChange={(e) => updateConfig('color', e.target.value)}
 				>
-					<option value={ChartColor.Blue}>
+					<option value={config.type === 'periodAreas' ? ChartColor.RecessionGrey : ChartColor.Blue}>
 						<div className='icon' aria-hidden='true'>
 							🟦
 						</div>
@@ -86,15 +82,13 @@ const SeriesConfig = ({
 						</div>
 						<div className='option-label'>Green</div>
 					</option>
-					<option value={ChartColor.Grey}>
-						<div className='icon' aria-hidden='true'>
-							⬛
-						</div>
-						<div className='option-label'>Grey</div>
-					</option>
 				</select>
 				<label htmlFor=''>Axis side</label>
-				<select value={config.side} onChange={(e) => updateConfig('side', e.target.value)}>
+				<select
+					disabled={config.type === 'periodAreas'}
+					value={config.side}
+					onChange={(e) => updateConfig('side', e.target.value)}
+				>
 					<option value='left'>Left</option>
 					<option value='right'>Right</option>
 				</select>
@@ -165,27 +159,16 @@ const Editor = () => {
 			const chartConfig: TimelineChartConfig = {
 				width: chartSize.chartWidth,
 				height: chartSize.chartHeight,
-				xAxisConfig: {
-					domain: getTimeDomain(data, 0),
-					ticksConfig: {
-						startDate: data[0][0],
-						numTicks: Math.round(8),
-						dateInterval: 'year',
-						intervalStep: 1,
-						dateFormat: '%Y',
-					},
-				},
+				xAxisConfig: getXAxisConfig(data),
 				yAxisConfig,
 				legend: seriesConfig.map((c) => ({ text: c.legend, color: c.color as ChartColor })),
 				//@ts-ignore
-				modules: seriesConfig
-					.map((c, id) => ({
-						type: c.type,
-						series: id,
-						side: c.side,
-						color: c.color as ChartColor,
-					}))
-					.sort(modulesSorter),
+				modules: seriesConfig.map((c, id) => ({
+					type: c.type,
+					series: id,
+					side: c.side,
+					color: c.color as ChartColor,
+				})),
 			}
 
 			setTemplateConfig(chartConfig)

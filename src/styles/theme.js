@@ -4,6 +4,7 @@ export const colors = {
 	darkNavy4: '#8e90a2',
 	seriesGreen: '#00A758',
 	seriesBlue: '#0000C1',
+	recessionGrey: '#dbdbdb',
 }
 
 export const fonts = {

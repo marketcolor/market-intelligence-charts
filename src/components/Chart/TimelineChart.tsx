@@ -2,7 +2,7 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
 
 import { usePlotMeasure } from '@lib/usePlotMeasure'
-import { getTimeScale, getLinearScale } from '@/lib/chartUtils'
+import { getTimeScale, getLinearScale, getXAxisConfig } from '@/lib/chartUtils'
 
 import YAxis from './modules/YAxis'
 import XAxis from './modules/XAxis'
@@ -30,13 +30,15 @@ const moduleComponents = {
 	periodAreas: (key: number, props: any) => <PeriodAreas key={key} {...props}></PeriodAreas>,
 }
 
+const modulesOrder = ['periodAreas', 'areaChart', 'lineChart']
+const modulesSorter = (ma: Modules, mb: Modules) => {
+	return modulesOrder.indexOf(ma.type) - modulesOrder.indexOf(mb.type)
+}
+
 const TimelineChart = ({ data, series, config }: Props) => {
 	const { width, height, marginAdjust, xAxisConfig, yAxisConfig, legend, modules } = config
 	const [plotRef, dimensions] = usePlotMeasure(width, height)
-	const [svgRef, { svgWidth, svgHeight, svgLeft, svgRight, svgTop, svgBottom }] = useSvgMeasure(
-		width,
-		height
-	)
+	const [svgRef, { svgLeft, svgRight, svgTop, svgBottom }] = useSvgMeasure(width, height)
 
 	const htmlOverlay = useRef<HTMLDivElement>(null)
 
@@ -52,6 +54,7 @@ const TimelineChart = ({ data, series, config }: Props) => {
 		x: getTimeScale(xAxisConfig.domain, [0, dimensions.plotWidth]),
 	}
 
+	getXAxisConfig(data)
 	const measures = {
 		...dimensions,
 		width,
@@ -67,6 +70,9 @@ const TimelineChart = ({ data, series, config }: Props) => {
 		'--margin-bottom': `${Math.max(marginAdjust?.bottom || 0, svgBottom || 0)}px`,
 	}
 
+	const underModules = modules?.filter((m) => m.type === 'periodAreas')
+	const overModules = modules?.filter((m) => m.type !== 'periodAreas').sort(modulesSorter)
+
 	return (
 		<div className='chart' style={style}>
 			<div className='overlay' ref={htmlOverlay}>
@@ -80,6 +86,16 @@ const TimelineChart = ({ data, series, config }: Props) => {
 			<svg className='chart' xmlns='http://www.w3.org/2000/svg' width={width} height={height}>
 				<g ref={svgRef}>
 					{legend && <Legend config={legend} htmlRef={htmlOverlay.current}></Legend>}
+					{underModules &&
+						underModules.map((module, id) =>
+							moduleComponents[module.type](id, {
+								config: module,
+								scales: chartScales,
+								measures,
+								data,
+								htmlRef: htmlOverlay.current,
+							})
+						)}
 					{yAxisConfig.left && (
 						<YAxis
 							side={YAxisSide.Left}
@@ -106,8 +122,8 @@ const TimelineChart = ({ data, series, config }: Props) => {
 							htmlRef={htmlOverlay.current}
 						></XAxis>
 					)}
-					{modules &&
-						modules.map((module, id) =>
+					{overModules &&
+						overModules.map((module, id) =>
 							moduleComponents[module.type](id, {
 								config: module,
 								scales: chartScales,

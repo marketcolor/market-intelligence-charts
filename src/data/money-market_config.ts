@@ -31,7 +31,6 @@ export const config: TimelineChartConfig = {
 		{
 			type: 'periodAreas',
 			series: 1,
-			color: ChartColor.Grey,
 		},
 		{
 			type: 'areaChart',

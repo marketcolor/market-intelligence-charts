@@ -6,9 +6,6 @@ const series = ['Fed funds target rate (%)', '10-year U.S. Treasury yeld (%)', '
 export const config: TimelineChartConfig = {
 	width: 1200,
 	height: 450,
-	// marginAdjust: {
-	// 	right: 30,
-	// },
 	xAxisConfig: {
 		domain: ['1994-01-31', '2025-03-31'],
 		ticksConfig: {
@@ -42,14 +39,13 @@ export const config: TimelineChartConfig = {
 		},
 		{
 			text: series[2],
-			color: ChartColor.Grey,
+			color: ChartColor.RecessionGrey,
 		},
 	],
 	modules: [
 		{
 			type: 'periodAreas',
 			series: 2,
-			color: ChartColor.Grey,
 		},
 		{
 			type: 'lineChart',

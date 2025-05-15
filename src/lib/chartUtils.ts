@@ -17,6 +17,12 @@ import {
 	min,
 	ticks,
 	nice,
+	timeTicks,
+	timeTickInterval,
+	utcTicks,
+	utcTickInterval,
+	utcYear,
+	utcMonth,
 } from 'd3'
 
 import type { ScaleBand, ScaleLinear, ScaleTime } from 'd3'
@@ -131,6 +137,37 @@ export const getPeriodAreaString = (
 
 export const getTimeDomain = (data: TimelineChartDataEntry[], timeSeries: number) => {
 	return extent(data, (d) => d[timeSeries]) as [Date, Date]
+}
+
+export const getTimeTicksConfig = (domain: [Date, Date]) => {
+	const ticks = utcTicks(domain[0], domain[1], 9)
+	const [start, end] = ticks
+
+	const config: TimelineTicksConfig = {
+		startDate: start,
+		numTicks: ticks.length,
+		dateInterval: 'day',
+		intervalStep: 0,
+		dateFormat: '%m/%y',
+	}
+	const yearInterval = utcYear.count(start, end)
+	const monthInterval = utcMonth.count(start, end)
+
+	if (yearInterval) {
+		config.dateInterval = 'year'
+		config.intervalStep = yearInterval
+	} else {
+		config.dateInterval = 'month'
+		config.intervalStep = monthInterval
+	}
+
+	return config
+}
+
+export const getXAxisConfig = (data: TimelineChartDataEntry[]) => {
+	const domain = extent(data, (d) => d[0]) as [Date, Date]
+	const ticksConfig = getTimeTicksConfig(domain)
+	return { domain, ticksConfig }
 }
 
 export const getYAxisConfig = (data: TimelineChartDataEntry[], series: { side: YAxisSide }[]) => {

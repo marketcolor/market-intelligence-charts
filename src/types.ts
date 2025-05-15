@@ -101,7 +101,6 @@ export type LineChartConfig = {
 export type PeriodAreasConfig = {
 	type: 'periodAreas'
 	series: number
-	color: ChartColor
 }
 
 export type AreaChartConfig = {

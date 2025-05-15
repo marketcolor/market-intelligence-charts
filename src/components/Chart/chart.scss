@@ -1,8 +1,7 @@
 .chart {
 	position: relative;
 	font-family: 'Manulife JH Sans Optimized';
-	margin: 10vh auto;
-	// outline: 1px solid tomato;
+
 	> .overlay {
 		position: absolute;
 		inset: 0;
@@ -42,7 +41,8 @@
 	}
 
 	svg.chart {
-		outline: 1px solid tomato;
 		overflow: visible;
+
+		outline: 1px solid #dadbdc;
 	}
 }
