@@ -35,12 +35,13 @@ const SeriesConfig = ({
 	seriesId: number
 	updateHandler: (config: SeriesConfigProps) => void
 }) => {
+	const initialColor = configColors[seriesId % configColors.length]
 	const [config, setConfig] = useObjectState<SeriesConfigProps>({
 		name,
 		legend: name,
 		showLegend: true,
 		type: 'lineChart',
-		color: configColors[seriesId % configColors.length],
+		color: initialColor,
 		side: YAxisSide.Left,
 	})
 
@@ -58,7 +59,15 @@ const SeriesConfig = ({
 			<div className='name'>{config.name}</div>
 			<div className='color config-box'>
 				<label htmlFor=''>Chart type</label>
-				<select value={config.type} onChange={(e) => updateConfig('type', e.target.value)}>
+				<select
+					value={config.type}
+					onChange={(e) => {
+						updateConfig('type', e.target.value)
+						if (e.target.value === 'periodAreas') {
+							updateConfig('color', ChartColor.RecessionGrey)
+						}
+					}}
+				>
 					<option value='lineChart'>Line Chart</option>
 					<option value='areaChart'>Area Chart</option>
 					<option value='periodAreas'>Period Areas</option>
@@ -70,7 +79,7 @@ const SeriesConfig = ({
 					disabled={config.type === 'periodAreas'}
 					onChange={(e) => updateConfig('color', e.target.value)}
 				>
-					<option value={config.type === 'periodAreas' ? ChartColor.RecessionGrey : ChartColor.Blue}>
+					<option value={ChartColor.Blue}>
 						<div className='icon' aria-hidden='true'>
 							🟦
 						</div>

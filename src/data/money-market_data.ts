@@ -1,4 +1,4 @@
-export const data = `date,Money Market Total Net Assets (ETF & Fund) ,Recession?
+export const data = `date,Money Market Total Net Assets (ETF & Fund) ,Recession
 01/04/2000,1.47,1
 01/05/2000,1.52,1
 01/06/2000,1.55,1
