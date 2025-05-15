@@ -12,7 +12,12 @@ import PeriodAreas from './modules/PeriodAreas'
 
 import './chart.scss'
 
-import type { TimelineChartConfig, TimelineChartDataEntry, TimelineChartScales } from '@/types'
+import type {
+	Modules,
+	TimelineChartConfig,
+	TimelineChartDataEntry,
+	TimelineChartScales,
+} from '@/types'
 
 import { YAxisSide } from '@/enums'
 import Legend from './modules/Legend'
@@ -21,7 +26,6 @@ import { useSvgMeasure } from '@/lib/useSvgMeasure'
 type Props = {
 	config: TimelineChartConfig
 	data: TimelineChartDataEntry[]
-	series: string[]
 }
 
 const moduleComponents = {
@@ -35,7 +39,7 @@ const modulesSorter = (ma: Modules, mb: Modules) => {
 	return modulesOrder.indexOf(ma.type) - modulesOrder.indexOf(mb.type)
 }
 
-const TimelineChart = ({ data, series, config }: Props) => {
+const TimelineChart = ({ data, config }: Props) => {
 	const { width, height, marginAdjust, xAxisConfig, yAxisConfig, legend, modules } = config
 	const [plotRef, dimensions] = usePlotMeasure(width, height)
 	const [svgRef, { svgLeft, svgRight, svgTop, svgBottom }] = useSvgMeasure(width, height)
@@ -64,10 +68,10 @@ const TimelineChart = ({ data, series, config }: Props) => {
 	const style = {
 		width,
 		height,
-		'--margin-left': `${Math.max(marginAdjust?.left || 0, svgLeft || 0)}px`,
-		'--margin-right': `${Math.max(marginAdjust?.right || 0, svgRight || 0)}px`,
-		'--margin-top': `${Math.max(marginAdjust?.top || 0, svgTop || 0)}px`,
-		'--margin-bottom': `${Math.max(marginAdjust?.bottom || 0, svgBottom || 0)}px`,
+		'--margin-left': `${Math.max(marginAdjust?.left || 20, svgLeft || 0)}px`,
+		'--margin-right': `${Math.max(marginAdjust?.right || 25, svgRight || 0)}px`,
+		'--margin-top': `${Math.max(marginAdjust?.top || 10, svgTop || 0)}px`,
+		'--margin-bottom': `${Math.max(marginAdjust?.bottom || 10, svgBottom || 0)}px`,
 	}
 
 	const underModules = modules?.filter((m) => m.type === 'periodAreas')

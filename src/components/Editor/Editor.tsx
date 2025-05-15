@@ -6,12 +6,13 @@ import Papa from 'papaparse'
 import { timeParse } from 'd3'
 import { useList, useObjectState } from '@uidotdev/usehooks'
 
-import type { Modules, TimelineChartConfig, TimelineChartDataEntry } from '@/types'
+import LiveEditor from './LiveEditor'
+import { getXAxisConfig, getYAxisConfig } from '@/lib/chartUtils'
+
+import type { TimelineChartConfig, TimelineChartDataEntry } from '@/types'
+import { ChartColor, YAxisSide } from '@/enums'
 
 import './editor.scss'
-import { getTimeDomain, getXAxisConfig, getYAxisConfig } from '@/lib/chartUtils'
-import { ChartColor, YAxisSide } from '@/enums'
-import TimelineChart from '../Chart'
 
 type SeriesConfigProps = {
 	name: string
@@ -163,14 +164,14 @@ const Editor = () => {
 
 	const generateChartConfig = useCallback(() => {
 		if (data) {
-			const yAxisConfig = getYAxisConfig(data, seriesConfig)
-
 			const chartConfig: TimelineChartConfig = {
 				width: chartSize.chartWidth,
 				height: chartSize.chartHeight,
 				xAxisConfig: getXAxisConfig(data),
-				yAxisConfig,
-				legend: seriesConfig.map((c) => ({ text: c.legend, color: c.color as ChartColor })),
+				yAxisConfig: getYAxisConfig(data, seriesConfig),
+				legend: seriesConfig
+					.filter((s) => s.showLegend)
+					.map((c) => ({ text: c.legend, color: c.color as ChartColor })),
 				//@ts-ignore
 				modules: seriesConfig.map((c, id) => ({
 					type: c.type,
@@ -240,9 +241,7 @@ const Editor = () => {
 				</div>
 			</div>
 			{!showModal && data && templateConfig && (
-				<div className='template-box'>
-					<TimelineChart data={data} config={templateConfig} series={[]}></TimelineChart>
-				</div>
+				<LiveEditor data={data} initialConfig={templateConfig}></LiveEditor>
 			)}
 		</div>
 	)

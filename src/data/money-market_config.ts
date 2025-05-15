@@ -21,7 +21,7 @@ export const config: TimelineChartConfig = {
 				startVal: 1,
 				numTicks: 7,
 				tickInterval: 1,
-				numberFormat: ',.0f',
+				decimals: 1,
 			},
 			label: 'Trillions($)',
 			guideLines: true,

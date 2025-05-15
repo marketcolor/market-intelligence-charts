@@ -9,6 +9,7 @@ import type { TimelineChartDataEntry, TimelineChartRawDataEntry } from '@types'
 
 import { data as rawData } from '../data/money-market_data'
 import { config } from '../data/money-market_config'
+import LiveEditor from '@/components/Editor/LiveEditor'
 // import { data as rawData } from '../data/fed-funds_data'
 // import { config } from '../data/fed-funds_config'
 // import { data as rawData } from '../data/stock-prices_data'
@@ -35,17 +36,17 @@ const data: TimelineChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
 
 <Layout>
 	<div class='container'>
-		<TimelineChart data={data} series={series} config={config} client:load />
+		<LiveEditor data={data} initialConfig={config} client:load />
+		<!-- <TimelineChart data={data} config={config} client:load /> -->
 	</div>
 </Layout>
 
 <style>
 	.container {
 		height: 100%;
-		display: grid;
-		place-content: center;
+		/* display: grid; */
 
-		background-image: linear-gradient(45deg, #cccccc80 25%, transparent 25%),
+		/* background-image: linear-gradient(45deg, #cccccc80 25%, transparent 25%),
 			linear-gradient(-45deg, #cccccc80 25%, transparent 25%),
 			linear-gradient(45deg, transparent 75%, #cccccc80 75%),
 			linear-gradient(-45deg, transparent 75%, #cccccc80 75%);
@@ -55,6 +56,6 @@ const data: TimelineChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
 			0 10px,
 			10px -10px,
 			-10px 0px;
-		background-repeat: repeat;
+		background-repeat: repeat; */
 	}
 </style>

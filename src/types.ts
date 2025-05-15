@@ -10,10 +10,12 @@ export type PlotDimensions = {
 	bottomMargin: number
 }
 
-export type ChartMeasures = PlotDimensions & {
+export type ChartSize = {
 	width: number
 	height: number
 }
+
+export type ChartMeasures = PlotDimensions & ChartSize
 
 export type ChartMargins = {
 	top?: number
@@ -50,7 +52,7 @@ export type NumericTicksConfig = {
 	startVal: number
 	numTicks: number
 	tickInterval: number
-	numberFormat?: string
+	decimals?: number
 }
 
 export type TickObject<T extends number | string | Date> = {

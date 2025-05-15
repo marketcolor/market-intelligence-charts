@@ -1,0 +1,68 @@
+.live-editor {
+	height: 100%;
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-template-areas: 'controls preview';
+}
+
+.controls-container {
+	grid-area: controls;
+	max-width: 400px;
+	padding: 8px;
+	background-color: #20204080;
+	z-index: 1;
+
+	.control-tab {
+		border: 1px solid #eeeeee;
+
+		.title {
+			background-color: #eee;
+			text-align: center;
+			padding: 4px;
+		}
+
+		.input-block {
+			padding: 8px;
+			display: grid;
+			grid-template-columns: auto 1fr;
+			justify-items: end;
+			align-items: center;
+			gap: 8px;
+
+			&[data-col='3'] {
+				grid-template-columns: auto 1fr auto;
+			}
+			&[data-col='4'] {
+				grid-template-columns: auto 1fr auto 1fr;
+			}
+		}
+	}
+
+	.subtitle {
+		text-transform: uppercase;
+		font-size: smaller;
+		padding: 4px;
+		font-weight: bold;
+	}
+
+	input,
+	select {
+		padding: 4px;
+
+		&[type='number'] {
+			max-width: 100px;
+			text-align: right;
+		}
+		&[type='text'] {
+			max-width: 100px;
+			// text-align: right;
+		}
+	}
+}
+
+.preview-container {
+	grid-area: preview;
+	display: grid;
+	place-items: center;
+	padding: 1rem;
+}

@@ -2,13 +2,11 @@ import {
 	area,
 	format,
 	line,
-	scaleBand,
 	scaleLinear,
 	scaleTime,
 	timeDay,
 	timeFormat,
 	timeMonth,
-	timeParse,
 	timeWeek,
 	timeYear,
 	curveStep,
@@ -16,16 +14,12 @@ import {
 	max,
 	min,
 	ticks,
-	nice,
-	timeTicks,
-	timeTickInterval,
 	utcTicks,
-	utcTickInterval,
 	utcYear,
 	utcMonth,
 } from 'd3'
 
-import type { ScaleBand, ScaleLinear, ScaleTime } from 'd3'
+import type { ScaleLinear, ScaleTime } from 'd3'
 
 import type {
 	NumericTicksConfig,
@@ -52,8 +46,8 @@ export const getTimeScale = (
 }
 
 export const getNumericTicks = (config: NumericTicksConfig): TickObject<number>[] => {
-	const { startVal, tickInterval, numTicks, numberFormat = '' } = config
-	const formatter = format(numberFormat)
+	const { startVal, tickInterval, numTicks, decimals } = config
+	const formatter = format(decimals ? `,.${decimals}f` : '')
 	return new Array(numTicks).fill(startVal).map((t, id) => {
 		const value = t + id * tickInterval
 		const label = formatter(value)
@@ -196,7 +190,7 @@ export const getYAxisConfig = (data: TimelineChartDataEntry[], series: { side: Y
 				startVal: cfgTicks[0],
 				numTicks: cfgTicks.length,
 				tickInterval: cfgTicks[1] - cfgTicks[0],
-				numberFormat: ',.0f',
+				decimals: 0,
 			},
 		}
 	}

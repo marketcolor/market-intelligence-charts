@@ -26,7 +26,7 @@ export const config: TimelineChartConfig = {
 				startVal: 15,
 				numTicks: 6,
 				tickInterval: 5,
-				numberFormat: ',.2r',
+				decimals: ',.2r',
 			},
 			guideLines: true,
 		},

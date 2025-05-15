@@ -9,7 +9,6 @@ import node from '@astrojs/node'
 export default defineConfig({
 	output: 'server',
 	integrations: [react()],
-
 	adapter: node({
 		mode: 'standalone',
 	}),
