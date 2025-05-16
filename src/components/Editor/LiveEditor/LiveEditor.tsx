@@ -59,7 +59,9 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		right: initialConfig.yAxisConfig.right,
 	})
 
-	const [modules, { updateAt: updateModule }] = useList(config.modules ? [...config.modules] : [])
+	const [modules, { updateAt: updateModule }] = useList(
+		initialConfig.modules ? [...initialConfig.modules] : []
+	)
 
 	const updatedConfig: TimelineChartConfig = {
 		...initialConfig,
@@ -72,7 +74,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		yAxisConfig: yAxis,
 		modules,
 	}
-	// console.log(modules)
+	// console.log(updatedConfig.modules)
 
 	return (
 		<div className='live-editor'>

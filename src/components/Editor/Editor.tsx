@@ -241,7 +241,11 @@ const Editor = () => {
 				</div>
 			</div>
 			{!showModal && data && templateConfig && (
-				<LiveEditor data={data} initialConfig={templateConfig}></LiveEditor>
+				<LiveEditor
+					data={data}
+					initialConfig={templateConfig}
+					series={seriesConfig.map((s) => s.name)}
+				></LiveEditor>
 			)}
 		</div>
 	)
