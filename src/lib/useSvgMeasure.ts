@@ -1,10 +1,11 @@
-import { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react'
+import { useDebounce } from '@uidotdev/usehooks'
+import { useState, useRef, useCallback, useEffect, useLayoutEffect, type RefObject } from 'react'
 
 type SvgDimensions = {
 	svgWidth: number | null
 	svgHeight: number | null
-	svgLeft: number | null
-	svgRight: number | null
+	svgLeft: number
+	svgRight: number
 	svgTop: number | null
 	svgBottom: number | null
 }
@@ -12,69 +13,72 @@ type SvgDimensions = {
 export function useSvgMeasure(
 	targetWidth: number,
 	targetHeight: number
-): [(node: SVGGElement) => void, SvgDimensions] {
+): [RefObject<SVGGElement | null>, SvgDimensions] {
 	const [dimensions, setDimensions] = useState<SvgDimensions>({
 		svgWidth: null,
 		svgHeight: null,
-		svgLeft: null,
-		svgRight: null,
+		svgLeft: 0,
+		svgRight: 0,
 		svgTop: null,
 		svgBottom: null,
 	})
 	const [bbox, setBBox] = useState<DOMRect>()
+	const debouncedBbox = useDebounce(bbox, 1000)
 
-	const previousObserver = useRef<ResizeObserver>(null)
+	const ref = useRef<SVGGElement>(null)
 
-	const customRef = useCallback((node: SVGGElement) => {
-		if (previousObserver.current) {
-			previousObserver.current.disconnect()
-			previousObserver.current = null
-		}
+	useEffect(() => {
+		const element = ref.current
+		if (!element) return
+		const observer = new ResizeObserver(([entry]) => {
+			if (entry && entry.target.tagName === 'g') {
+				const gEl = entry.target as SVGGElement
+				const box = gEl.getBBox()
+				setBBox(box)
+			}
+		})
+		observer.observe(element)
 
-		if (node?.nodeType === Node.ELEMENT_NODE) {
-			const observer = new ResizeObserver(([entry]) => {
-				if (entry && entry.target.tagName === 'g') {
-					const gEl = entry.target as SVGGElement
-					const box = gEl.getBBox()
-					setBBox(box)
-				}
-			})
-
-			observer.observe(node)
-			previousObserver.current = observer
+		return () => {
+			observer.disconnect()
 		}
 	}, [])
 
-	// useLayoutEffect(() => {
-	// 	if (bbox) {
-	// 		const bleedLeft = bbox.x < 0 ? Math.ceil(-bbox.x) : 0
-	// 		const svgLeft =
-	// 			bleedLeft > 0 && bleedLeft !== dimensions.svgLeft ? bleedLeft : dimensions.svgLeft
+	// useEffect(() => {
+	// 	if (debouncedBbox) {
+	// 		const bleedLeft = debouncedBbox.x < 0 ? Math.ceil(-debouncedBbox.x) : 0
+	// 		// console.log(debouncedBbox.x)
+	// 		// console.log(bleedLeft)
+	// 		const svgLeft = bleedLeft <= 0 ? dimensions.svgLeft : bleedLeft + 1
 
-	// 		const bleedRight = Math.ceil(bbox.width - targetWidth + -bbox.x)
+	// 		const bleedRight = Math.ceil(debouncedBbox.width - targetWidth + debouncedBbox.x)
+	// 		console.log(bleedRight)
+	// 		const svgRight = bleedRight <= 0 ? dimensions.svgRight : bleedRight + 1
+	// 		console.log(svgRight)
 
-	// 		const svgRight =
-	// 			bleedRight > 0 && bleedRight !== dimensions.svgRight ? bleedRight : dimensions.svgRight
+	// 		// const svgRight =
+	// 		// 	bleedRight > 0 && bleedRight !== dimensions.svgRight ? bleedRight : dimensions.svgRight
+	// 		// console.log(svgRight)
 
-	// 		const bleedTop = bbox.y < 0 ? Math.ceil(-bbox.y) : 0
-	// 		const svgTop = bleedTop > 0 && bleedTop !== dimensions.svgTop ? bleedTop : dimensions.svgTop
+	// 		// const bleedTop = debouncedBbox.y < 0 ? Math.ceil(-debouncedBbox.y) : 0
+	// 		// const svgTop = bleedTop > 0 && bleedTop !== dimensions.svgTop ? bleedTop : dimensions.svgTop
 
-	// 		const bleedBottom = Math.ceil(bbox.height - targetHeight + bbox.y)
-	// 		const svgBottom =
-	// 			bleedBottom > 0 && bleedBottom !== dimensions.svgBottom ? bleedBottom : dimensions.svgBottom
+	// 		// const bleedBottom = Math.ceil(debouncedBbox.height - targetHeight + debouncedBbox.y)
+	// 		// const svgBottom =
+	// 		// 	bleedBottom > 0 && bleedBottom !== dimensions.svgBottom ? bleedBottom : dimensions.svgBottom
 
 	// 		const newDimensions: SvgDimensions = {
-	// 			svgWidth: bbox.width,
-	// 			svgHeight: bbox.height,
+	// 			svgWidth: debouncedBbox.width,
+	// 			svgHeight: debouncedBbox.height,
 	// 			svgLeft,
 	// 			svgRight,
-	// 			svgBottom,
-	// 			svgTop,
+	// 			svgBottom: null,
+	// 			svgTop: null,
 	// 		}
 
-	// 		setDimensions(newDimensions)
+	// 		// setDimensions(newDimensions)
 	// 	}
-	// }, [bbox])
+	// }, [debouncedBbox])
 
-	return [customRef, dimensions]
+	return [ref, dimensions]
 }

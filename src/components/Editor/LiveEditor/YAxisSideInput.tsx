@@ -65,7 +65,7 @@ const YAxisSideInput = ({ side, initialConfig, handleChange }: Props) => {
 				<NumberInput
 					label='Ticks number'
 					value={yAxisTicks.numTicks!}
-					min={2}
+					min={0}
 					hasRange={false}
 					//@ts-ignore
 					handleChange={(v) => setYAxisTicks(() => ({ numTicks: Number(v) }))}

@@ -1,8 +1,28 @@
 .live-editor {
+	position: relative;
 	height: 100%;
 	display: grid;
 	grid-template-columns: auto 1fr;
 	grid-template-areas: 'controls preview';
+}
+
+.actions {
+	position: fixed;
+	top: 0;
+	right: 0;
+	padding: 1rem;
+	display: flex;
+	gap: 1rem;
+
+	button {
+		padding: 8px 4px;
+	}
+
+	.temp-svg-container {
+		width: 0;
+		height: 0;
+		overflow: hidden;
+	}
 }
 
 .controls-container {

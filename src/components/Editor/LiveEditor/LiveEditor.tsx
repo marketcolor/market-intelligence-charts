@@ -1,12 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useObjectState } from '@uidotdev/usehooks'
+import Session from 'svg-text-to-path'
 
 import TimelineChart from '@/components/Chart'
 import { ControlTab, InputBlock, NumberInput, DateInput, Select } from './Inputs'
 import YAxisSideInput from './YAxisSideInput'
 
+import { fonts } from '@styles/theme'
 import './live-editor.scss'
 
 import type { TimelineChartConfig, TimelineChartDataEntry, YAxisConfig } from '@/types'
@@ -31,6 +33,8 @@ const defaultYAxisConfig: YAxisConfig = {
 
 const LiveEditor = ({ data, initialConfig }: Props) => {
 	const [config, setConfig] = useState<TimelineChartConfig>(structuredClone(initialConfig))
+
+	const tempContainer = useRef<HTMLDivElement>(null)
 
 	const [size, setSize] = useObjectState({
 		width: initialConfig.width,
@@ -60,10 +64,83 @@ const LiveEditor = ({ data, initialConfig }: Props) => {
 		yAxisConfig: yAxis,
 	}
 
+	const generateTempSvg = () => {
+		if (tempContainer.current) {
+			const tempEl = tempContainer.current
+			const chartSvg = document.querySelector<SVGElement>('#chart')!
+			const cloneSvg = chartSvg?.cloneNode(true) as SVGElement
+			cloneSvg.removeAttribute('id')
+			tempEl.append(cloneSvg)
+
+			const baselineElements = tempEl.querySelectorAll<SVGAElement>('[dominant-baseline]')
+			baselineElements.forEach((el) => {
+				const rect = el.getBoundingClientRect()
+				const { x, y } = rect
+				el.removeAttribute('dominant-baseline')
+
+				const newRect = el.getBoundingClientRect()
+
+				if (newRect.y !== y) {
+					const originalY = Number(el.getAttribute('y'))
+					el.setAttribute('y', `${y - newRect.y + (originalY || 0)}`)
+				}
+				if (newRect.x !== x) {
+					const originalY = Number(el.getAttribute('y'))
+					el.setAttribute('y', `${x - newRect.x + (originalY || 0)}`)
+				}
+			})
+			return cloneSvg
+		}
+	}
+
+	const saveSvg = () => {
+		const cloneSvg = generateTempSvg()
+		if (cloneSvg) {
+			initSvgDownload(cloneSvg.outerHTML)
+			cleanup(cloneSvg)
+		}
+	}
+
+	const saveOutlinedSvg = async () => {
+		const cloneSvg = generateTempSvg()
+		if (cloneSvg) {
+			// @ts-ignore
+			let session = new Session(cloneSvg, {
+				fonts: {
+					[fonts.manulife]: [
+						{
+							source: '../fonts/ManulifeJHSansOptimized.ttf',
+						},
+					],
+				},
+			})
+			await session.replaceAll(['text[data-outlined]'])
+			initSvgDownload(cloneSvg.outerHTML)
+			cleanup(cloneSvg)
+		}
+	}
+
+	const initSvgDownload = (svgString: string) => {
+		const a = document.createElement('a')
+		const blob = new Blob([svgString], { type: 'text/svg' })
+		const url = URL.createObjectURL(blob)
+		a.setAttribute('href', url)
+		a.setAttribute('download', 'chart.svg')
+		a.click()
+	}
+
+	const cleanup = (cloneSvg: SVGElement) => {
+		cloneSvg.parentNode?.removeChild(cloneSvg)
+	}
 	// console.log(updatedConfig)
 
 	return (
 		<div className='live-editor'>
+			<div className='actions'>
+				<button onClick={saveSvg}>Save svg</button>
+				<button onClick={saveOutlinedSvg}>Save outlined svg</button>
+				<div className='temp-svg-container' ref={tempContainer}></div>
+			</div>
 			<div className='controls-container'>
 				<ControlTab title='Size'>
 					<InputBlock numColumns='3'>

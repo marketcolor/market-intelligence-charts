@@ -46,8 +46,9 @@ export const getTimeScale = (
 }
 
 export const getNumericTicks = (config: NumericTicksConfig): TickObject<number>[] => {
-	const { startVal, tickInterval, numTicks, decimals } = config
+	const { startVal, tickInterval, numTicks = 0, decimals } = config
 	const formatter = format(decimals ? `,.${decimals}f` : '')
+
 	return new Array(numTicks).fill(startVal).map((t, id) => {
 		const value = t + id * tickInterval
 		const label = formatter(value)

@@ -82,6 +82,7 @@ const Svg = memo(({ side, ticks, scale, label, guides, measures, ticksWidth }: S
 						textAnchor='end'
 						dominantBaseline='central'
 						fill={colors.darkNavy}
+						data-outlined='outlined'
 					>
 						{label}
 					</text>
@@ -106,6 +107,7 @@ const Svg = memo(({ side, ticks, scale, label, guides, measures, ticksWidth }: S
 						dominantBaseline={side === 'left' ? 'text-before-edge' : 'text-after-edge'}
 						fill={colors.darkNavy}
 						transform='rotate(-90)'
+						data-outlined='outlined'
 					>
 						{label}
 					</text>
@@ -132,7 +134,7 @@ const Html = memo(({ side, ticks, scale, label, updateTicksWidth }: SubProps) =>
 					<div className='label'>{label}</div>
 				</div>
 			)}
-			{!!ticks.length && (
+			{ticks.length > 0 && (
 				<div className='ticks-container' ref={ticksRef}>
 					{ticks.map(({ value, label }, id) => (
 						<div className='tick' key={id} style={{ transform: `translate(0, ${scale(value)}px)` }}>

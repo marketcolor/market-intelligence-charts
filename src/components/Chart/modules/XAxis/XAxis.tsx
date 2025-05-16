@@ -73,6 +73,7 @@ const Svg = memo(({ ticks, scale, guides, measures }: SubProps) => {
 						textAnchor='middle'
 						dominantBaseline='text-before-edge'
 						fill={colors.darkNavy}
+						data-outlined='outlined'
 					>
 						{label}
 					</text>

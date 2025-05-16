@@ -68,10 +68,10 @@ const TimelineChart = ({ data, config }: Props) => {
 	const style = {
 		width,
 		height,
-		'--margin-left': `${Math.max(marginAdjust?.left || 20, svgLeft || 0)}px`,
-		'--margin-right': `${Math.max(marginAdjust?.right || 25, svgRight || 0)}px`,
-		'--margin-top': `${Math.max(marginAdjust?.top || 10, svgTop || 0)}px`,
-		'--margin-bottom': `${Math.max(marginAdjust?.bottom || 10, svgBottom || 0)}px`,
+		'--margin-left': `${Math.max(marginAdjust?.left || 0, svgLeft || 0)}px`,
+		'--margin-right': `${Math.max(marginAdjust?.right || 0, svgRight || 0)}px`,
+		'--margin-top': `${Math.max(marginAdjust?.top || 0, svgTop || 0)}px`,
+		'--margin-bottom': `${Math.max(marginAdjust?.bottom || 0, svgBottom || 0)}px`,
 	}
 
 	const underModules = modules?.filter((m) => m.type === 'periodAreas')
@@ -87,7 +87,7 @@ const TimelineChart = ({ data, config }: Props) => {
 				{/* @ts-ignore */}
 				<div className='plot-container' ref={plotRef}></div>
 			</div>
-			<svg className='chart' xmlns='http://www.w3.org/2000/svg' width={width} height={height}>
+			<svg id='chart' xmlns='http://www.w3.org/2000/svg' width={width} height={height}>
 				<g ref={svgRef}>
 					{legend && <Legend config={legend} htmlRef={htmlOverlay.current}></Legend>}
 					{underModules &&

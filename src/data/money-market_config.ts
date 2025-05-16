@@ -7,7 +7,7 @@ export const config: TimelineChartConfig = {
 	xAxisConfig: {
 		domain: ['2000-04-01', '2025-02-01'],
 		ticksConfig: {
-			startDate: '2001-02-01',
+			startDate: '2001-04-01',
 			numTicks: 9,
 			dateInterval: 'year',
 			intervalStep: 3,
