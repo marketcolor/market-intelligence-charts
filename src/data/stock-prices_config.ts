@@ -1,4 +1,4 @@
-import { ChartColor, YAxisSide } from '@/enums'
+import { ChartColor, ModuleType, YAxisSide } from '@/enums'
 import type { TimelineChartConfig } from '@/types'
 
 const series = ['S&P 500 Index', 'S&P 500 EPS forecast, next 12 months']
@@ -51,13 +51,13 @@ export const config: TimelineChartConfig = {
 	],
 	modules: [
 		{
-			type: 'lineChart',
+			type: ModuleType.LineChart,
 			series: 0,
 			side: YAxisSide.Left,
 			color: ChartColor.Green,
 		},
 		{
-			type: 'lineChart',
+			type: ModuleType.AreaChart,
 			series: 1,
 			side: YAxisSide.Right,
 			color: ChartColor.Blue,

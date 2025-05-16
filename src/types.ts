@@ -1,5 +1,5 @@
 import type { ScaleLinear, ScaleTime } from 'd3'
-import type { ChartColor, YAxisSide } from './enums'
+import type { ChartColor, ModuleType, YAxisSide } from './enums'
 
 export type PlotDimensions = {
 	plotWidth: number
@@ -90,7 +90,7 @@ export type TimelineChartDataEntry = [Date, ...number[]]
 //
 // modules config
 export type LineChartConfig = {
-	type: 'lineChart'
+	type: ModuleType.LineChart
 	series: number
 	side: YAxisSide
 	color: ChartColor
@@ -103,12 +103,12 @@ export type LineChartConfig = {
 }
 
 export type PeriodAreasConfig = {
-	type: 'periodAreas'
+	type: ModuleType.PeriodAreas
 	series: number
 }
 
 export type AreaChartConfig = {
-	type: 'areaChart'
+	type: ModuleType.AreaChart
 	series: number
 	side: YAxisSide
 	color: ChartColor

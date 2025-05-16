@@ -36,7 +36,7 @@ const data: TimelineChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
 
 <Layout>
 	<div class='container'>
-		<LiveEditor data={data} initialConfig={config} client:load />
+		<LiveEditor data={data} initialConfig={config} series={series} client:load />
 		<!-- <TimelineChart data={data} config={config} client:load /> -->
 	</div>
 </Layout>

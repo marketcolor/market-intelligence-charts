@@ -26,9 +26,11 @@
 }
 
 .controls-container {
+	position: relative;
 	grid-area: controls;
 	max-width: 400px;
 	padding: 8px;
+	padding-bottom: 10vh;
 	background-color: #20204080;
 	z-index: 1;
 
@@ -44,16 +46,26 @@
 		.input-block {
 			padding: 8px;
 			display: grid;
-			grid-template-columns: auto 1fr;
-			justify-items: end;
+			grid-template-columns: 1fr;
+			// justify-items: end;
 			align-items: center;
 			gap: 8px;
 
+			&[data-col='2'] {
+				grid-template-columns: auto 1fr;
+			}
 			&[data-col='3'] {
 				grid-template-columns: auto 1fr auto;
 			}
 			&[data-col='4'] {
 				grid-template-columns: auto 1fr auto 1fr;
+			}
+
+			&[data-level='1'] {
+				padding: 12px 8px;
+				background-color: #00000020;
+				border-top: 1px solid #fefeffaa;
+				border-bottom: 1px solid #fefeffaa;
 			}
 		}
 	}
@@ -71,21 +83,24 @@
 	input,
 	select {
 		padding: 4px;
-
+		width: 100%;
 		&[type='number'] {
-			width: 100%;
 			text-align: right;
 		}
 		&[type='text'] {
-			width: 100%;
-			min-width: 0;
 		}
 	}
 }
 
 .preview-container {
 	grid-area: preview;
-	display: grid;
-	place-items: center;
-	padding: 1rem;
+
+	> .sticky-container {
+		position: sticky;
+		top: 0;
+		height: 100vh;
+		display: grid;
+		place-items: center;
+		padding: 1rem;
+	}
 }

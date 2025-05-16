@@ -54,6 +54,8 @@ const TimelineChart = ({ data, config }: Props) => {
 	const [plotRef, dimensions] = usePlotMeasure(width, height)
 	const [svgRef, { svgLeft, svgRight, svgTop, svgBottom }] = useSvgMeasure(width, height)
 
+	console.log(modules)
+
 	const htmlOverlay = useRef<HTMLDivElement>(null)
 
 	const chartScales: TimelineChartScales = {

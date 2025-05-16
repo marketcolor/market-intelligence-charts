@@ -19,3 +19,9 @@ export enum ChartColor {
 	Blue = '#0000C1',
 	RecessionGrey = '#dbdbdb',
 }
+
+export enum ModuleType {
+	LineChart = 'lineChart',
+	AreaChart = 'areaChart',
+	PeriodAreas = 'periodAreas',
+}

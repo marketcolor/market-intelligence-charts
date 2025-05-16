@@ -11,13 +11,15 @@ export const ControlTab = ({ title, children }: { title: string; children?: Reac
 
 export const InputBlock = ({
 	numColumns = '2',
+	level = 0,
 	children,
 }: {
 	numColumns?: string
+	level?: number
 	children?: ReactNode
 }) => {
 	return (
-		<div className='input-block' data-col={numColumns}>
+		<div className='input-block' data-col={numColumns} data-level={level}>
 			{children}
 		</div>
 	)
