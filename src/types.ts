@@ -24,6 +24,8 @@ export type ChartMargins = {
 	right?: number
 }
 export type BaseChartConfig = {
+	title?: string
+	description?: string
 	width: number
 	height: number
 	marginAdjust?: ChartMargins

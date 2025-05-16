@@ -40,7 +40,17 @@ const modulesSorter = (ma: Modules, mb: Modules) => {
 }
 
 const TimelineChart = ({ data, config }: Props) => {
-	const { width, height, marginAdjust, xAxisConfig, yAxisConfig, legend, modules } = config
+	const {
+		title,
+		description,
+		width,
+		height,
+		marginAdjust,
+		xAxisConfig,
+		yAxisConfig,
+		legend,
+		modules,
+	} = config
 	const [plotRef, dimensions] = usePlotMeasure(width, height)
 	const [svgRef, { svgLeft, svgRight, svgTop, svgBottom }] = useSvgMeasure(width, height)
 
@@ -88,6 +98,8 @@ const TimelineChart = ({ data, config }: Props) => {
 				<div className='plot-container' ref={plotRef}></div>
 			</div>
 			<svg id='chart' xmlns='http://www.w3.org/2000/svg' width={width} height={height}>
+				{title && <title id='mi-chart-title'>{title}</title>}
+				{description && <desc id='mi-chart-description'>{description}</desc>}
 				<g ref={svgRef}>
 					{legend && <Legend config={legend} htmlRef={htmlOverlay.current}></Legend>}
 					{underModules &&

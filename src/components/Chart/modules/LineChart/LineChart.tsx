@@ -27,9 +27,9 @@ const LineChart = ({ config, data, scales, measures }: Props) => {
 	return (
 		<g>
 			<defs>
-				<mask id={`line-chart-mask-${series}`}>
-					<rect width={plotWidth} height={plotHeight} fill='white'></rect>
-				</mask>
+				<clipPath id={`line-chart-clip-${series}`}>
+					<rect width={plotWidth} height={plotHeight}></rect>
+				</clipPath>
 				{threshold && (
 					<linearGradient
 						gradientUnits='userSpaceOnUse'
@@ -44,7 +44,10 @@ const LineChart = ({ config, data, scales, measures }: Props) => {
 					</linearGradient>
 				)}
 			</defs>
-			<g transform={`translate(${leftMargin}, ${topMargin})`} mask={`url(#line-chart-mask-${series})`}>
+			<g
+				transform={`translate(${leftMargin}, ${topMargin})`}
+				clipPath={`url(#line-chart-clip-${series})`}
+			>
 				{threshold && (
 					<line
 						x2={plotWidth}

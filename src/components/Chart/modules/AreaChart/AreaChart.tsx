@@ -25,11 +25,14 @@ const AreaChart = ({ config, data, scales, measures }: Props) => {
 	return (
 		<g>
 			<defs>
-				<mask id={`area-chart-mask-${series}`}>
-					<rect width={plotWidth} height={plotHeight} fill='white'></rect>
-				</mask>
+				<clipPath id={`area-chart-clip-${series}`}>
+					<rect width={plotWidth} height={plotHeight}></rect>
+				</clipPath>
 			</defs>
-			<g transform={`translate(${leftMargin}, ${topMargin})`} mask={`url(#area-chart-mask-${series})`}>
+			<g
+				transform={`translate(${leftMargin}, ${topMargin})`}
+				clipPath={`url(#area-chart-clip-${series})`}
+			>
 				<path
 					key={series + 1}
 					d={getAreaString(data, 0, xScale, series + 1, yScale, plotHeight)!}

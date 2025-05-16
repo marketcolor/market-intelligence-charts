@@ -4,6 +4,8 @@ import type { TimelineChartConfig } from '@/types'
 const series = ['S&P 500 Index', 'S&P 500 EPS forecast, next 12 months']
 
 export const config: TimelineChartConfig = {
+	title: 'Stock prices and earnings',
+	description: 'Stock prices and earnings estimates tend to move together over time',
 	width: 800,
 	height: 500,
 	xAxisConfig: {
