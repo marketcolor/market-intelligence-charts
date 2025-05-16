@@ -19,22 +19,22 @@ export const config: TimelineChartConfig = {
 	yAxisConfig: {
 		left: {
 			domain: [1500, 6500],
-			// ticksConfig: {
-			// 	startVal: 1500,
-			// 	numTicks: 11,
-			// 	tickInterval: 500,
-			// 	decimals: 0,
-			// },
+			ticksConfig: {
+				startVal: 1500,
+				numTicks: 11,
+				tickInterval: 500,
+				decimals: 0,
+			},
 			guideLines: true,
 		},
 		right: {
 			domain: [120, 320],
-			// ticksConfig: {
-			// 	startVal: 120,
-			// 	numTicks: 11,
-			// 	tickInterval: 20,
-			// 	decimals: 0,
-			// },
+			ticksConfig: {
+				startVal: 120,
+				numTicks: 11,
+				tickInterval: 20,
+				decimals: 0,
+			},
 		},
 	},
 	legend: [
