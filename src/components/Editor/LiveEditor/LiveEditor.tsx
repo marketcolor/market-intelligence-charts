@@ -5,7 +5,7 @@ import { useObjectState } from '@uidotdev/usehooks'
 import Session from 'svg-text-to-path'
 
 import TimelineChart from '@/components/Chart'
-import { ControlTab, InputBlock, NumberInput, DateInput, Select } from './Inputs'
+import { ControlTab, InputBlock, NumberInput, DateInput, Select, TextInput } from './Inputs'
 import YAxisSideInput from './YAxisSideInput'
 
 import { fonts } from '@styles/theme'
@@ -36,6 +36,11 @@ const LiveEditor = ({ data, initialConfig }: Props) => {
 
 	const tempContainer = useRef<HTMLDivElement>(null)
 
+	const [info, setInfo] = useObjectState({
+		title: initialConfig.title,
+		description: initialConfig.description,
+	})
+
 	const [size, setSize] = useObjectState({
 		width: initialConfig.width,
 		height: initialConfig.height,
@@ -56,6 +61,7 @@ const LiveEditor = ({ data, initialConfig }: Props) => {
 
 	const updatedConfig: TimelineChartConfig = {
 		...initialConfig,
+		...info,
 		...size,
 		xAxisConfig: {
 			...initialConfig.xAxisConfig,
@@ -142,6 +148,22 @@ const LiveEditor = ({ data, initialConfig }: Props) => {
 				<div className='temp-svg-container' ref={tempContainer}></div>
 			</div>
 			<div className='controls-container'>
+				<ControlTab title='Info'>
+					<InputBlock numColumns='2'>
+						<TextInput
+							label='Title'
+							value={info.title || ''}
+							//@ts-ignore
+							handleChange={(v) => setInfo(() => ({ title: v }))}
+						></TextInput>
+						<TextInput
+							label='Descriptions'
+							value={info.description || ''}
+							//@ts-ignore
+							handleChange={(v) => setInfo(() => ({ description: v }))}
+						></TextInput>
+					</InputBlock>
+				</ControlTab>
 				<ControlTab title='Size'>
 					<InputBlock numColumns='3'>
 						<NumberInput
