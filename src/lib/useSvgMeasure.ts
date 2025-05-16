@@ -46,15 +46,23 @@ export function useSvgMeasure(
 
 	// useEffect(() => {
 	// 	if (debouncedBbox) {
+	// 		const svgWidth = Math.ceil(debouncedBbox.width)
+	// 		const svgHeight = Math.ceil(debouncedBbox.height)
+	// 		console.log(svgWidth, targetWidth)
+
+	// 		if (svgWidth <= targetWidth && svgHeight <= targetHeight) {
+	// 			return
+	// 		}
+
 	// 		const bleedLeft = debouncedBbox.x < 0 ? Math.ceil(-debouncedBbox.x) : 0
 	// 		// console.log(debouncedBbox.x)
-	// 		// console.log(bleedLeft)
-	// 		const svgLeft = bleedLeft <= 0 ? dimensions.svgLeft : bleedLeft + 1
+	// 		console.log(bleedLeft)
+	// 		const svgLeft = bleedLeft <= 0 ? dimensions.svgLeft : bleedLeft
 
 	// 		const bleedRight = Math.ceil(debouncedBbox.width - targetWidth + debouncedBbox.x)
-	// 		console.log(bleedRight)
+	// 		// console.log(bleedRight)
 	// 		const svgRight = bleedRight <= 0 ? dimensions.svgRight : bleedRight + 1
-	// 		console.log(svgRight)
+	// 		// console.log(svgRight)
 
 	// 		// const svgRight =
 	// 		// 	bleedRight > 0 && bleedRight !== dimensions.svgRight ? bleedRight : dimensions.svgRight
@@ -71,7 +79,7 @@ export function useSvgMeasure(
 	// 			svgWidth: debouncedBbox.width,
 	// 			svgHeight: debouncedBbox.height,
 	// 			svgLeft,
-	// 			svgRight,
+	// 			svgRight: 0,
 	// 			svgBottom: null,
 	// 			svgTop: null,
 	// 		}
