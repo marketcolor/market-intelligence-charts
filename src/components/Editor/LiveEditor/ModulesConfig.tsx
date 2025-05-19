@@ -12,9 +12,11 @@ const ChartColorOptions = Object.entries(ChartColor)
 
 const LineChartEditor = ({
 	config,
+	availableAxis,
 	handleChange,
 }: {
 	config: LineChartConfig
+	availableAxis: YAxisSide[]
 	handleChange: Function
 }) => {
 	const [side, setSide] = useState<YAxisSide>(config.side)
@@ -28,7 +30,8 @@ const LineChartEditor = ({
 			<Select
 				label='Axis side'
 				value={config.side}
-				options={Object.values(YAxisSide).map((s) => ({ value: s }))}
+				options={availableAxis.map((s) => ({ value: s }))}
+				// options={Object.values(YAxisSide).map((s) => ({ value: s }))}
 				//@ts-ignore
 				handleChange={(v) => setSide(v)}
 			></Select>
@@ -45,9 +48,11 @@ const LineChartEditor = ({
 
 const AreaChartEditor = ({
 	config,
+	availableAxis,
 	handleChange,
 }: {
 	config: AreaChartConfig
+	availableAxis: YAxisSide[]
 	handleChange: Function
 }) => {
 	const [side, setSide] = useState<YAxisSide>(config.side)
@@ -62,7 +67,8 @@ const AreaChartEditor = ({
 			<Select
 				label='Axis side'
 				value={config.side}
-				options={Object.values(YAxisSide).map((s) => ({ value: s }))}
+				options={availableAxis.map((s) => ({ value: s }))}
+				// options={Object.values(YAxisSide).map((s) => ({ value: s }))}
 				//@ts-ignore
 				handleChange={(v) => setSide(v)}
 			></Select>
@@ -78,24 +84,32 @@ const AreaChartEditor = ({
 }
 
 const PeriodAreasEditor = ({ config }: { config: PeriodAreasConfig }) => {
-	return <span>no additional setting</span>
+	return <span>no additional settings</span>
 }
 
 const moduleEditors = {
-	lineChart: (config: LineChartConfig, handleChange: Function) => (
-		<LineChartEditor config={config} handleChange={handleChange} />
+	lineChart: (config: LineChartConfig, availableAxis: YAxisSide[], handleChange: Function) => (
+		<LineChartEditor config={config} availableAxis={availableAxis} handleChange={handleChange} />
 	),
-	areaChart: (config: AreaChartConfig, handleChange: Function) => (
-		<AreaChartEditor config={config} handleChange={handleChange} />
+	areaChart: (config: AreaChartConfig, availableAxis: YAxisSide[], handleChange: Function) => (
+		<AreaChartEditor config={config} availableAxis={availableAxis} handleChange={handleChange} />
 	),
-	periodAreas: (config: PeriodAreasConfig, handleChange: Function) => (
+	periodAreas: (config: PeriodAreasConfig, availableAxis: YAxisSide, handleChange: Function) => (
 		<PeriodAreasEditor config={config} />
 	),
 }
 
-const ModulesConfig = ({ config, handleChange }: { config: Modules; handleChange: Function }) => {
+const ModulesConfig = ({
+	config,
+	availableAxis,
+	handleChange,
+}: {
+	config: Modules
+	availableAxis: YAxisSide[]
+	handleChange: Function
+}) => {
 	//@ts-ignore
-	return moduleEditors[config.type](config, handleChange)
+	return moduleEditors[config.type](config, availableAxis, handleChange)
 }
 
 export default ModulesConfig

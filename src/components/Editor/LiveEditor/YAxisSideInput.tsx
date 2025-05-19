@@ -38,7 +38,6 @@ const YAxisSideInput = ({ side, initialConfig, handleChange }: Props) => {
 
 	return (
 		<div className='y-axis-side'>
-			<div className='subtitle'>{side} y axis</div>
 			<InputBlock numColumns='2'>
 				<NumberInput
 					label='From'

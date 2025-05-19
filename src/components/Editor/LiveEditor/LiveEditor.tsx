@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useList, useObjectState } from '@uidotdev/usehooks'
 import { TabView, TabPanel } from 'primereact/tabview'
+import { Button } from 'primereact/button'
 
 import TimelineChart from '@/components/Chart'
 import {
@@ -14,6 +15,9 @@ import {
 	TextInput,
 	TextAreaInput,
 } from './Inputs'
+import Toolbar from './Toolbar'
+import ModulesConfig from './ModulesConfig'
+
 import YAxisSideInput from './YAxisSideInput'
 
 import 'primereact/resources/themes/soho-dark/theme.css'
@@ -23,9 +27,6 @@ import './live-editor.scss'
 
 import type { Modules, TimelineChartConfig, TimelineChartDataEntry, YAxisConfig } from '@/types'
 import { ChartColor, ModuleType, YAxisSide } from '@/enums'
-
-import Toolbar from './Toolbar'
-import ModulesConfig from './ModulesConfig'
 
 type Props = {
 	data: TimelineChartDataEntry[]
@@ -86,7 +87,8 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		yAxisConfig: yAxis,
 		modules,
 	}
-	// console.log(updatedConfig.modules)
+
+	const availableYAxis = Object.keys(yAxis).filter((key) => yAxis?.[key as YAxisSide]) as YAxisSide[]
 
 	return (
 		<div className='live-editor'>
@@ -171,44 +173,52 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 					</InputBlock>
 				</ControlTab>
 				<ControlTab title='Y Axis'>
-					{yAxis.left ? (
-						<YAxisSideInput
-							side={YAxisSide.Left}
-							initialConfig={yAxis.left}
-							//@ts-ignore
-							handleChange={(v) => setYAxis(() => ({ left: v }))}
-						></YAxisSideInput>
-					) : (
-						<InputBlock numColumns='2'>
-							<div>Left axis is not defined</div>
-							<button
-								//@ts-ignore
-								onClick={() => setYAxis(() => ({ left: defaultYAxisConfig }))}
-							>
-								Click to create one
-							</button>
-						</InputBlock>
-					)}
-					{yAxis.right ? (
-						<YAxisSideInput
-							side={YAxisSide.Right}
-							initialConfig={yAxis.right}
-							//@ts-ignore
-							handleChange={(v) => setYAxis(() => ({ right: v }))}
-						></YAxisSideInput>
-					) : (
-						<InputBlock numColumns='2'>
-							<div>Right axis is not defined</div>
-							<button
-								//@ts-ignore
-								onClick={() => setYAxis(() => ({ right: defaultYAxisConfig }))}
-							>
-								Click to create one
-							</button>
-						</InputBlock>
-					)}
+					<TabView>
+						<TabPanel header='Left Y Axis'>
+							{yAxis.left ? (
+								<YAxisSideInput
+									side={YAxisSide.Left}
+									initialConfig={yAxis.left}
+									//@ts-ignore
+									handleChange={(v) => setYAxis(() => ({ left: v }))}
+								></YAxisSideInput>
+							) : (
+								<InputBlock numColumns='2'>
+									<div>Left axis is not defined</div>
+									<Button
+										//@ts-ignore
+										onClick={() => setYAxis(() => ({ left: defaultYAxisConfig }))}
+									>
+										Click to create one
+									</Button>
+								</InputBlock>
+							)}
+						</TabPanel>
+						<TabPanel header='Right Y Axis'>
+							{yAxis.right ? (
+								<YAxisSideInput
+									side={YAxisSide.Right}
+									initialConfig={yAxis.right}
+									//@ts-ignore
+									handleChange={(v) => setYAxis(() => ({ right: v }))}
+								></YAxisSideInput>
+							) : (
+								<InputBlock numColumns='1'>
+									<div className='input-wrapper'>
+										<label>Right axis is not defined</label>
+										<Button
+											//@ts-ignore
+											onClick={() => setYAxis(() => ({ right: defaultYAxisConfig }))}
+										>
+											Click to create one
+										</Button>
+									</div>
+								</InputBlock>
+							)}
+						</TabPanel>
+					</TabView>
 				</ControlTab>
-				<ControlTab title='Series' open>
+				<ControlTab title='Series'>
 					<TabView scrollable>
 						{modules.length &&
 							modules.map((module, id) => (
@@ -227,6 +237,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 										<InputBlock numColumns='2'>
 											<ModulesConfig
 												config={module}
+												availableAxis={availableYAxis}
 												handleChange={(value: Modules) => updateModule(id, value)}
 											></ModulesConfig>
 										</InputBlock>
@@ -234,30 +245,6 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 								</TabPanel>
 							))}
 					</TabView>
-					{/* {modules?.length &&
-						modules.map((module, id) => (
-							<div key={id}>
-								<div className='subtitle'>{series[module.series]}</div>
-								<InputBlock level={1} numColumns='1'>
-									<InputBlock numColumns='2'>
-										<Select
-											label={'Type'}
-											value={module.type}
-											options={Object.values(ModuleType).map((value) => ({ value }))}
-											handleChange={(type: string) =>
-												updateModule(id, getDefaultModuleConfig(type as ModuleType, module)!)
-											}
-										></Select>
-									</InputBlock>
-									<InputBlock numColumns='4'>
-										<ModulesConfig
-											config={module}
-											handleChange={(value: Modules) => updateModule(id, value)}
-										></ModulesConfig>
-									</InputBlock>
-								</InputBlock>
-							</div>
-						))} */}
 				</ControlTab>
 			</div>
 			<div className='preview-container'>
