@@ -18,6 +18,8 @@
 		"astro": "^5.7.12",
 		"d3": "^7.9.0",
 		"papaparse": "^5.5.2",
+		"primeicons": "^7.0.0",
+		"primereact": "^10.9.5",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
 		"react-dropzone": "^14.3.8",

@@ -1,7 +1,14 @@
-import { ChartColor, YAxisSide } from '@/enums'
-import type { AreaChartConfig, LineChartConfig, Modules, PeriodAreasConfig } from '@/types'
-import { Select } from './Inputs'
 import { useEffect, useState } from 'react'
+
+import { ColorSelect, Select } from './Inputs'
+
+import { ChartColor, YAxisSide } from '@/enums'
+
+import type { AreaChartConfig, LineChartConfig, Modules, PeriodAreasConfig } from '@/types'
+
+const ChartColorOptions = Object.entries(ChartColor)
+	.map(([label, value]) => ({ label, value }))
+	.filter(({ label }) => label !== 'RecessionGrey')
 
 const LineChartEditor = ({
 	config,
@@ -25,13 +32,13 @@ const LineChartEditor = ({
 				//@ts-ignore
 				handleChange={(v) => setSide(v)}
 			></Select>
-			<Select
+			<ColorSelect
 				label='Color'
 				value={config.color}
-				options={Object.values(ChartColor).map((s) => ({ value: s }))}
+				options={ChartColorOptions}
 				//@ts-ignore
 				handleChange={(v) => setColor(v)}
-			></Select>
+			></ColorSelect>
 		</>
 	)
 }
@@ -59,13 +66,13 @@ const AreaChartEditor = ({
 				//@ts-ignore
 				handleChange={(v) => setSide(v)}
 			></Select>
-			<Select
+			<ColorSelect
 				label='Color'
 				value={config.color}
-				options={Object.values(ChartColor).map((s) => ({ value: s }))}
+				options={ChartColorOptions}
 				//@ts-ignore
 				handleChange={(v) => setColor(v)}
-			></Select>
+			></ColorSelect>
 		</>
 	)
 }

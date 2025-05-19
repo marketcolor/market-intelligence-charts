@@ -39,18 +39,16 @@ const YAxisSideInput = ({ side, initialConfig, handleChange }: Props) => {
 	return (
 		<div className='y-axis-side'>
 			<div className='subtitle'>{side} y axis</div>
-			<InputBlock numColumns='4'>
+			<InputBlock numColumns='2'>
 				<NumberInput
 					label='From'
 					value={domain.start}
-					hasRange={false}
 					//@ts-ignore
 					handleChange={(v) => setDomain(() => ({ start: Number(v) }))}
 				></NumberInput>
 				<NumberInput
 					label='To'
 					value={domain.end}
-					hasRange={false}
 					//@ts-ignore
 					handleChange={(v) => setDomain(() => ({ end: Number(v) }))}
 				></NumberInput>
@@ -58,7 +56,6 @@ const YAxisSideInput = ({ side, initialConfig, handleChange }: Props) => {
 					label='Start value'
 					value={yAxisTicks.startVal!}
 					// min={2}
-					hasRange={false}
 					//@ts-ignore
 					handleChange={(v) => setYAxisTicks(() => ({ startVal: Number(v) }))}
 				></NumberInput>
@@ -66,7 +63,6 @@ const YAxisSideInput = ({ side, initialConfig, handleChange }: Props) => {
 					label='Ticks number'
 					value={yAxisTicks.numTicks!}
 					min={0}
-					hasRange={false}
 					//@ts-ignore
 					handleChange={(v) => setYAxisTicks(() => ({ numTicks: Number(v) }))}
 				></NumberInput>
@@ -74,7 +70,6 @@ const YAxisSideInput = ({ side, initialConfig, handleChange }: Props) => {
 					label='Step'
 					value={yAxisTicks.tickInterval!}
 					min={0}
-					hasRange={false}
 					//@ts-ignore
 					handleChange={(v) => setYAxisTicks(() => ({ tickInterval: Number(v) }))}
 				></NumberInput>
@@ -83,7 +78,6 @@ const YAxisSideInput = ({ side, initialConfig, handleChange }: Props) => {
 					value={yAxisTicks.decimals!}
 					min={0}
 					max={3}
-					hasInput={false}
 					//@ts-ignore
 					handleChange={(v) => setYAxisTicks(() => ({ decimals: Number(v) }))}
 				></NumberInput>

@@ -2,10 +2,22 @@
 
 import { useState } from 'react'
 import { useList, useObjectState } from '@uidotdev/usehooks'
+import { TabView, TabPanel } from 'primereact/tabview'
 
 import TimelineChart from '@/components/Chart'
-import { ControlTab, InputBlock, NumberInput, DateInput, Select, TextInput } from './Inputs'
+import {
+	ControlTab,
+	InputBlock,
+	NumberInput,
+	DateInput,
+	Select,
+	TextInput,
+	TextAreaInput,
+} from './Inputs'
 import YAxisSideInput from './YAxisSideInput'
+
+import 'primereact/resources/themes/soho-dark/theme.css'
+import 'primeicons/primeicons.css'
 
 import './live-editor.scss'
 
@@ -80,24 +92,24 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		<div className='live-editor'>
 			<Toolbar chartTitle={info.title}></Toolbar>
 			<div className='controls-container'>
-				<ControlTab title='Info'>
-					<InputBlock numColumns='2'>
+				<ControlTab title='Info' open>
+					<InputBlock numColumns='1'>
 						<TextInput
 							label='Title'
 							value={info.title || ''}
 							//@ts-ignore
 							handleChange={(v) => setInfo(() => ({ title: v }))}
 						></TextInput>
-						<TextInput
+						<TextAreaInput
 							label='Descriptions'
 							value={info.description || ''}
 							//@ts-ignore
 							handleChange={(v) => setInfo(() => ({ description: v }))}
-						></TextInput>
+						></TextAreaInput>
 					</InputBlock>
 				</ControlTab>
 				<ControlTab title='Size'>
-					<InputBlock numColumns='3'>
+					<InputBlock numColumns='2'>
 						<NumberInput
 							label='Width'
 							value={size.width}
@@ -117,29 +129,13 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 					</InputBlock>
 				</ControlTab>
 				<ControlTab title='X Axis Ticks'>
-					<InputBlock numColumns='4'>
+					<InputBlock numColumns='2'>
 						<DateInput
-							label='Start'
+							label='Start date'
 							value={xAxisTicks.startDate}
 							//@ts-ignore
 							handleChange={(v) => setXAxisTicks(() => ({ startDate: v }))}
 						></DateInput>
-						<NumberInput
-							label='Ticks number'
-							value={xAxisTicks.numTicks}
-							min={2}
-							hasRange={false}
-							//@ts-ignore
-							handleChange={(v) => setXAxisTicks(() => ({ numTicks: v }))}
-						></NumberInput>
-						<NumberInput
-							label='Step'
-							value={xAxisTicks.intervalStep}
-							min={1}
-							hasRange={false}
-							//@ts-ignore
-							handleChange={(v) => setXAxisTicks(() => ({ intervalStep: v }))}
-						></NumberInput>
 						<Select
 							label='Date interval'
 							value={xAxisTicks.dateInterval}
@@ -147,6 +143,20 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 							//@ts-ignore
 							handleChange={(v) => setXAxisTicks(() => ({ dateInterval: v }))}
 						></Select>
+						<NumberInput
+							label='Ticks number'
+							value={xAxisTicks.numTicks}
+							min={2}
+							//@ts-ignore
+							handleChange={(v) => setXAxisTicks(() => ({ numTicks: v }))}
+						></NumberInput>
+						<NumberInput
+							label='Step'
+							value={xAxisTicks.intervalStep}
+							min={1}
+							//@ts-ignore
+							handleChange={(v) => setXAxisTicks(() => ({ intervalStep: v }))}
+						></NumberInput>
 						<Select
 							label='Date format'
 							value={xAxisTicks.dateFormat}
@@ -169,7 +179,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 							handleChange={(v) => setYAxis(() => ({ left: v }))}
 						></YAxisSideInput>
 					) : (
-						<InputBlock numColumns='4'>
+						<InputBlock numColumns='2'>
 							<div>Left axis is not defined</div>
 							<button
 								//@ts-ignore
@@ -187,7 +197,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 							handleChange={(v) => setYAxis(() => ({ right: v }))}
 						></YAxisSideInput>
 					) : (
-						<InputBlock numColumns='4'>
+						<InputBlock numColumns='2'>
 							<div>Right axis is not defined</div>
 							<button
 								//@ts-ignore
@@ -198,8 +208,33 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 						</InputBlock>
 					)}
 				</ControlTab>
-				<ControlTab title='Series'>
-					{modules?.length &&
+				<ControlTab title='Series' open>
+					<TabView scrollable>
+						{modules.length &&
+							modules.map((module, id) => (
+								<TabPanel key={id} header={series[module.series]}>
+									<InputBlock level={1} numColumns='1'>
+										<InputBlock numColumns='2'>
+											<Select
+												label={'Type'}
+												value={module.type}
+												options={Object.values(ModuleType).map((value) => ({ value }))}
+												handleChange={(type: string) =>
+													updateModule(id, getDefaultModuleConfig(type as ModuleType, module)!)
+												}
+											></Select>
+										</InputBlock>
+										<InputBlock numColumns='2'>
+											<ModulesConfig
+												config={module}
+												handleChange={(value: Modules) => updateModule(id, value)}
+											></ModulesConfig>
+										</InputBlock>
+									</InputBlock>
+								</TabPanel>
+							))}
+					</TabView>
+					{/* {modules?.length &&
 						modules.map((module, id) => (
 							<div key={id}>
 								<div className='subtitle'>{series[module.series]}</div>
@@ -222,7 +257,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 									</InputBlock>
 								</InputBlock>
 							</div>
-						))}
+						))} */}
 				</ControlTab>
 			</div>
 			<div className='preview-container'>
