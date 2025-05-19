@@ -10,9 +10,12 @@
 	position: fixed;
 	top: 0;
 	right: 0;
+	width: 100%;
 	padding: 1rem;
 	display: flex;
+	justify-content: end;
 	gap: 1rem;
+	background-color: #000;
 
 	button {
 		padding: 8px 4px;
@@ -34,7 +37,6 @@
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
-	// background-color: #20204080;
 	z-index: 1;
 
 	.control-tab {

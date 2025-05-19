@@ -3,6 +3,7 @@ import { useRef } from 'react'
 import Session from 'svg-text-to-path'
 
 import { fonts } from '@styles/theme'
+import { Button } from 'primereact/button'
 
 const Toolbar = ({ chartTitle }: { chartTitle?: string }) => {
 	const tempContainer = useRef<HTMLDivElement>(null)
@@ -80,8 +81,8 @@ const Toolbar = ({ chartTitle }: { chartTitle?: string }) => {
 
 	return (
 		<div className='toolbar'>
-			<button onClick={saveSvg}>Save svg</button>
-			<button onClick={saveOutlinedSvg}>Save outlined svg</button>
+			<Button onClick={saveSvg}>Save svg</Button>
+			<Button onClick={saveOutlinedSvg}>Save outlined svg</Button>
 			<div className='temp-svg-container' ref={tempContainer}></div>
 		</div>
 	)
