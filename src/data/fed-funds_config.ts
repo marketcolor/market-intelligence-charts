@@ -1,4 +1,4 @@
-import { ChartColor, YAxisSide } from '@/enums'
+import { ChartColor, ModuleType, YAxisSide } from '@/enums'
 import type { TimelineChartConfig } from '@/types'
 
 const series = ['Fed funds target rate (%)', '10-year U.S. Treasury yeld (%)', 'Recessions']
@@ -44,20 +44,20 @@ export const config: TimelineChartConfig = {
 	],
 	modules: [
 		{
-			type: 'periodAreas',
-			series: 2,
-		},
-		{
-			type: 'lineChart',
+			type: ModuleType.LineChart,
 			series: 0,
 			side: YAxisSide.Left,
 			color: ChartColor.Green,
 		},
 		{
-			type: 'lineChart',
+			type: ModuleType.LineChart,
 			series: 1,
 			side: YAxisSide.Left,
 			color: ChartColor.Blue,
+		},
+		{
+			type: ModuleType.PeriodAreas,
+			series: 2,
 		},
 	],
 }

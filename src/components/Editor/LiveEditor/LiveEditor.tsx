@@ -249,7 +249,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 												config={module}
 												availableAxis={availableYAxis}
 												handleChange={(value: Modules) => updateModule(id, value)}
-												legendConfig={legend[id]}
+												legendConfig={legend[module.series]}
 												handleLegendChange={(config: LegendConfig) => updateLegend(id, config)}
 											></ModulesConfig>
 										</InputBlock>
