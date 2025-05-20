@@ -8,10 +8,10 @@ import LiveEditor from '@/components/Editor/LiveEditor'
 
 import type { TimelineChartDataEntry, TimelineChartRawDataEntry } from '@types'
 
-import { data as rawData } from '../data/money-market_data'
-import { config } from '../data/money-market_config'
-// import { data as rawData } from '../data/fed-funds_data'
-// import { config } from '../data/fed-funds_config'
+// import { data as rawData } from '../data/money-market_data'
+// import { config } from '../data/money-market_config'
+import { data as rawData } from '../data/fed-funds_data'
+import { config } from '../data/fed-funds_config'
 // import { data as rawData } from '../data/stock-prices_data'
 // import { config } from '../data/stock-prices_config'
 
@@ -32,6 +32,8 @@ const data: TimelineChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
 	dateParser(dateStr)!,
 	...values,
 ])
+
+// console.log(config)
 ---
 
 <Layout>

@@ -29,7 +29,8 @@ const bottomOffset = 25
 
 const Legend = ({ config, htmlRef }: Props) => {
 	const [legendOffsets, setLegendOffsets] = useState<ItemOffset[]>([])
-	const filteredConfig = config.filter((l) => l.show)
+	const filteredConfig = config.filter((l) => !!l.show)
+
 	return (
 		<>
 			<Svg config={filteredConfig} offsets={legendOffsets}></Svg>
@@ -41,6 +42,7 @@ const Legend = ({ config, htmlRef }: Props) => {
 
 const Html = memo(({ config, handleOffsets }: HtmlProps) => {
 	const [ref, size] = useMeasure()
+
 	useEffect(() => {
 		if (size.width && size.height) {
 			const legendItems = document.querySelectorAll<HTMLElement>('.legend-item')
@@ -54,17 +56,15 @@ const Html = memo(({ config, handleOffsets }: HtmlProps) => {
 	}, [size, handleOffsets])
 
 	return (
-		<div
-			className='legend'
-			ref={ref}
-			style={{ '--bottom-offset': `${bottomOffset}px` } as CSSProperties}
-		>
-			{config.map(({ text, color }, id) => (
-				<div key={id} className='legend-item' style={{ '--legend-color': color } as CSSProperties}>
-					<div className='bullet'></div>
-					<div className='legend-text'>{text}</div>
-				</div>
-			))}
+		<div className='legend' style={{ '--bottom-offset': `${bottomOffset}px` } as CSSProperties}>
+			<div className='legend-inner' ref={ref}>
+				{config.map(({ text, color }, id) => (
+					<div key={id} className='legend-item' style={{ '--legend-color': color } as CSSProperties}>
+						<div className='bullet'></div>
+						<div className='legend-text'>{text}</div>
+					</div>
+				))}
+			</div>
 		</div>
 	)
 })

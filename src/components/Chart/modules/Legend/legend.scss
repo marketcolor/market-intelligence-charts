@@ -3,20 +3,24 @@
 	grid-row: 1 / 2;
 	padding-bottom: var(--bottom-offset);
 
-	display: flex;
-	align-items: center;
-	gap: 18px;
-
-	> .legend-item {
-		font-size: 18px;
-		display: flex;
+	> .legend-inner {
+		display: inline-flex;
+		justify-content: flex-start;
 		align-items: center;
-		gap: 10px;
+		gap: 18px;
+		outline: 1px solid tomato;
 
-		.bullet {
-			width: 10px;
-			height: 10px;
-			background-color: var(--legend-color);
+		> .legend-item {
+			font-size: 18px;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+
+			.bullet {
+				width: 10px;
+				height: 10px;
+				background-color: var(--legend-color);
+			}
 		}
 	}
 }
