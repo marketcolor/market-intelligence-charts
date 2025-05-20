@@ -1,4 +1,4 @@
-import { ChartColor, YAxisSide } from '@/enums'
+import { ChartColor, ModuleType, YAxisSide } from '@/enums'
 import type { TimelineChartConfig } from '@/types'
 
 export const config: TimelineChartConfig = {
@@ -29,11 +29,11 @@ export const config: TimelineChartConfig = {
 	},
 	modules: [
 		{
-			type: 'periodAreas',
+			type: ModuleType.PeriodAreas,
 			series: 1,
 		},
 		{
-			type: 'areaChart',
+			type: ModuleType.AreaChart,
 			series: 0,
 			side: YAxisSide.Left,
 			color: ChartColor.Green,

@@ -31,8 +31,8 @@ const LineChartEditor = ({
 }: LineChartProps) => {
 	const [side, setSide] = useState<YAxisSide>(config.side)
 	const [color, setColor] = useState<ChartColor>(config.color)
-	const [legendText, setLegendText] = useState<string>(legendConfig.text)
-	const [showLegend, setShowLegend] = useState<boolean>(legendConfig.show)
+	const [legendText, setLegendText] = useState<string>(legendConfig?.text || '')
+	const [showLegend, setShowLegend] = useState<boolean>(legendConfig?.show)
 
 	useEffect(() => {
 		handleChange({ ...config, side, color })
@@ -94,8 +94,8 @@ const AreaChartEditor = ({
 }: AreaChartProps) => {
 	const [side, setSide] = useState<YAxisSide>(config.side)
 	const [color, setColor] = useState<ChartColor>(config.color)
-	const [legendText, setLegendText] = useState<string>(legendConfig.text)
-	const [showLegend, setShowLegend] = useState<boolean>(legendConfig.show)
+	const [legendText, setLegendText] = useState<string>(legendConfig?.text || '')
+	const [showLegend, setShowLegend] = useState<boolean>(legendConfig?.show)
 
 	useEffect(() => {
 		handleChange({ ...config, side, color })
@@ -144,8 +144,8 @@ type PeriodAreaProps = {
 }
 
 const PeriodAreasEditor = ({ config, legendConfig, handleLegendChange }: PeriodAreaProps) => {
-	const [legendText, setLegendText] = useState<string>(legendConfig.text)
-	const [showLegend, setShowLegend] = useState<boolean>(legendConfig.show)
+	const [legendText, setLegendText] = useState<string>(legendConfig?.text || '')
+	const [showLegend, setShowLegend] = useState<boolean>(legendConfig?.show)
 
 	useEffect(() => {
 		handleLegendChange({ text: legendText, show: showLegend, color: ChartColor.RecessionGrey })
