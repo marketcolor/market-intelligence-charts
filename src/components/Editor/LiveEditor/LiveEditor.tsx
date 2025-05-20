@@ -22,7 +22,13 @@ import YAxisSideInput from './YAxisSideInput'
 
 import './live-editor.scss'
 
-import type { Modules, TimelineChartConfig, TimelineChartDataEntry, YAxisConfig } from '@/types'
+import type {
+	LegendConfig,
+	Modules,
+	TimelineChartConfig,
+	TimelineChartDataEntry,
+	YAxisConfig,
+} from '@/types'
 import { ChartColor, ModuleType, YAxisSide } from '@/enums'
 
 type Props = {
@@ -69,6 +75,10 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		right: initialConfig.yAxisConfig.right,
 	})
 
+	const [legend, { updateAt: updateLegend }] = useList(
+		initialConfig.legend ? [...initialConfig.legend] : []
+	)
+
 	const [modules, { updateAt: updateModule }] = useList(
 		initialConfig.modules ? [...initialConfig.modules] : []
 	)
@@ -77,6 +87,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		...initialConfig,
 		...info,
 		...size,
+		legend,
 		xAxisConfig: {
 			...initialConfig.xAxisConfig,
 			ticksConfig: xAxisTicks,
@@ -215,7 +226,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 						</TabPanel>
 					</TabView>
 				</ControlTab>
-				<ControlTab title='Series'>
+				<ControlTab title='Series' open>
 					<TabView scrollable renderActiveOnly={false}>
 						{modules.length &&
 							modules.map((module, id) => (
@@ -236,6 +247,8 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 												config={module}
 												availableAxis={availableYAxis}
 												handleChange={(value: Modules) => updateModule(id, value)}
+												legendConfig={legend[id]}
+												handleLegendChange={(config: LegendConfig) => updateLegend(id, config)}
 											></ModulesConfig>
 										</InputBlock>
 									</InputBlock>

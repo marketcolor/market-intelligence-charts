@@ -67,8 +67,8 @@ const Editor = () => {
 				xAxisConfig: getXAxisConfig(data),
 				yAxisConfig: getYAxisConfig(data, seriesConfig),
 				legend: seriesConfig
-					.filter((s) => s.showLegend)
-					.map((c) => ({ text: c.legend, color: c.color as ChartColor })),
+					// .filter((s) => s.showLegend)
+					.map((c) => ({ text: c.legend, show: c.showLegend, color: c.color as ChartColor })),
 				//@ts-ignore
 				modules: seriesConfig.map((c, id) => ({
 					type: c.type,

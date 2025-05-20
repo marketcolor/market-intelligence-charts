@@ -29,11 +29,12 @@ const bottomOffset = 25
 
 const Legend = ({ config, htmlRef }: Props) => {
 	const [legendOffsets, setLegendOffsets] = useState<ItemOffset[]>([])
+	const filteredConfig = config.filter((l) => l.show)
 	return (
 		<>
-			<Svg config={config} offsets={legendOffsets}></Svg>
+			<Svg config={filteredConfig} offsets={legendOffsets}></Svg>
 			{htmlRef &&
-				createPortal(<Html config={config} handleOffsets={setLegendOffsets}></Html>, htmlRef)}
+				createPortal(<Html config={filteredConfig} handleOffsets={setLegendOffsets}></Html>, htmlRef)}
 		</>
 	)
 }
