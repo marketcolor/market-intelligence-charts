@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
 import { useObjectState } from '@uidotdev/usehooks'
-import { Panel } from 'primereact/panel'
+
 import { TabView, TabPanel } from 'primereact/tabview'
 import { Button } from 'primereact/button'
+import { Panel } from 'primereact/panel'
 
 import {
 	CheckboxInput,

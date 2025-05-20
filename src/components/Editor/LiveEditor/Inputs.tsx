@@ -1,5 +1,3 @@
-import type { ReactNode } from 'react'
-
 import { Accordion, AccordionTab } from 'primereact/accordion'
 import { InputText } from 'primereact/inputtext'
 import { InputTextarea } from 'primereact/inputtextarea'
@@ -9,6 +7,8 @@ import { Dropdown } from 'primereact/dropdown'
 import { Calendar } from 'primereact/calendar'
 import { Checkbox } from 'primereact/checkbox'
 import { SelectButton } from 'primereact/selectbutton'
+
+import type { ReactNode } from 'react'
 
 export const ControlTab = ({
 	title,

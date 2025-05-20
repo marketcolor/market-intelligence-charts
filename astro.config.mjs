@@ -9,4 +9,9 @@ import vercel from '@astrojs/vercel'
 export default defineConfig({
 	integrations: [react()],
 	adapter: vercel(),
+	vite: {
+		ssr: {
+			noExternal: ['primereact'],
+		},
+	},
 })

@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 
-import { FileUpload, type FileUploadFilesEvent } from 'primereact/fileupload'
+import { FileUpload } from 'primereact/fileupload'
+import type { FileUploadFilesEvent } from 'primereact/fileupload'
 
 export default function UploadPanel({ handleUpload }: { handleUpload: Function }) {
 	const fileUploadRef = useRef(null)
