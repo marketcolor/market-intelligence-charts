@@ -138,7 +138,7 @@ const TimelineChart = ({ data, config }: Props) => {
 							htmlRef={htmlOverlay.current}
 						></XAxis>
 					)}
-					{overModules &&
+					{overModules?.length &&
 						overModules.map((module, id) =>
 							moduleComponents[module.type](id, {
 								config: module,

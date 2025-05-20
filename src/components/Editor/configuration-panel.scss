@@ -1,0 +1,25 @@
+.configuration-panel {
+	width: 450px;
+	background: #282936;
+
+	.p-panel-header {
+		padding: 1rem;
+		font-size: larger;
+	}
+
+	.configuration-footer {
+		padding: 0.75rem 1.25rem;
+		border: 1px solid #3e4053;
+		border-top: 0 none;
+		border-bottom-right-radius: 6px;
+		border-bottom-left-radius: 6px;
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.p-panel-content {
+		border-bottom-right-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+}

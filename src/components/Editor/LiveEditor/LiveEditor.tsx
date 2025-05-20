@@ -15,13 +15,10 @@ import {
 	TextInput,
 	TextAreaInput,
 } from './Inputs'
+
 import Toolbar from './Toolbar'
 import ModulesConfig from './ModulesConfig'
-
 import YAxisSideInput from './YAxisSideInput'
-
-import 'primereact/resources/themes/soho-dark/theme.css'
-import 'primeicons/primeicons.css'
 
 import './live-editor.scss'
 
@@ -173,7 +170,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 					</InputBlock>
 				</ControlTab>
 				<ControlTab title='Y Axis'>
-					<TabView>
+					<TabView renderActiveOnly={false}>
 						<TabPanel header='Left Y Axis'>
 							{yAxis.left ? (
 								<YAxisSideInput
@@ -219,7 +216,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 					</TabView>
 				</ControlTab>
 				<ControlTab title='Series'>
-					<TabView scrollable>
+					<TabView scrollable renderActiveOnly={false}>
 						{modules.length &&
 							modules.map((module, id) => (
 								<TabPanel key={id} header={series[module.series]}>

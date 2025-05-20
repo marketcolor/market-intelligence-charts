@@ -6,9 +6,7 @@ import { ChartColor, YAxisSide } from '@/enums'
 
 import type { AreaChartConfig, LineChartConfig, Modules, PeriodAreasConfig } from '@/types'
 
-const ChartColorOptions = Object.entries(ChartColor)
-	.map(([label, value]) => ({ label, value }))
-	.filter(({ label }) => label !== 'RecessionGrey')
+import { ChartColorOptions } from '@lib/configUtils'
 
 const LineChartEditor = ({
 	config,
@@ -31,7 +29,6 @@ const LineChartEditor = ({
 				label='Axis side'
 				value={config.side}
 				options={availableAxis.map((s) => ({ value: s }))}
-				// options={Object.values(YAxisSide).map((s) => ({ value: s }))}
 				//@ts-ignore
 				handleChange={(v) => setSide(v)}
 			></Select>

@@ -2,90 +2,33 @@
 	position: relative;
 	min-height: 100%;
 	display: grid;
-	// grid-template-columns: auto 1fr;
-}
-
-.dropzone-modal {
-	position: fixed;
-	inset: 0;
-	display: none;
 	place-content: center;
-	background-color: #cccccc80;
 
-	&[data-open='open'] {
-		display: grid;
-	}
-
-	> .modal-body {
-		background-color: #ffffff;
-		padding: 2rem;
-		box-shadow: 0px 0px 4px 4px #00000022;
-		min-width: 40vw;
-	}
-
-	.dropzone-root {
-		border-radius: 5px;
-		background-color: #f9f9f9; /* Very light gray background */
-		padding: 1rem;
-		border: 1px solid #ccc; /* Light gray border */
-	}
-
-	.series {
-		margin: 0.5rem 0;
-		.heading {
-			font-size: 1.3em;
-			font-weight: bold;
-			color: #222;
-			margin-bottom: 0.5rem;
-		}
-		.series-footer {
-			button {
-				padding: 8px;
-				font-family: inherit;
-				font-size: larger;
-			}
-		}
+	&[data-live-editor='true'] {
+		display: block;
 	}
 }
 
-.series-config,
-.size-selector {
-	border: 1px solid #ccc; /* Light gray border */
-	padding: 15px;
-	margin-bottom: 20px;
-	border-radius: 5px;
-	background-color: #f9f9f9; /* Very light gray background */
-	display: grid;
+.p-fileupload .p-fileupload-buttonbar {
+	padding: 1.25rem;
+	border-bottom: 0 none;
+	border-top-right-radius: 6px;
+	border-top-left-radius: 6px;
 	gap: 0.5rem;
-	color: #777; /* Slightly darker gray text */
+}
 
-	.config-box {
-		display: flex;
-		align-items: center;
-		gap: 0.25rem;
-	}
+.upload-icon {
+	font-size: 5em;
+	color: var(--surface-d);
+}
 
-	.name {
-		font-size: 1.2em;
-		font-weight: bold;
-		color: #555;
-	}
-
-	input[type='text'],
-	input[type='number'] {
-		padding: 5px;
-		border: 1px solid #ddd; /* Light gray border for input */
-		border-radius: 3px;
-		margin-right: 10px;
-		color: #555;
-	}
-
-	select {
-		padding: 5px;
-		border: 1px solid #ddd;
-		border-radius: 3px;
-		color: #555;
-	}
+.empty-template {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
+	padding: 2rem;
 }
 
 .template-box {
@@ -93,4 +36,5 @@
 	height: 100%;
 	display: grid;
 	place-content: center;
+	outline: 1px solid tomato;
 }

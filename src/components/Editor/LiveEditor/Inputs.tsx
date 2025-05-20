@@ -184,16 +184,23 @@ export const CheckboxInput = ({
 export const TextInput = ({
 	label,
 	value,
+	disabled,
 	handleChange,
 }: {
 	label: string
 	value: string
+	disabled?: boolean
 	handleChange: Function
 }) => {
 	return (
 		<div className='input-wrapper'>
 			<FloatLabel>
-				<InputText id={label} value={value} onChange={(e) => handleChange(e.target.value)} />
+				<InputText
+					id={label}
+					value={value}
+					disabled={disabled}
+					onChange={(e) => handleChange(e.target.value)}
+				/>
 				<label htmlFor={label}>{label}</label>
 			</FloatLabel>
 		</div>
