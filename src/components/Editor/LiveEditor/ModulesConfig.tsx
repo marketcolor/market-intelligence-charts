@@ -42,8 +42,6 @@ const LineChartEditor = ({
 		handleLegendChange({ text: legendText, show: showLegend, color })
 	}, [legendText, showLegend, color])
 
-	// console.log(legend)
-
 	return (
 		<>
 			<Select

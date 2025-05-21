@@ -4,7 +4,7 @@ import type { TimelineChartConfig } from '@/types'
 const series = ['Fed funds target rate (%)', '10-year U.S. Treasury yeld (%)', 'Recessions']
 
 export const config: TimelineChartConfig = {
-	width: 1200,
+	width: 800,
 	height: 450,
 	xAxisConfig: {
 		domain: ['1994-01-31', '2025-03-31'],

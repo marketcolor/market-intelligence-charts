@@ -120,7 +120,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 						></TextAreaInput>
 					</InputBlock>
 				</ControlTab>
-				<ControlTab title='Size'>
+				<ControlTab title='Size' open>
 					<InputBlock numColumns='2'>
 						<NumberInput
 							label='Width'
@@ -228,31 +228,29 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 						</TabPanel>
 					</TabView>
 				</ControlTab>
-				<ControlTab title='Series' open>
+				<ControlTab title='Series'>
 					<TabView scrollable renderActiveOnly={false}>
 						{modules.length &&
 							modules.map((module, id) => (
 								<TabPanel key={id} header={series[module.series]}>
-									<InputBlock level={1} numColumns='1'>
-										<InputBlock numColumns='2'>
-											<Select
-												label={'Type'}
-												value={module.type}
-												options={Object.values(ModuleType).map((value) => ({ value }))}
-												handleChange={(type: string) =>
-													updateModule(id, getDefaultModuleConfig(type as ModuleType, module)!)
-												}
-											></Select>
-										</InputBlock>
-										<InputBlock numColumns='2'>
-											<ModulesConfig
-												config={module}
-												availableAxis={availableYAxis}
-												handleChange={(value: Modules) => updateModule(id, value)}
-												legendConfig={legend[module.series]}
-												handleLegendChange={(config: LegendConfig) => updateLegend(id, config)}
-											></ModulesConfig>
-										</InputBlock>
+									<InputBlock numColumns='2'>
+										<Select
+											label={'Type'}
+											value={module.type}
+											options={Object.values(ModuleType).map((value) => ({ value }))}
+											handleChange={(type: string) =>
+												updateModule(id, getDefaultModuleConfig(type as ModuleType, module)!)
+											}
+										></Select>
+									</InputBlock>
+									<InputBlock numColumns='2'>
+										<ModulesConfig
+											config={module}
+											availableAxis={availableYAxis}
+											handleChange={(value: Modules) => updateModule(id, value)}
+											legendConfig={legend[module.series]}
+											handleLegendChange={(config: LegendConfig) => updateLegend(id, config)}
+										></ModulesConfig>
 									</InputBlock>
 								</TabPanel>
 							))}
