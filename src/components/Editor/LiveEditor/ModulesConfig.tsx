@@ -14,7 +14,6 @@ import type {
 
 import { ChartColorOptions } from '@lib/configUtils'
 import { useObjectState } from '@uidotdev/usehooks'
-import { Value } from 'sass'
 
 type LineChartProps = {
 	config: LineChartConfig
