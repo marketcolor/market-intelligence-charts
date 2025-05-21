@@ -62,6 +62,13 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		height: initialConfig.height,
 	})
 
+	const [marginAdjust, setMarginAdjust] = useObjectState({
+		left: initialConfig.marginAdjust?.left || !!initialConfig.yAxisConfig.left ? 0 : 24,
+		right: initialConfig.marginAdjust?.right || !!initialConfig.yAxisConfig.right ? 0 : 24,
+		top: initialConfig.marginAdjust?.top || 12,
+		bottom: initialConfig.marginAdjust?.bottom || 0,
+	})
+
 	const [xAxisTicks, setXAxisTicks] = useObjectState({
 		startDate: initialConfig.xAxisConfig.ticksConfig.startDate,
 		numTicks: initialConfig.xAxisConfig.ticksConfig.numTicks,
@@ -89,6 +96,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		...initialConfig,
 		...info,
 		...size,
+		marginAdjust,
 		legend,
 		xAxisConfig: {
 			...initialConfig.xAxisConfig,
@@ -137,6 +145,38 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 							max={600}
 							//@ts-ignore
 							handleChange={(v) => setSize(() => ({ height: Number(v) }))}
+						></NumberInput>
+					</InputBlock>
+				</ControlTab>
+				<ControlTab title='Adjust margins'>
+					<InputBlock numColumns='2'>
+						<NumberInput
+							label='Left'
+							value={marginAdjust.left}
+							min={0}
+							//@ts-ignore
+							handleChange={(v) => setMarginAdjust(() => ({ left: Number(v) }))}
+						></NumberInput>
+						<NumberInput
+							label='Right'
+							value={marginAdjust.right}
+							min={0}
+							//@ts-ignore
+							handleChange={(v) => setMarginAdjust(() => ({ right: Number(v) }))}
+						></NumberInput>
+						<NumberInput
+							label='Top'
+							value={marginAdjust.top}
+							min={0}
+							//@ts-ignore
+							handleChange={(v) => setMarginAdjust(() => ({ top: Number(v) }))}
+						></NumberInput>
+						<NumberInput
+							label='Bottom'
+							value={marginAdjust.bottom}
+							min={0}
+							//@ts-ignore
+							handleChange={(v) => setMarginAdjust(() => ({ bottom: Number(v) }))}
 						></NumberInput>
 					</InputBlock>
 				</ControlTab>

@@ -28,20 +28,20 @@ export const config: TimelineChartConfig = {
 			guideLines: true,
 		},
 	},
-	legend: [
-		{
-			text: series[0],
-			color: ChartColor.Green,
-		},
-		{
-			text: series[1],
-			color: ChartColor.Blue,
-		},
-		{
-			text: series[2],
-			color: ChartColor.RecessionGrey,
-		},
-	],
+	// legend: [
+	// 	{
+	// 		text: series[0],
+	// 		color: ChartColor.Green,
+	// 	},
+	// 	{
+	// 		text: series[1],
+	// 		color: ChartColor.Blue,
+	// 	},
+	// 	{
+	// 		text: series[2],
+	// 		color: ChartColor.RecessionGrey,
+	// 	},
+	// ],
 	modules: [
 		{
 			type: ModuleType.LineChart,
