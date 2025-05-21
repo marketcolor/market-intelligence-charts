@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { CheckboxInput, ColorSelect, Select, TextInput } from './Inputs'
+import { CheckboxInput, ColorSelect, NumberInput, Select, TextInput } from './Inputs'
 
 import { ChartColor, YAxisSide } from '@/enums'
 
@@ -13,6 +13,7 @@ import type {
 } from '@/types'
 
 import { ChartColorOptions } from '@lib/configUtils'
+import { useObjectState } from '@uidotdev/usehooks'
 
 type LineChartProps = {
 	config: LineChartConfig
@@ -33,10 +34,15 @@ const LineChartEditor = ({
 	const [color, setColor] = useState<ChartColor>(config.color)
 	const [legendText, setLegendText] = useState<string>(legendConfig?.text || '')
 	const [showLegend, setShowLegend] = useState<boolean>(!!legendConfig?.show)
+	const [threshold, setThreshold] = useObjectState({
+		active: !!config.threshold,
+		value: config.threshold?.value || 0,
+		bottomColor: config.threshold?.bottomColor || ChartColor.Green,
+	})
 
 	useEffect(() => {
-		handleChange({ ...config, side, color })
-	}, [side, color])
+		handleChange({ ...config, side, color, threshold })
+	}, [side, color, threshold])
 
 	useEffect(() => {
 		handleLegendChange({ text: legendText, show: showLegend, color })
@@ -71,6 +77,28 @@ const LineChartEditor = ({
 				//@ts-ignore
 				handleChange={(value) => setLegendText(value)}
 			></TextInput>
+			<CheckboxInput
+				label='Threshold line?'
+				value={threshold.active}
+				//@ts-ignore
+				handleChange={(value) => setThreshold(() => ({ active: value }))}
+			></CheckboxInput>
+			<NumberInput
+				label='Threshold value'
+				value={threshold.value}
+				step={0.1}
+				disabled={!threshold.active}
+				//@ts-ignore
+				handleChange={(value) => setThreshold(() => ({ value }))}
+			></NumberInput>
+			<ColorSelect
+				label='Bottom color'
+				value={threshold.bottomColor}
+				options={ChartColorOptions}
+				disabled={!threshold.active}
+				//@ts-ignore
+				handleChange={(value) => setThreshold(() => ({ bottomColor: value }))}
+			></ColorSelect>
 		</>
 	)
 }

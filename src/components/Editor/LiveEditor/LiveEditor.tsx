@@ -63,8 +63,8 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 	})
 
 	const [marginAdjust, setMarginAdjust] = useObjectState({
-		left: initialConfig.marginAdjust?.left || !!initialConfig.yAxisConfig.left ? 0 : 24,
-		right: initialConfig.marginAdjust?.right || !!initialConfig.yAxisConfig.right ? 0 : 24,
+		left: initialConfig.marginAdjust?.left || (!!initialConfig.yAxisConfig.left ? 0 : 24),
+		right: initialConfig.marginAdjust?.right || (!!initialConfig.yAxisConfig.right ? 0 : 24),
 		top: initialConfig.marginAdjust?.top || 12,
 		bottom: initialConfig.marginAdjust?.bottom || 0,
 	})
@@ -268,7 +268,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 						</TabPanel>
 					</TabView>
 				</ControlTab>
-				<ControlTab title='Series'>
+				<ControlTab title='Series' open>
 					<TabView scrollable renderActiveOnly={false}>
 						{modules.length &&
 							modules.map((module, id) => (

@@ -47,7 +47,8 @@ export const NumberInput = ({
 	value,
 	min,
 	max,
-	step = 1,
+	step,
+	disabled,
 	handleChange,
 }: {
 	label: string
@@ -55,6 +56,7 @@ export const NumberInput = ({
 	min?: number
 	max?: number
 	step?: number
+	disabled?: boolean
 	handleChange: Function
 }) => {
 	return (
@@ -70,6 +72,8 @@ export const NumberInput = ({
 					step={step}
 					max={max}
 					min={min}
+					disabled={disabled}
+					mode='decimal'
 					decrementButtonClassName='p-button-danger'
 					incrementButtonClassName='p-button-success'
 					incrementButtonIcon='pi pi-plus'
@@ -137,14 +141,16 @@ export const ColorSelect = ({
 	label,
 	value,
 	options,
+	disabled,
 	handleChange,
 }: {
 	label: string
 	value: string
 	options: { label: string; value: string }[]
+	disabled?: boolean
 	handleChange: Function
 }) => {
-	const swatchTemplate = (option) => {
+	const swatchTemplate = (option: { label: string; value: string }) => {
 		return <div className='swatch-bullet' style={{ color: option.value }}></div>
 	}
 
@@ -156,6 +162,7 @@ export const ColorSelect = ({
 				value={value}
 				onChange={(e) => handleChange(e.value)}
 				options={options}
+				disabled={disabled}
 				unstyled
 				allowEmpty={false}
 				itemTemplate={swatchTemplate}

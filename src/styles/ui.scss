@@ -27,11 +27,16 @@
 	display: flex;
 	gap: 0.5rem;
 
-	* {
+	[role='button'] {
 		border-radius: 4px;
 		&[aria-pressed='true'] {
 			outline: 1px solid currentColor;
 			outline-offset: 2px;
+		}
+
+		&[aria-disabled='true'] {
+			opacity: 0.4;
+			pointer-events: none;
 		}
 	}
 }
