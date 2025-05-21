@@ -14,6 +14,7 @@ import type {
 
 import { ChartColorOptions } from '@lib/configUtils'
 import { useObjectState } from '@uidotdev/usehooks'
+import { Value } from 'sass'
 
 type LineChartProps = {
 	config: LineChartConfig
@@ -41,7 +42,14 @@ const LineChartEditor = ({
 	})
 
 	useEffect(() => {
-		handleChange({ ...config, side, color, threshold })
+		handleChange({
+			...config,
+			side,
+			color,
+			threshold: threshold.active
+				? { value: threshold.value, bottomColor: threshold.bottomColor }
+				: null,
+		})
 	}, [side, color, threshold])
 
 	useEffect(() => {
