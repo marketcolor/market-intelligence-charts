@@ -47,7 +47,7 @@ export const NumberInput = ({
 	value,
 	min,
 	max,
-	step,
+	step = 1,
 	disabled,
 	handleChange,
 }: {
