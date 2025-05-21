@@ -29,7 +29,7 @@ const bottomOffset = 25
 
 const Legend = ({ config, htmlRef }: Props) => {
 	const [legendOffsets, setLegendOffsets] = useState<ItemOffset[]>([])
-	const filteredConfig = config.filter((l) => !!l.show)
+	const filteredConfig = config.filter((l) => (l.show === undefined ? true : l.show))
 
 	return (
 		<>

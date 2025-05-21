@@ -2,6 +2,9 @@ import { ChartColor, ModuleType, YAxisSide } from '@/enums'
 import type { TimelineChartConfig } from '@/types'
 
 export const config: TimelineChartConfig = {
+	title: 'Money market assets remain at all-time highs, with balances nearing $7 trillion',
+	description:
+		'This chart shows how money market assets have tended to peak near recessions and stock market bottoms. Currently, these assets have been rising since the start of the pandemic and remain elevated.',
 	width: 1000,
 	height: 550,
 	xAxisConfig: {

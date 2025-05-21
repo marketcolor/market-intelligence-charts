@@ -66,7 +66,6 @@ const TimelineChart = ({ data, config }: Props) => {
 		x: getTimeScale(xAxisConfig.domain, [0, dimensions.plotWidth]),
 	}
 
-	getXAxisConfig(data)
 	const measures = {
 		...dimensions,
 		width,

@@ -5,7 +5,8 @@ const series = ['S&P 500 Index', 'S&P 500 EPS forecast, next 12 months']
 
 export const config: TimelineChartConfig = {
 	title: 'Stock prices and earnings',
-	description: 'Stock prices and earnings estimates tend to move together over time',
+	description:
+		'This graph shows the S&P 500 Index price and the S&P 500 Index EPS forecast, which tend to move together over time.',
 	width: 800,
 	height: 500,
 	xAxisConfig: {
@@ -57,7 +58,7 @@ export const config: TimelineChartConfig = {
 			color: ChartColor.Green,
 		},
 		{
-			type: ModuleType.AreaChart,
+			type: ModuleType.LineChart,
 			series: 1,
 			side: YAxisSide.Right,
 			color: ChartColor.Blue,

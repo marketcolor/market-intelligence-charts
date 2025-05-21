@@ -1,4 +1,4 @@
-import { ChartColor, YAxisSide } from '@/enums'
+import { ChartColor, ModuleType, YAxisSide } from '@/enums'
 import type { TimelineChartConfig } from '@/types'
 
 const series = [
@@ -7,6 +7,9 @@ const series = [
 ]
 
 export const config: TimelineChartConfig = {
+	title: 'A steady labor market and tight high-yield spreads suggest the economy remains resilient',
+	description:
+		'A steady labor market and tight high-yield spreads suggest the economy remains resilient',
 	width: 900,
 	height: 550,
 	xAxisConfig: {
@@ -26,7 +29,7 @@ export const config: TimelineChartConfig = {
 				startVal: 100,
 				numTicks: 7,
 				tickInterval: 100,
-				decimals: ',.2r',
+				decimals: 0,
 			},
 			guideLines: true,
 		},
@@ -36,7 +39,7 @@ export const config: TimelineChartConfig = {
 				startVal: 2,
 				numTicks: 7,
 				tickInterval: 3,
-				decimals: ',.0f',
+				decimals: 0,
 			},
 		},
 	},
@@ -52,13 +55,13 @@ export const config: TimelineChartConfig = {
 	],
 	modules: [
 		{
-			type: 'lineChart',
+			type: ModuleType.LineChart,
 			series: 0,
 			side: YAxisSide.Left,
 			color: ChartColor.Green,
 		},
 		{
-			type: 'lineChart',
+			type: ModuleType.LineChart,
 			series: 1,
 			side: YAxisSide.Right,
 			color: ChartColor.Blue,

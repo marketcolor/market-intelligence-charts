@@ -1,29 +1,29 @@
-import { ChartColor, YAxisSide } from '@/enums'
+import { ChartColor, ModuleType, YAxisSide } from '@/enums'
 import type { TimelineChartConfig } from '@/types'
 
 const series = ['Fed funds target rate (%)', '10-year U.S. Treasury yeld (%)', 'Recessions']
 
 export const config: TimelineChartConfig = {
-	width: 1200,
-	height: 450,
+	width: 1000,
+	height: 550,
 	xAxisConfig: {
-		domain: ['1994-01-31', '2025-03-31'],
+		domain: ['1976-02-27', '2020-03-31'],
 		ticksConfig: {
-			startDate: '1995-03-01',
-			numTicks: 11,
+			startDate: '1980-01-01',
+			numTicks: 9,
 			dateInterval: 'year',
-			intervalStep: 3,
-			dateFormat: '%m/%y',
+			intervalStep: 5,
+			dateFormat: '%Y',
 		},
 	},
 	yAxisConfig: {
 		left: {
-			domain: [0, 8],
+			domain: [-2, 22],
 			ticksConfig: {
-				startVal: 0,
-				numTicks: 5,
+				startVal: -2,
+				numTicks: 13,
 				tickInterval: 2,
-				decimals: ',.0f',
+				decimals: 0,
 			},
 			guideLines: true,
 		},
@@ -37,24 +37,16 @@ export const config: TimelineChartConfig = {
 			text: series[1],
 			color: ChartColor.Blue,
 		},
-		{
-			text: series[2],
-			color: ChartColor.RecessionGrey,
-		},
 	],
 	modules: [
 		{
-			type: 'periodAreas',
-			series: 2,
-		},
-		{
-			type: 'lineChart',
+			type: ModuleType.LineChart,
 			series: 0,
 			side: YAxisSide.Left,
 			color: ChartColor.Green,
 		},
 		{
-			type: 'lineChart',
+			type: ModuleType.LineChart,
 			series: 1,
 			side: YAxisSide.Left,
 			color: ChartColor.Blue,

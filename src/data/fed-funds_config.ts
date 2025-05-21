@@ -4,7 +4,11 @@ import type { TimelineChartConfig } from '@/types'
 const series = ['Fed funds target rate (%)', '10-year U.S. Treasury yeld (%)', 'Recessions']
 
 export const config: TimelineChartConfig = {
-	width: 800,
+	title:
+		'The fed funds target rate tends to fall further than the 10-year U.S. Treasury yield once the Fed shifts policy',
+	description:
+		'This chart plots the fed funds target rate and the 10-year U.S. Treasury yield, with recessions shaded.',
+	width: 1200,
 	height: 450,
 	xAxisConfig: {
 		domain: ['1994-01-31', '2025-03-31'],

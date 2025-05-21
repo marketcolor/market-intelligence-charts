@@ -3,12 +3,12 @@ import Papa from 'papaparse'
 import { timeParse } from 'd3'
 
 import Layout from '@layouts/Layout.astro'
-import TimelineChart from '@/components/Chart'
+import LiveEditor from '@/components/Editor/LiveEditor'
 
 import type { TimelineChartDataEntry, TimelineChartRawDataEntry } from '@types'
 
-import { data as rawData } from '../data/stock-prices_data'
-import { config } from '../data/stock-prices_config'
+import { data as rawData } from '../data/mega-cap_data'
+import { config } from '../data/mega-cap_config'
 
 const { errors, data: parsedData }: { errors: any[]; data: any[] } = Papa.parse(rawData, {
 	dynamicTyping: true,
@@ -31,15 +31,12 @@ const data: TimelineChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
 
 <Layout>
 	<div class='container'>
-		<TimelineChart data={data} config={config} client:load />
+		<LiveEditor data={data} initialConfig={config} series={series} client:load />
 	</div>
 </Layout>
 
 <style>
 	.container {
 		height: 100%;
-		display: grid;
-		place-content: center;
-		background-color: white;
 	}
 </style>
