@@ -24,7 +24,7 @@ export const config: TimelineChartConfig = {
 	},
 	yAxisConfig: {
 		left: {
-			domain: [100, 717.5],
+			domain: [100, 700],
 			ticksConfig: {
 				startVal: 100,
 				numTicks: 7,
@@ -34,7 +34,7 @@ export const config: TimelineChartConfig = {
 			guideLines: true,
 		},
 		right: {
-			domain: [2, 20.5],
+			domain: [2, 20],
 			ticksConfig: {
 				startVal: 2,
 				numTicks: 7,
