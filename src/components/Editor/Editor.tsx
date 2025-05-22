@@ -19,6 +19,16 @@ import './editor.scss'
 
 const dateParser = timeParse('%d/%m/%Y')
 
+// const tempConfig = [
+// 	{
+// 		name: 'Relative P/E',
+// 		legend: 'Relative P/E',
+// 		showLegend: true,
+// 		type: 'lineChart',
+// 		color: '#00A758',
+// 		side: 'left',
+// 	},
+// ]
 const Editor = () => {
 	const [data, setData] = useState<TimelineChartDataEntry[]>()
 	const [chartSize, setChartSize] = useObjectState<{ chartWidth: number; chartHeight: number }>({
@@ -33,9 +43,9 @@ const Editor = () => {
 	const [seriesConfig, { set, updateAt, clear }] = useList<SeriesConfigProps>()
 	const [templateConfig, setTemplateConfig] = useState<TimelineChartConfig>()
 
-	const handleFileDrop = useCallback((files: File[]) => {
-		if (!!files[0]) {
-			Papa.parse(files[0], {
+	const handleFileDrop = useCallback((file: File) => {
+		if (!!file) {
+			Papa.parse(file, {
 				dynamicTyping: true,
 				skipEmptyLines: true,
 				complete: ({ errors, data: parsedData }: { errors: any[]; data: any[] }) => {
@@ -83,7 +93,7 @@ const Editor = () => {
 		}
 	}, [seriesConfig, chartSize, info, data])
 
-	// console.log(templateConfig)
+	console.log(seriesConfig)
 
 	return (
 		<div className='editor' data-live-editor={showLiveEditor}>

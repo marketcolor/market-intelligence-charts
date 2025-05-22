@@ -1,25 +1,16 @@
 .configuration-panel {
-	width: 450px;
-	background: #282936;
+	min-width: 480px;
+	color: #fff;
 
-	.p-panel-header {
-		padding: 1rem;
-		font-size: larger;
+	.rs-panel-body {
+		padding: 4px;
 	}
 
 	.configuration-footer {
 		padding: 0.75rem 1.25rem;
-		border: 1px solid #3e4053;
-		border-top: 0 none;
-		border-bottom-right-radius: 6px;
-		border-bottom-left-radius: 6px;
+		border-top: 1px solid var(--rs-navs-tab-border);
 		display: flex;
 		align-items: center;
 		gap: 1rem;
-	}
-
-	.p-panel-content {
-		border-bottom-right-radius: 0;
-		border-bottom-left-radius: 0;
 	}
 }

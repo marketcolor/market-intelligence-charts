@@ -1,8 +1,11 @@
 ---
 import Layout from '@layouts/Layout.astro'
 import EditorComponent from '@components/Editor'
+import RSuiteProvider from '@/components/RSuiteProvider'
 ---
 
 <Layout>
-	<EditorComponent client:load />
+	<RSuiteProvider client:load>
+		<EditorComponent client:load />
+	</RSuiteProvider>
 </Layout>

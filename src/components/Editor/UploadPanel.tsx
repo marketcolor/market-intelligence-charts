@@ -1,37 +1,26 @@
-import { useRef } from 'react'
-
-import { FileUpload } from 'primereact/fileupload'
-import type { FileUploadFilesEvent } from 'primereact/fileupload'
+import { Uploader } from 'rsuite'
+import type { FileType } from 'rsuite/esm/Uploader'
 
 export default function UploadPanel({ handleUpload }: { handleUpload: Function }) {
-	const fileUploadRef = useRef(null)
-
-	const uploadHandler = (e: FileUploadFilesEvent) => {
-		handleUpload(e.files)
-	}
-
-	const emptyTemplate = () => {
-		return (
-			<div className='empty-template'>
-				<i className='pi pi-table upload-icon'></i>
-				<span className='upload-text'>...or Drag and Drop Data File Here</span>
-			</div>
-		)
+	const uploadHandler = (res: Response, file: FileType) => {
+		handleUpload(file.blobFile)
 	}
 
 	return (
 		<div className='upload-panel'>
-			<FileUpload
-				ref={fileUploadRef}
+			<Uploader
 				name='data-upload'
 				accept='text/csv'
-				maxFileSize={1000000}
-				chooseLabel='Chose data file'
-				customUpload={true}
-				uploadHandler={uploadHandler}
-				auto={true}
-				emptyTemplate={emptyTemplate}
-			/>
+				draggable
+				autoUpload
+				multiple={false}
+				onSuccess={uploadHandler}
+				action={''}
+			>
+				<div>
+					<div className='upload-inner'>Click or Drag data file</div>
+				</div>
+			</Uploader>
 		</div>
 	)
 }

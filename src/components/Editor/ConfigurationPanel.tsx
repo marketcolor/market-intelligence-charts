@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
 import { useObjectState } from '@uidotdev/usehooks'
 
-import { TabView, TabPanel } from 'primereact/tabview'
-import { Button } from 'primereact/button'
-import { Panel } from 'primereact/panel'
+// import { TabView, TabPanel } from 'primereact/tabview'
+// import { Button } from 'primereact/button'
+// import { Panel } from 'primereact/panel'
+
+import { Tabs, Button, Panel } from 'rsuite'
 
 import {
 	CheckboxInput,
@@ -124,20 +126,8 @@ const ConfigurationPanel = ({
 	clearSeriesConfig,
 	generateChartConfig,
 }: Props) => {
-	const footerTemplate = () => {
-		return (
-			<div className='configuration-footer'>
-				<Button rounded onClick={() => generateChartConfig()}>
-					Start
-				</Button>
-				<Button rounded onClick={() => clearSeriesConfig()}>
-					Select Different File
-				</Button>
-			</div>
-		)
-	}
 	return (
-		<Panel header='Configure Chart' className='configuration-panel' footerTemplate={footerTemplate}>
+		<Panel header='Configure Chart' className='configuration-panel'>
 			<ControlTab title='Info' open>
 				<InputBlock numColumns='1'>
 					<TextInput
@@ -175,18 +165,22 @@ const ConfigurationPanel = ({
 				</InputBlock>
 			</ControlTab>
 			<ControlTab title='Series' open>
-				<TabView scrollable renderActiveOnly={false}>
+				<Tabs defaultActiveKey={'0'}>
 					{seriesConfig.map((s, id) => (
-						<TabPanel key={s.name} header={s.name}>
+						<Tabs.Tab key={s.name} title={s.name} eventKey={id.toString()}>
 							<SeriesConfig
 								seriesId={id}
 								name={s.name}
 								updateHandler={(config) => updateSeriesConfig(id, config)}
 							></SeriesConfig>
-						</TabPanel>
+						</Tabs.Tab>
 					))}
-				</TabView>
+				</Tabs>
 			</ControlTab>
+			<div className='configuration-footer'>
+				<Button onClick={() => generateChartConfig()}>Start</Button>
+				<Button onClick={() => clearSeriesConfig()}>Select Different File</Button>
+			</div>
 		</Panel>
 	)
 }
