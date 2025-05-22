@@ -1,45 +1,13 @@
 ---
-import Papa from 'papaparse'
-import { timeParse } from 'd3'
-
 import Layout from '@layouts/Layout.astro'
-import TimelineChart from '@/components/Chart'
+import Editor from '@components/Editor'
+import RSuiteProvider from '@/components/RSuiteProvider'
 
-import type { TimelineChartDataEntry, TimelineChartRawDataEntry } from '@types'
-
-import { data as rawData } from '../data/stock-prices_data'
-import { config } from '../data/stock-prices_config'
-
-const { errors, data: parsedData }: { errors: any[]; data: any[] } = Papa.parse(rawData, {
-	dynamicTyping: true,
-})
-
-if (errors.length) {
-	throw new Error(`Error parsing data: ${JSON.stringify(errors)}`)
-}
-
-const columns: string[] = parsedData[0]
-const dataset: TimelineChartRawDataEntry[] = parsedData.slice(1)
-
-const [dateKey, ...series] = columns
-const dateParser = timeParse('%d/%m/%Y')
-const data: TimelineChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
-	dateParser(dateStr)!,
-	...values,
-])
+export const prerender = false
 ---
 
 <Layout>
-	<div class='container'>
-		<TimelineChart data={data} config={config} client:load />
-	</div>
+	<RSuiteProvider client:load>
+		<Editor client:load />
+	</RSuiteProvider>
 </Layout>
-
-<style>
-	.container {
-		height: 100%;
-		display: grid;
-		place-content: center;
-		background-color: white;
-	}
-</style>
