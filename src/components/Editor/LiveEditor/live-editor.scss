@@ -1,9 +1,11 @@
 .live-editor {
+	--toolbar-height: 70px;
 	position: relative;
 	height: 100%;
 	display: grid;
 	grid-template-columns: auto 1fr;
 	grid-template-areas: 'controls preview';
+	align-items: start;
 }
 
 .toolbar {
@@ -15,7 +17,7 @@
 	display: flex;
 	justify-content: end;
 	gap: 1rem;
-	background-color: #000;
+	background-color: var(--rs-gray-900);
 	z-index: 1;
 
 	button {
@@ -30,36 +32,38 @@
 }
 
 .controls-container {
-	position: relative;
 	grid-area: controls;
 	width: 400px;
-	padding: 8px;
+	padding: 4px;
 	padding-bottom: 10vh;
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
-	z-index: 1;
-
-	.control-tab {
-		border: 1px solid #eeeeee;
-
-		.title {
-			background-color: #eee;
-			text-align: center;
-			padding: 4px;
-		}
-	}
+	z-index: 2;
+	min-height: 200vh;
 }
 
 .preview-container {
+	// position: relative;
+	position: sticky;
+	top: 0;
 	grid-area: preview;
 	background-color: #fff;
+	height: 100vh;
+	overflow: hidden;
+
+	background-image: linear-gradient(45deg, #cccccc80 25%, transparent 25%),
+		linear-gradient(-45deg, #cccccc80 25%, transparent 25%),
+		linear-gradient(45deg, transparent 75%, #cccccc80 75%),
+		linear-gradient(-45deg, transparent 75%, #cccccc80 75%);
+	background-size: 20px 20px;
+	background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+	background-repeat: repeat;
+
 	> .sticky-container {
-		position: sticky;
-		top: 0;
-		height: 100vh;
+		height: 100%;
 		display: grid;
 		place-items: center;
 		padding: 1rem;
+		outline: 1px solid tomato;
 	}
 }

@@ -3,7 +3,7 @@ import { useRef } from 'react'
 import Session from 'svg-text-to-path'
 
 import { fonts } from '@styles/theme'
-import { Button } from 'primereact/button'
+import { Button } from 'rsuite'
 
 const Toolbar = ({ chartTitle }: { chartTitle?: string }) => {
 	const tempContainer = useRef<HTMLDivElement>(null)

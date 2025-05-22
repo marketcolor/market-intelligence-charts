@@ -1,12 +1,14 @@
-import { Accordion, AccordionTab } from 'primereact/accordion'
-import { InputText } from 'primereact/inputtext'
-import { InputTextarea } from 'primereact/inputtextarea'
-import { InputNumber } from 'primereact/inputnumber'
-import { FloatLabel } from 'primereact/floatlabel'
-import { Dropdown } from 'primereact/dropdown'
-import { Calendar } from 'primereact/calendar'
-import { Checkbox } from 'primereact/checkbox'
-import { SelectButton } from 'primereact/selectbutton'
+import {
+	Input,
+	InputNumber,
+	SelectPicker,
+	Checkbox,
+	VStack,
+	Accordion,
+	DatePicker,
+	RadioTileGroup,
+	RadioTile,
+} from 'rsuite'
 
 import type { ReactNode } from 'react'
 
@@ -20,8 +22,10 @@ export const ControlTab = ({
 	children?: ReactNode
 }) => {
 	return (
-		<Accordion activeIndex={open ? 0 : -1}>
-			<AccordionTab header={title}>{children}</AccordionTab>
+		<Accordion>
+			<Accordion.Panel header={title} defaultExpanded={open}>
+				{children}
+			</Accordion.Panel>
 		</Accordion>
 	)
 }
@@ -60,27 +64,18 @@ export const NumberInput = ({
 	handleChange: Function
 }) => {
 	return (
-		<div className='input-wrapper'>
-			<FloatLabel>
-				<label htmlFor={label}>{label}:</label>
-				<InputNumber
-					id={label}
-					value={value}
-					onValueChange={(e) => handleChange(e.target.value)}
-					showButtons
-					buttonLayout='horizontal'
-					step={step}
-					max={max}
-					min={min}
-					disabled={disabled}
-					mode='decimal'
-					decrementButtonClassName='p-button-danger'
-					incrementButtonClassName='p-button-success'
-					incrementButtonIcon='pi pi-plus'
-					decrementButtonIcon='pi pi-minus'
-				/>
-			</FloatLabel>
-		</div>
+		<VStack>
+			<label htmlFor={label}>{label}:</label>
+			<InputNumber
+				id={label}
+				value={value}
+				step={step}
+				max={max}
+				min={min}
+				disabled={disabled}
+				onChange={(value) => handleChange(value)}
+			></InputNumber>
+		</VStack>
 	)
 }
 
@@ -95,12 +90,14 @@ export const DateInput = ({
 }) => {
 	const dateValue = typeof value === 'string' ? new Date(value) : value
 	return (
-		<div className='input-wrapper'>
-			<FloatLabel>
-				<Calendar id={label} value={dateValue} onChange={(e) => handleChange(e.target.value)} />
-				<label htmlFor={label}>{label}</label>
-			</FloatLabel>
-		</div>
+		<VStack>
+			<label htmlFor={label}>{label}</label>
+			<DatePicker
+				value={dateValue}
+				onChange={(value) => handleChange(value)}
+				cleanable={false}
+			></DatePicker>
+		</VStack>
 	)
 }
 
@@ -121,19 +118,17 @@ export const Select = ({
 	}))
 
 	return (
-		<div className='input-wrapper'>
-			<FloatLabel>
-				<label htmlFor={label}>{label}</label>
-				<Dropdown
-					id={label}
-					value={value}
-					onChange={(e) => handleChange(e.target.value)}
-					options={dropdownOptions}
-					optionLabel='label'
-					optionValue='value'
-				/>
-			</FloatLabel>
-		</div>
+		<VStack>
+			<label htmlFor={label}>{label}</label>
+			<SelectPicker
+				id={label}
+				data={dropdownOptions}
+				value={value}
+				onChange={(value) => handleChange(value)}
+				searchable={false}
+				cleanable={false}
+			></SelectPicker>
+		</VStack>
 	)
 }
 
@@ -150,24 +145,23 @@ export const ColorSelect = ({
 	disabled?: boolean
 	handleChange: Function
 }) => {
-	const swatchTemplate = (option: { label: string; value: string }) => {
-		return <div className='swatch-bullet' style={{ color: option.value }}></div>
-	}
-
 	return (
-		<div className='input-wrapper'>
+		<VStack>
 			<label htmlFor={label}>{label}</label>
-			<SelectButton
-				className='color-select'
-				value={value}
-				onChange={(e) => handleChange(e.value)}
-				options={options}
-				disabled={disabled}
-				unstyled
-				allowEmpty={false}
-				itemTemplate={swatchTemplate}
-			></SelectButton>
-		</div>
+			<RadioTileGroup
+				defaultValue={value}
+				onChange={(value) => {
+					handleChange(value)
+				}}
+				inline
+			>
+				{options.map(({ value, label }) => (
+					<RadioTile value={value}>
+						<div className='swatch-bullet' style={{ color: value }}></div>
+					</RadioTile>
+				))}
+			</RadioTileGroup>
+		</VStack>
 	)
 }
 
@@ -181,10 +175,9 @@ export const CheckboxInput = ({
 	handleChange: Function
 }) => {
 	return (
-		<div className='input-wrapper'>
-			<label>{label}:</label>
-			<Checkbox checked={value} onChange={(e) => handleChange(e.target.checked)}></Checkbox>
-		</div>
+		<Checkbox checked={value} onChange={(value) => handleChange(value)}>
+			{label}
+		</Checkbox>
 	)
 }
 
@@ -200,35 +193,40 @@ export const TextInput = ({
 	handleChange: Function
 }) => {
 	return (
-		<div className='input-wrapper'>
-			<FloatLabel>
-				<InputText
-					id={label}
-					value={value}
-					disabled={disabled}
-					onChange={(e) => handleChange(e.target.value)}
-				/>
-				<label htmlFor={label}>{label}</label>
-			</FloatLabel>
-		</div>
+		<VStack>
+			<label htmlFor={label}>{label}</label>
+			<Input
+				id={label}
+				name={label}
+				value={value}
+				disabled={disabled}
+				onChange={(value) => handleChange(value)}
+			/>
+		</VStack>
 	)
 }
 
 export const TextAreaInput = ({
 	label,
 	value,
+	disabled = false,
 	handleChange,
 }: {
 	label: string
 	value: string
+	disabled?: boolean
 	handleChange: Function
 }) => {
 	return (
-		<div className='input-wrapper'>
-			<FloatLabel>
-				<InputTextarea id={label} value={value} onChange={(e) => handleChange(e.target.value)} />
-				<label htmlFor={label}>{label}</label>
-			</FloatLabel>
-		</div>
+		<VStack>
+			<label htmlFor={label}>{label}</label>
+			<Input
+				as='textarea'
+				id={label}
+				value={value}
+				disabled={disabled}
+				onChange={(value) => handleChange(value)}
+			/>
+		</VStack>
 	)
 }

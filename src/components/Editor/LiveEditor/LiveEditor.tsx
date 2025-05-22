@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { useList, useObjectState } from '@uidotdev/usehooks'
-import { TabView, TabPanel } from 'primereact/tabview'
-import { Button } from 'primereact/button'
+
+import { Tabs, Button } from 'rsuite'
 
 import TimelineChart from '@/components/Chart'
 import {
@@ -30,6 +30,7 @@ import type {
 	YAxisConfig,
 } from '@/types'
 import { ChartColor, ModuleType, YAxisSide } from '@/enums'
+import { CustomProvider } from 'rsuite'
 
 type Props = {
 	data: TimelineChartDataEntry[]
@@ -109,200 +110,202 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 	const availableYAxis = Object.keys(yAxis).filter((key) => yAxis?.[key as YAxisSide]) as YAxisSide[]
 
 	return (
-		<div className='live-editor'>
-			<Toolbar chartTitle={info.title}></Toolbar>
-			<div className='controls-container'>
-				<ControlTab title='Info' open>
-					<InputBlock numColumns='1'>
-						<TextInput
-							label='Title'
-							value={info.title || ''}
-							//@ts-ignore
-							handleChange={(v) => setInfo(() => ({ title: v }))}
-						></TextInput>
-						<TextAreaInput
-							label='Descriptions'
-							value={info.description || ''}
-							//@ts-ignore
-							handleChange={(v) => setInfo(() => ({ description: v }))}
-						></TextAreaInput>
-					</InputBlock>
-				</ControlTab>
-				<ControlTab title='Size' open>
-					<InputBlock numColumns='2'>
-						<NumberInput
-							label='Width'
-							value={size.width}
-							min={400}
-							max={1200}
-							//@ts-ignore
-							handleChange={(v) => setSize(() => ({ width: Number(v) }))}
-						></NumberInput>
-						<NumberInput
-							label='Heigh'
-							value={size.height}
-							min={300}
-							max={600}
-							//@ts-ignore
-							handleChange={(v) => setSize(() => ({ height: Number(v) }))}
-						></NumberInput>
-					</InputBlock>
-				</ControlTab>
-				<ControlTab title='Adjust margins'>
-					<InputBlock numColumns='2'>
-						<NumberInput
-							label='Left'
-							value={marginAdjust.left}
-							min={0}
-							//@ts-ignore
-							handleChange={(v) => setMarginAdjust(() => ({ left: Number(v) }))}
-						></NumberInput>
-						<NumberInput
-							label='Right'
-							value={marginAdjust.right}
-							min={0}
-							//@ts-ignore
-							handleChange={(v) => setMarginAdjust(() => ({ right: Number(v) }))}
-						></NumberInput>
-						<NumberInput
-							label='Top'
-							value={marginAdjust.top}
-							min={0}
-							//@ts-ignore
-							handleChange={(v) => setMarginAdjust(() => ({ top: Number(v) }))}
-						></NumberInput>
-						<NumberInput
-							label='Bottom'
-							value={marginAdjust.bottom}
-							min={0}
-							//@ts-ignore
-							handleChange={(v) => setMarginAdjust(() => ({ bottom: Number(v) }))}
-						></NumberInput>
-					</InputBlock>
-				</ControlTab>
-				<ControlTab title='X Axis Ticks'>
-					<InputBlock numColumns='2'>
-						<DateInput
-							label='Start date'
-							value={xAxisTicks.startDate}
-							//@ts-ignore
-							handleChange={(v) => setXAxisTicks(() => ({ startDate: v }))}
-						></DateInput>
-						<Select
-							label='Date interval'
-							value={xAxisTicks.dateInterval}
-							options={[{ value: 'day' }, { value: 'month' }, { value: 'year' }]}
-							//@ts-ignore
-							handleChange={(v) => setXAxisTicks(() => ({ dateInterval: v }))}
-						></Select>
-						<NumberInput
-							label='Ticks number'
-							value={xAxisTicks.numTicks}
-							min={2}
-							//@ts-ignore
-							handleChange={(v) => setXAxisTicks(() => ({ numTicks: v }))}
-						></NumberInput>
-						<NumberInput
-							label='Step'
-							value={xAxisTicks.intervalStep}
-							min={1}
-							//@ts-ignore
-							handleChange={(v) => setXAxisTicks(() => ({ intervalStep: v }))}
-						></NumberInput>
-						<Select
-							label='Date format'
-							value={xAxisTicks.dateFormat}
-							options={[
-								{ value: '%m/%y', label: 'mm/yy' },
-								{ value: '%m/%Y', label: 'mm/yyyy' },
-								{ value: '%Y', label: 'yyyy' },
-							]}
-							//@ts-ignore
-							handleChange={(v) => setXAxisTicks(() => ({ dateFormat: v }))}
-						></Select>
-					</InputBlock>
-				</ControlTab>
-				<ControlTab title='Y Axis'>
-					<TabView renderActiveOnly={false}>
-						<TabPanel header='Left Y Axis'>
-							{yAxis.left ? (
-								<YAxisSideInput
-									side={YAxisSide.Left}
-									initialConfig={yAxis.left}
-									//@ts-ignore
-									handleChange={(v) => setYAxis(() => ({ left: v }))}
-								></YAxisSideInput>
-							) : (
-								<InputBlock numColumns='2'>
-									<div>Left axis is not defined</div>
-									<Button
+		<CustomProvider theme='dark'>
+			<div className='live-editor'>
+				<Toolbar chartTitle={info.title}></Toolbar>
+				<div className='controls-container'>
+					<ControlTab title='Info' open>
+						<InputBlock numColumns='1'>
+							<TextInput
+								label='Title'
+								value={info.title || ''}
+								//@ts-ignore
+								handleChange={(v) => setInfo(() => ({ title: v }))}
+							></TextInput>
+							<TextAreaInput
+								label='Description'
+								value={info.description || ''}
+								//@ts-ignore
+								handleChange={(v) => setInfo(() => ({ description: v }))}
+							></TextAreaInput>
+						</InputBlock>
+					</ControlTab>
+					<ControlTab title='Size' open>
+						<InputBlock numColumns='2'>
+							<NumberInput
+								label='Width'
+								value={size.width}
+								min={400}
+								max={1200}
+								//@ts-ignore
+								handleChange={(v) => setSize(() => ({ width: Number(v) }))}
+							></NumberInput>
+							<NumberInput
+								label='Heigh'
+								value={size.height}
+								min={300}
+								max={600}
+								//@ts-ignore
+								handleChange={(v) => setSize(() => ({ height: Number(v) }))}
+							></NumberInput>
+						</InputBlock>
+					</ControlTab>
+					<ControlTab title='Adjust margins'>
+						<InputBlock numColumns='2'>
+							<NumberInput
+								label='Left'
+								value={marginAdjust.left}
+								min={0}
+								//@ts-ignore
+								handleChange={(v) => setMarginAdjust(() => ({ left: Number(v) }))}
+							></NumberInput>
+							<NumberInput
+								label='Right'
+								value={marginAdjust.right}
+								min={0}
+								//@ts-ignore
+								handleChange={(v) => setMarginAdjust(() => ({ right: Number(v) }))}
+							></NumberInput>
+							<NumberInput
+								label='Top'
+								value={marginAdjust.top}
+								min={0}
+								//@ts-ignore
+								handleChange={(v) => setMarginAdjust(() => ({ top: Number(v) }))}
+							></NumberInput>
+							<NumberInput
+								label='Bottom'
+								value={marginAdjust.bottom}
+								min={0}
+								//@ts-ignore
+								handleChange={(v) => setMarginAdjust(() => ({ bottom: Number(v) }))}
+							></NumberInput>
+						</InputBlock>
+					</ControlTab>
+					<ControlTab title='X Axis Ticks'>
+						<InputBlock numColumns='2'>
+							<DateInput
+								label='Start date'
+								value={xAxisTicks.startDate}
+								//@ts-ignore
+								handleChange={(v) => setXAxisTicks(() => ({ startDate: v }))}
+							></DateInput>
+							<Select
+								label='Date interval'
+								value={xAxisTicks.dateInterval}
+								options={[{ value: 'day' }, { value: 'month' }, { value: 'year' }]}
+								//@ts-ignore
+								handleChange={(v) => setXAxisTicks(() => ({ dateInterval: v }))}
+							></Select>
+							<NumberInput
+								label='Ticks number'
+								value={xAxisTicks.numTicks}
+								min={2}
+								//@ts-ignore
+								handleChange={(v) => setXAxisTicks(() => ({ numTicks: v }))}
+							></NumberInput>
+							<NumberInput
+								label='Step'
+								value={xAxisTicks.intervalStep}
+								min={1}
+								//@ts-ignore
+								handleChange={(v) => setXAxisTicks(() => ({ intervalStep: v }))}
+							></NumberInput>
+							<Select
+								label='Date format'
+								value={xAxisTicks.dateFormat}
+								options={[
+									{ value: '%m/%y', label: 'mm/yy' },
+									{ value: '%m/%Y', label: 'mm/yyyy' },
+									{ value: '%Y', label: 'yyyy' },
+								]}
+								//@ts-ignore
+								handleChange={(v) => setXAxisTicks(() => ({ dateFormat: v }))}
+							></Select>
+						</InputBlock>
+					</ControlTab>
+					<ControlTab title='Y Axis'>
+						<Tabs defaultActiveKey='1'>
+							<Tabs.Tab title='Left Y Axis' eventKey='1'>
+								{yAxis.left ? (
+									<YAxisSideInput
+										side={YAxisSide.Left}
+										initialConfig={yAxis.left}
 										//@ts-ignore
-										onClick={() => setYAxis(() => ({ left: defaultYAxisConfig }))}
-									>
-										Click to create one
-									</Button>
-								</InputBlock>
-							)}
-						</TabPanel>
-						<TabPanel header='Right Y Axis'>
-							{yAxis.right ? (
-								<YAxisSideInput
-									side={YAxisSide.Right}
-									initialConfig={yAxis.right}
-									//@ts-ignore
-									handleChange={(v) => setYAxis(() => ({ right: v }))}
-								></YAxisSideInput>
-							) : (
-								<InputBlock numColumns='1'>
-									<div className='input-wrapper'>
-										<label>Right axis is not defined</label>
+										handleChange={(v) => setYAxis(() => ({ left: v }))}
+									></YAxisSideInput>
+								) : (
+									<InputBlock numColumns='2'>
+										<div>Left axis is not defined</div>
 										<Button
 											//@ts-ignore
-											onClick={() => setYAxis(() => ({ right: defaultYAxisConfig }))}
+											onClick={() => setYAxis(() => ({ left: defaultYAxisConfig }))}
 										>
 											Click to create one
 										</Button>
-									</div>
-								</InputBlock>
-							)}
-						</TabPanel>
-					</TabView>
-				</ControlTab>
-				<ControlTab title='Series' open>
-					<TabView scrollable renderActiveOnly={false}>
-						{modules.length &&
-							modules.map((module, id) => (
-								<TabPanel key={id} header={series[module.series]}>
-									<InputBlock numColumns='2'>
-										<Select
-											label={'Type'}
-											value={module.type}
-											options={Object.values(ModuleType).map((value) => ({ value }))}
-											handleChange={(type: string) =>
-												updateModule(id, getDefaultModuleConfig(type as ModuleType, module)!)
-											}
-										></Select>
 									</InputBlock>
-									<InputBlock numColumns='2'>
-										<ModulesConfig
-											config={module}
-											availableAxis={availableYAxis}
-											handleChange={(value: Modules) => updateModule(id, value)}
-											legendConfig={legend[module.series]}
-											handleLegendChange={(config: LegendConfig) => updateLegend(id, config)}
-										></ModulesConfig>
+								)}
+							</Tabs.Tab>
+							<Tabs.Tab title='Right Y Axis' eventKey='2'>
+								{yAxis.right ? (
+									<YAxisSideInput
+										side={YAxisSide.Right}
+										initialConfig={yAxis.right}
+										//@ts-ignore
+										handleChange={(v) => setYAxis(() => ({ right: v }))}
+									></YAxisSideInput>
+								) : (
+									<InputBlock numColumns='1'>
+										<div className='input-wrapper'>
+											<label>Right axis is not defined</label>
+											<Button
+												//@ts-ignore
+												onClick={() => setYAxis(() => ({ right: defaultYAxisConfig }))}
+											>
+												Click to create one
+											</Button>
+										</div>
 									</InputBlock>
-								</TabPanel>
-							))}
-					</TabView>
-				</ControlTab>
-			</div>
-			<div className='preview-container'>
-				<div className='sticky-container'>
-					<TimelineChart data={data} config={updatedConfig}></TimelineChart>
+								)}
+							</Tabs.Tab>
+						</Tabs>
+					</ControlTab>
+					<ControlTab title='Series'>
+						<Tabs defaultActiveKey='0'>
+							{modules.length &&
+								modules.map((module, id) => (
+									<Tabs.Tab key={id} eventKey={id.toString()} title={series[module.series]}>
+										<InputBlock numColumns='2'>
+											<Select
+												label={'Type'}
+												value={module.type}
+												options={Object.values(ModuleType).map((value) => ({ value }))}
+												handleChange={(type: string) =>
+													updateModule(id, getDefaultModuleConfig(type as ModuleType, module)!)
+												}
+											></Select>
+										</InputBlock>
+										<InputBlock numColumns='2'>
+											<ModulesConfig
+												config={module}
+												availableAxis={availableYAxis}
+												handleChange={(value: Modules) => updateModule(id, value)}
+												legendConfig={legend[module.series]}
+												handleLegendChange={(config: LegendConfig) => updateLegend(id, config)}
+											></ModulesConfig>
+										</InputBlock>
+									</Tabs.Tab>
+								))}
+						</Tabs>
+					</ControlTab>
+				</div>
+				<div className='preview-container'>
+					<div className='sticky-container'>
+						{/* <TimelineChart data={data} config={updatedConfig}></TimelineChart> */}
+					</div>
 				</div>
 			</div>
-		</div>
+		</CustomProvider>
 	)
 }
 
