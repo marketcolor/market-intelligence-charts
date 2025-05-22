@@ -93,8 +93,6 @@ const Editor = () => {
 		}
 	}, [seriesConfig, chartSize, info, data])
 
-	console.log(seriesConfig)
-
 	return (
 		<div className='editor' data-live-editor={showLiveEditor}>
 			{!seriesConfig.length && <UploadPanel handleUpload={handleFileDrop}></UploadPanel>}
