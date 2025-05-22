@@ -9,6 +9,7 @@ import type { TimelineChartDataEntry, TimelineChartRawDataEntry } from '@types'
 
 import { data as rawData } from '../data/fed-funds_data'
 import { config } from '../data/fed-funds_config'
+import RSuiteProvider from '@/components/RSuiteProvider'
 
 const { errors, data: parsedData }: { errors: any[]; data: any[] } = Papa.parse(rawData, {
 	dynamicTyping: true,
@@ -31,7 +32,9 @@ const data: TimelineChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
 
 <Layout>
 	<div class='container'>
-		<LiveEditor data={data} initialConfig={config} series={series} client:load />
+		<RSuiteProvider client:load>
+			<LiveEditor data={data} initialConfig={config} series={series} client:load />
+		</RSuiteProvider>
 	</div>
 </Layout>
 
