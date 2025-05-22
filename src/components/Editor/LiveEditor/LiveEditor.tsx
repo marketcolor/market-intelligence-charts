@@ -301,7 +301,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 				</div>
 				<div className='preview-container'>
 					<div className='sticky-container'>
-						{/* <TimelineChart data={data} config={updatedConfig}></TimelineChart> */}
+						<TimelineChart data={data} config={updatedConfig}></TimelineChart>
 					</div>
 				</div>
 			</div>
