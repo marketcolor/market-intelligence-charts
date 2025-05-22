@@ -1,0 +1,18 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { SignIn as SignInComponent } from '@clerk/astro/components'
+---
+
+<Layout>
+	<main>
+		<SignInComponent />
+	</main>
+</Layout>
+
+<style>
+	main {
+		height: 100%;
+		display: grid;
+		place-content: center;
+	}
+</style>
