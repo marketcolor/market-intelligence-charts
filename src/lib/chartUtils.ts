@@ -168,7 +168,7 @@ export const getXAxisConfig = (data: TimelineChartDataEntry[]) => {
 export const getYAxisConfig = (
 	data: TimelineChartDataEntry[],
 	series: { side: YAxisSide }[],
-	height?: number
+	height = 500
 ) => {
 	const sidesIndices = series.reduce((pv: { [key: string]: any }, s, id) => {
 		if (!Object.hasOwn(pv, s.side)) {
@@ -178,26 +178,68 @@ export const getYAxisConfig = (
 		return pv
 	}, {})
 
+	const numTicks = Math.round(height / 50)
 	const config: { [key in YAxisSide]?: YAxisConfig } = {}
+
+	let primaryBaseDomain = [0, 100]
 
 	for (const [key, { dataIndices }] of Object.entries(sidesIndices)) {
 		const domain: [number, number] = [
 			min(data, (d) => min(d.filter((e, id) => dataIndices.includes(id)))) as number,
 			max(data, (d) => max(d.filter((e, id) => dataIndices.includes(id)))) as number,
 		]
-		const cfgScale = scaleLinear(domain, [0, height || 1000]).nice()
-		const cfgDomain = cfgScale.domain() as [number, number]
-		const cfgTicks = cfgScale.ticks()
+		if (Object.keys(config).length === 1) {
+			const primConfig = config.left!
+			// secondary scale should be adjusted to primary
+			const M = (domain[1] - domain[0]) / (primaryBaseDomain[1] - primaryBaseDomain[0])
+			const B = domain[0] - M * primaryBaseDomain[0]
 
-		config[key as YAxisSide] = {
-			domain: cfgDomain,
-			guideLines: key === 'left',
-			ticksConfig: {
-				startVal: cfgTicks[0],
-				numTicks: cfgTicks.length,
-				tickInterval: cfgTicks[1] - cfgTicks[0],
-				decimals: 0,
-			},
+			// Apply this transformation to the LEFT's *nice* domain
+			// to get the *corresponding* domain for the right axis.
+			const y2DerivedMin = M * primConfig.domain[0] + B
+			const y2DerivedMax = M * primConfig.domain[1] + B
+
+			// Create the right Y-Axis scale
+			const ySecondaryScale = scaleLinear([y2DerivedMin, y2DerivedMax], [height, 0]).nice(numTicks)
+
+			const secondaryDomain = ySecondaryScale.domain() as [number, number]
+
+			const secondaryTicks = ySecondaryScale.ticks(numTicks)
+			const tickInterval = secondaryTicks[1] - secondaryTicks[0]
+			const intervalParts = tickInterval.toString().split('.')
+
+			const decimals = intervalParts.length === 1 ? 0 : intervalParts[1].length
+
+			config[key as YAxisSide] = {
+				domain: secondaryDomain,
+				guideLines: false,
+				ticksConfig: {
+					startVal: secondaryTicks[0],
+					numTicks: secondaryTicks.length,
+					tickInterval: secondaryTicks[1] - secondaryTicks[0],
+					decimals,
+				},
+			}
+		} else {
+			primaryBaseDomain = domain
+			const primaryYScale = scaleLinear(domain, [height, 0]).nice(numTicks)
+			const primaryYDomain = primaryYScale.domain() as [number, number]
+			const primaryTicks = primaryYScale.ticks(numTicks)
+
+			const tickInterval = primaryTicks[1] - primaryTicks[0]
+			const intervalParts = tickInterval.toString().split('.')
+			const decimals = intervalParts.length === 1 ? 0 : intervalParts[1].length
+
+			config[key as YAxisSide] = {
+				domain: primaryYDomain,
+				guideLines: key === 'left',
+				ticksConfig: {
+					startVal: primaryTicks[0],
+					numTicks: primaryTicks.length,
+					tickInterval: primaryTicks[1] - primaryTicks[0],
+					decimals,
+				},
+			}
 		}
 	}
 	return config
