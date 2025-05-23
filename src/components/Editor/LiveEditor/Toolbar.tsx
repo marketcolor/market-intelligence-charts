@@ -8,7 +8,7 @@ import { Button } from 'rsuite'
 const Toolbar = ({ chartTitle }: { chartTitle?: string }) => {
 	const tempContainer = useRef<HTMLDivElement>(null)
 
-	const slug = chartTitle?.replaceAll(' ', '_') || 'chart'
+	const slug = chartTitle?.replaceAll(' ', '_').toLocaleLowerCase() || 'chart'
 
 	const generateTempSvg = () => {
 		if (tempContainer.current) {
@@ -17,6 +17,16 @@ const Toolbar = ({ chartTitle }: { chartTitle?: string }) => {
 			const cloneSvg = chartSvg?.cloneNode(true) as SVGElement
 			cloneSvg.removeAttribute('id')
 			tempEl.append(cloneSvg)
+
+			const visibilityElements = tempEl.querySelectorAll<SVGAElement>('[visibility]')
+			visibilityElements.forEach((el) => {
+				const visible = el.getAttribute('visibility') === 'visible'
+				if (visible) {
+					el.removeAttribute('visibility')
+				} else {
+					el.parentNode?.removeChild(el)
+				}
+			})
 
 			const baselineElements = tempEl.querySelectorAll<SVGAElement>('[dominant-baseline]')
 			baselineElements.forEach((el) => {
