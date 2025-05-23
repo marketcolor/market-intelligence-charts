@@ -128,14 +128,14 @@ const AreaChartEditor = ({
 	const [side, setSide] = useState<YAxisSide>(config.side)
 	const [color, setColor] = useState<ChartColor>(config.color)
 	const [legendText, setLegendText] = useState<string>(legendConfig?.text || '')
-	const [showLegend, setShowLegend] = useState<boolean>(!!legendConfig?.hide)
+	const [showLegend, setShowLegend] = useState<boolean>(!legendConfig?.hide)
 
 	useEffect(() => {
 		handleChange({ ...config, side, color })
 	}, [side, color])
 
 	useEffect(() => {
-		handleLegendChange({ text: legendText, show: showLegend, color })
+		handleLegendChange({ text: legendText, hide: !showLegend, color })
 	}, [legendText, showLegend, color])
 	return (
 		<>
@@ -178,10 +178,10 @@ type PeriodAreaProps = {
 
 const PeriodAreasEditor = ({ config, legendConfig, handleLegendChange }: PeriodAreaProps) => {
 	const [legendText, setLegendText] = useState<string>(legendConfig?.text || '')
-	const [showLegend, setShowLegend] = useState<boolean>(!!legendConfig?.hide)
+	const [showLegend, setShowLegend] = useState<boolean>(!legendConfig?.hide)
 
 	useEffect(() => {
-		handleLegendChange({ text: legendText, show: showLegend, color: ChartColor.RecessionGrey })
+		handleLegendChange({ text: legendText, hide: !showLegend, color: ChartColor.RecessionGrey })
 	}, [legendText, showLegend])
 
 	return (

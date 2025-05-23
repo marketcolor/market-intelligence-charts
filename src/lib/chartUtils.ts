@@ -13,7 +13,6 @@ import {
 	extent,
 	max,
 	min,
-	ticks,
 	utcTicks,
 	utcYear,
 	utcMonth,
@@ -22,6 +21,7 @@ import {
 import type { ScaleLinear, ScaleTime } from 'd3'
 
 import type {
+	DateInterval,
 	NumericTicksConfig,
 	TickObject,
 	TimelineChartDataEntry,
@@ -134,34 +134,47 @@ export const getTimeDomain = (data: TimelineChartDataEntry[], timeSeries: number
 	return extent(data, (d) => d[timeSeries]) as [Date, Date]
 }
 
-export const getTimeTicksConfig = (domain: [Date, Date]) => {
-	const ticks = utcTicks(domain[0], domain[1], 9)
-	const [start, end] = ticks
-
-	const config: TimelineTicksConfig = {
-		startDate: start,
-		numTicks: ticks.length,
-		dateInterval: 'day',
-		intervalStep: 0,
-		dateFormat: '%m/%y',
-	}
+const getTimeInterval = (start: Date, end: Date) => {
 	const yearInterval = utcYear.count(start, end)
 	const monthInterval = utcMonth.count(start, end)
 
+	const result = {
+		dateInterval: 'day' as DateInterval,
+		intervalStep: 1,
+	}
+
 	if (yearInterval) {
-		config.dateInterval = 'year'
-		config.intervalStep = yearInterval
+		result.dateInterval = 'year'
+		result.intervalStep = yearInterval
 	} else {
-		config.dateInterval = 'month'
-		config.intervalStep = monthInterval
+		result.dateInterval = 'month'
+		result.intervalStep = monthInterval
+	}
+	return result
+}
+
+export const getTimeTicksConfig = (domain: [Date, Date], preset?: Partial<TimelineTicksConfig>) => {
+	const ticks = utcTicks(domain[0], domain[1], 9)
+	const [start, end] = ticks
+	const { dateInterval, intervalStep } = getTimeInterval(start, end)
+
+	const config: TimelineTicksConfig = {
+		startDate: preset?.startDate || start,
+		numTicks: preset?.numTicks || ticks.length,
+		dateInterval: preset?.dateInterval || dateInterval,
+		intervalStep: preset?.intervalStep || intervalStep,
+		dateFormat: preset?.dateFormat || '%m/%y',
 	}
 
 	return config
 }
 
-export const getXAxisConfig = (data: TimelineChartDataEntry[]) => {
+export const getXAxisConfig = (
+	data: TimelineChartDataEntry[],
+	preset?: Partial<TimelineTicksConfig>
+) => {
 	const domain = extent(data, (d) => d[0]) as [Date, Date]
-	const ticksConfig = getTimeTicksConfig(domain)
+	const ticksConfig = getTimeTicksConfig(domain, preset)
 	return { domain, ticksConfig }
 }
 

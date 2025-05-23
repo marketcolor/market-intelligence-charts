@@ -23,6 +23,7 @@ import { ChartColorOptions } from '@lib/configUtils'
 import { ChartColor, ModuleType, YAxisSide } from '@/enums'
 
 import './configuration-panel.scss'
+import type { TimelineChartConfig } from '@/types'
 
 export type SeriesConfigProps = {
 	name: string
@@ -38,20 +39,22 @@ const configColors = Object.values(ChartColor)
 const SeriesConfig = ({
 	name,
 	seriesId,
+	preset,
 	updateHandler,
 }: {
 	name: string
 	seriesId: number
+	preset?: Partial<SeriesConfigProps>
 	updateHandler: (config: SeriesConfigProps) => void
 }) => {
 	const initialColor = configColors[seriesId % configColors.length]
 	const [config, setConfig] = useObjectState<SeriesConfigProps>({
 		name,
 		legend: name,
-		showLegend: true,
-		type: 'lineChart',
-		color: initialColor,
-		side: YAxisSide.Left,
+		showLegend: preset?.showLegend !== undefined ? preset?.showLegend : true,
+		type: preset?.type || 'lineChart',
+		color: preset?.color || initialColor,
+		side: preset?.side || YAxisSide.Left,
 	})
 
 	const updateConfig = (key: keyof SeriesConfigProps, value: any) => {
@@ -116,6 +119,7 @@ type Props = {
 	updateSeriesConfig: Function
 	clearSeriesConfig: Function
 	generateChartConfig: Function
+	preset?: Partial<TimelineChartConfig>
 }
 
 const ConfigurationPanel = ({
@@ -127,6 +131,7 @@ const ConfigurationPanel = ({
 	updateSeriesConfig,
 	clearSeriesConfig,
 	generateChartConfig,
+	preset,
 }: Props) => {
 	return (
 		<Panel header='Configure Chart' className='configuration-panel'>
@@ -173,6 +178,7 @@ const ConfigurationPanel = ({
 							<SeriesConfig
 								seriesId={id}
 								name={s.name}
+								preset={preset?.modules?.[id]}
 								updateHandler={(config) => updateSeriesConfig(id, config)}
 							></SeriesConfig>
 						</Tabs.Tab>

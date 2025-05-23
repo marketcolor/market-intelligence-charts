@@ -1,0 +1,17 @@
+---
+import Layout from '@layouts/Layout.astro'
+import Editor from '@components/Editor'
+import RSuiteProvider from '@/components/RSuiteProvider'
+
+import { presets } from '@/data/presets'
+
+// const cookie = Astro.request.headers.get('cookie')
+const url = new URL(Astro.request.url)
+const preset = url.searchParams.get('name')
+---
+
+<Layout>
+	<RSuiteProvider client:load>
+		<Editor client:load preset={presets[preset]} />
+	</RSuiteProvider>
+</Layout>
