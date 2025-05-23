@@ -76,6 +76,7 @@ const SeriesConfig = ({
 					label='Color'
 					value={config.color}
 					options={ChartColorOptions}
+					disabled={config.type === ModuleType.PeriodAreas}
 					//@ts-ignore
 					handleChange={(value) => updateConfig('color', value)}
 				></ColorSelect>
@@ -84,6 +85,7 @@ const SeriesConfig = ({
 					value={config.side}
 					options={Object.values(YAxisSide).map((value) => ({ value }))}
 					handleChange={(value: string) => updateConfig('side', value)}
+					disabled={config.type === ModuleType.PeriodAreas}
 				></Select>
 			</InputBlock>
 			<InputBlock numColumns='2'>

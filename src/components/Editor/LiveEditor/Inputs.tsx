@@ -105,11 +105,13 @@ export const Select = ({
 	label,
 	value,
 	options,
+	disabled,
 	handleChange,
 }: {
 	label: string
 	value: string
 	options: { label?: string; value: string }[]
+	disabled?: boolean
 	handleChange: Function
 }) => {
 	const dropdownOptions = options.map((option) => ({
@@ -127,6 +129,7 @@ export const Select = ({
 				onChange={(value) => handleChange(value)}
 				searchable={false}
 				cleanable={false}
+				disabled={disabled}
 			></SelectPicker>
 		</VStack>
 	)
