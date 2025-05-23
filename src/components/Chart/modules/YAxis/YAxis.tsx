@@ -34,10 +34,12 @@ const YAxis = ({ side, config, scales, measures, htmlRef }: Props) => {
 	const [ticksWidth, setTicksWidth] = useState(0)
 
 	const { ticksConfig, label, guideLines } = config
+	const axisScale = scales.y[side]!
+	const [min, max] = axisScale.domain()
 
-	const ticks = ticksConfig ? getNumericTicks(ticksConfig) : []
-
-	const axisScale = scales.y[side]
+	const ticks = ticksConfig
+		? getNumericTicks(ticksConfig).filter(({ value }) => value >= min && value <= max)
+		: []
 
 	return (
 		<>
