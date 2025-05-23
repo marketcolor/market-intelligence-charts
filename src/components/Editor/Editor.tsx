@@ -19,7 +19,7 @@ import './editor.scss'
 
 const dateParser = timeParse('%d/%m/%Y')
 
-// const tempConfig = [
+// const tempSeriesConfig = [
 // 	{
 // 		name: 'Relative P/E',
 // 		legend: 'Relative P/E',
@@ -29,6 +29,7 @@ const dateParser = timeParse('%d/%m/%Y')
 // 		side: 'left',
 // 	},
 // ]
+
 const Editor = () => {
 	const [data, setData] = useState<TimelineChartDataEntry[]>()
 	const [chartSize, setChartSize] = useObjectState<{ chartWidth: number; chartHeight: number }>({
@@ -78,7 +79,7 @@ const Editor = () => {
 				yAxisConfig: getYAxisConfig(data, seriesConfig),
 				legend: seriesConfig
 					// .filter((s) => s.showLegend)
-					.map((c) => ({ text: c.legend, show: c.showLegend, color: c.color as ChartColor })),
+					.map((c) => ({ text: c.legend, hide: !c.showLegend, color: c.color as ChartColor })),
 				//@ts-ignore
 				modules: seriesConfig.map((c, id) => ({
 					type: c.type,

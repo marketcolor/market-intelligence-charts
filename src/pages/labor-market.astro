@@ -13,6 +13,7 @@ import RSuiteProvider from '@/components/RSuiteProvider'
 
 const { errors, data: parsedData }: { errors: any[]; data: any[] } = Papa.parse(rawData, {
 	dynamicTyping: true,
+	skipEmptyLines: true,
 })
 
 if (errors.length) {

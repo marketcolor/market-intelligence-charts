@@ -154,6 +154,7 @@ export const ColorSelect = ({
 					handleChange(value)
 				}}
 				inline
+				disabled={disabled}
 			>
 				{options.map(({ value, label }) => (
 					<RadioTile value={value}>
@@ -175,7 +176,7 @@ export const CheckboxInput = ({
 	handleChange: Function
 }) => {
 	return (
-		<Checkbox checked={value} onChange={(value) => handleChange(value)}>
+		<Checkbox checked={value} onChange={(_, checked) => handleChange(checked)}>
 			{label}
 		</Checkbox>
 	)

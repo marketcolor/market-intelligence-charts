@@ -83,9 +83,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 	})
 
 	const [legend, { updateAt: updateLegend }] = useList(
-		initialConfig.legend
-			? initialConfig.legend.map((l) => ({ ...l, show: l.show !== undefined ? l.show : true }))
-			: []
+		initialConfig.legend ? [...initialConfig.legend] : []
 	)
 
 	const [modules, { updateAt: updateModule }] = useList(

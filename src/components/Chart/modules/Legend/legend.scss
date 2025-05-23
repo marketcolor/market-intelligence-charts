@@ -16,6 +16,10 @@
 			align-items: center;
 			gap: 10px;
 
+			&[aria-hidden='true'] {
+				display: none;
+			}
+
 			.bullet {
 				width: 10px;
 				height: 10px;

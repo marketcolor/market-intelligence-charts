@@ -29,13 +29,12 @@ const bottomOffset = 25
 
 const Legend = ({ config, htmlRef }: Props) => {
 	const [legendOffsets, setLegendOffsets] = useState<ItemOffset[]>([])
-	const filteredConfig = config.filter((l) => (l.show === undefined ? true : l.show))
 
 	return (
 		<>
-			<Svg config={filteredConfig} offsets={legendOffsets}></Svg>
+			<Svg config={config} offsets={legendOffsets}></Svg>
 			{htmlRef &&
-				createPortal(<Html config={filteredConfig} handleOffsets={setLegendOffsets}></Html>, htmlRef)}
+				createPortal(<Html config={config} handleOffsets={setLegendOffsets}></Html>, htmlRef)}
 		</>
 	)
 }
@@ -58,8 +57,13 @@ const Html = memo(({ config, handleOffsets }: HtmlProps) => {
 	return (
 		<div className='legend' style={{ '--bottom-offset': `${bottomOffset}px` } as CSSProperties}>
 			<div className='legend-inner' ref={ref}>
-				{config.map(({ text, color }, id) => (
-					<div key={id} className='legend-item' style={{ '--legend-color': color } as CSSProperties}>
+				{config.map(({ text, color, hide }, id) => (
+					<div
+						key={id}
+						className='legend-item'
+						aria-hidden={hide}
+						style={{ '--legend-color': color } as CSSProperties}
+					>
 						<div className='bullet'></div>
 						<div className='legend-text'>{text}</div>
 					</div>
@@ -73,8 +77,12 @@ const Svg = memo(({ config, offsets }: SvgProps) => {
 	return (
 		<g transform={`translate(0, 0)`}>
 			{offsets.length &&
-				config.map(({ text, color }, id) => (
-					<g key={id} transform={`translate(${offsets[id][0]}, ${offsets[id][1]})`}>
+				config.map(({ text, color, hide }, id) => (
+					<g
+						key={id}
+						visibility={hide ? 'hidden' : 'visible'}
+						transform={`translate(${offsets[id][0]}, ${offsets[id][1]})`}
+					>
 						<rect fill={color} width={10} height={10} y={-5}></rect>
 						<text
 							x='19'

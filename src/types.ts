@@ -79,7 +79,7 @@ export type YAxisConfig = {
 export type LegendConfig = {
 	text: string
 	color: ChartColor
-	show?: boolean
+	hide?: boolean
 }
 // data entry
 export type GeneralDataEntry = {

@@ -33,7 +33,7 @@ const LineChartEditor = ({
 	const [side, setSide] = useState<YAxisSide>(config.side)
 	const [color, setColor] = useState<ChartColor>(config.color)
 	const [legendText, setLegendText] = useState<string>(legendConfig?.text || '')
-	const [showLegend, setShowLegend] = useState<boolean>(!!legendConfig?.show)
+	const [showLegend, setShowLegend] = useState<boolean>(!legendConfig?.hide)
 	const [threshold, setThreshold] = useObjectState({
 		active: !!config.threshold,
 		value: config.threshold?.value || 0,
@@ -52,7 +52,7 @@ const LineChartEditor = ({
 	}, [side, color, threshold])
 
 	useEffect(() => {
-		handleLegendChange({ text: legendText, show: showLegend, color })
+		handleLegendChange({ text: legendText, hide: !showLegend, color })
 	}, [legendText, showLegend, color])
 
 	return (
@@ -73,7 +73,7 @@ const LineChartEditor = ({
 			></ColorSelect>
 			<CheckboxInput
 				label='Show legend'
-				value={showLegend}
+				value={!!showLegend}
 				//@ts-ignore
 				handleChange={(value) => setShowLegend(value)}
 			></CheckboxInput>
@@ -128,7 +128,7 @@ const AreaChartEditor = ({
 	const [side, setSide] = useState<YAxisSide>(config.side)
 	const [color, setColor] = useState<ChartColor>(config.color)
 	const [legendText, setLegendText] = useState<string>(legendConfig?.text || '')
-	const [showLegend, setShowLegend] = useState<boolean>(!!legendConfig?.show)
+	const [showLegend, setShowLegend] = useState<boolean>(!!legendConfig?.hide)
 
 	useEffect(() => {
 		handleChange({ ...config, side, color })
@@ -178,7 +178,7 @@ type PeriodAreaProps = {
 
 const PeriodAreasEditor = ({ config, legendConfig, handleLegendChange }: PeriodAreaProps) => {
 	const [legendText, setLegendText] = useState<string>(legendConfig?.text || '')
-	const [showLegend, setShowLegend] = useState<boolean>(!!legendConfig?.show)
+	const [showLegend, setShowLegend] = useState<boolean>(!!legendConfig?.hide)
 
 	useEffect(() => {
 		handleLegendChange({ text: legendText, show: showLegend, color: ChartColor.RecessionGrey })

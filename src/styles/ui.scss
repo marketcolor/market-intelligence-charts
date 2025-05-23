@@ -57,6 +57,13 @@
 	}
 }
 
+.rs-radio-tile-disabled {
+	.rs-radio-tile-body {
+		cursor: not-allowed;
+		opacity: 0.4;
+	}
+}
+
 .rs-panel-header {
 	border-bottom: 1px solid var(--rs-border-primary);
 	background-color: var(--rs-gray-800);
