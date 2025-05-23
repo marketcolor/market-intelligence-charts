@@ -165,7 +165,11 @@ export const getXAxisConfig = (data: TimelineChartDataEntry[]) => {
 	return { domain, ticksConfig }
 }
 
-export const getYAxisConfig = (data: TimelineChartDataEntry[], series: { side: YAxisSide }[]) => {
+export const getYAxisConfig = (
+	data: TimelineChartDataEntry[],
+	series: { side: YAxisSide }[],
+	height?: number
+) => {
 	const sidesIndices = series.reduce((pv: { [key: string]: any }, s, id) => {
 		if (!Object.hasOwn(pv, s.side)) {
 			pv[s.side] = { dataIndices: [] }
@@ -181,11 +185,12 @@ export const getYAxisConfig = (data: TimelineChartDataEntry[], series: { side: Y
 			min(data, (d) => min(d.filter((e, id) => dataIndices.includes(id)))) as number,
 			max(data, (d) => max(d.filter((e, id) => dataIndices.includes(id)))) as number,
 		]
-
-		const cfgTicks = ticks(domain[0], domain[1], 6)
+		const cfgScale = scaleLinear(domain, [0, height || 1000]).nice()
+		const cfgDomain = cfgScale.domain() as [number, number]
+		const cfgTicks = cfgScale.ticks()
 
 		config[key as YAxisSide] = {
-			domain,
+			domain: cfgDomain,
 			guideLines: key === 'left',
 			ticksConfig: {
 				startVal: cfgTicks[0],

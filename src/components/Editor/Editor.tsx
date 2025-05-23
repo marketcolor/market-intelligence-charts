@@ -76,10 +76,12 @@ const Editor = () => {
 				width: chartSize.chartWidth,
 				height: chartSize.chartHeight,
 				xAxisConfig: getXAxisConfig(data),
-				yAxisConfig: getYAxisConfig(data, seriesConfig),
-				legend: seriesConfig
-					// .filter((s) => s.showLegend)
-					.map((c) => ({ text: c.legend, hide: !c.showLegend, color: c.color as ChartColor })),
+				yAxisConfig: getYAxisConfig(data, seriesConfig, chartSize.chartHeight),
+				legend: seriesConfig.map((c) => ({
+					text: c.legend,
+					hide: !c.showLegend,
+					color: c.color as ChartColor,
+				})),
 				//@ts-ignore
 				modules: seriesConfig.map((c, id) => ({
 					type: c.type,
