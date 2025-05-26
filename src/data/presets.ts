@@ -52,7 +52,7 @@ export const presets = {
 		xAxisConfig: {
 			ticksConfig: {
 				startDate: '1995-03-01',
-				numTicks: 7,
+				numTicks: 11,
 				dateInterval: 'year',
 				intervalStep: 3,
 				dateFormat: '%m/%y',
