@@ -1,8 +1,8 @@
 'use client'
 
-import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
+import { useCallback, useLayoutEffect, useState } from 'react'
 import Papa from 'papaparse'
-import { timeParse } from 'd3'
+import { timeParse, utcParse } from 'd3'
 import { useList, useObjectState } from '@uidotdev/usehooks'
 
 import UploadPanel from './UploadPanel'
@@ -17,7 +17,7 @@ import { ChartColor, ModuleType, YAxisSide } from '@/enums'
 
 import './editor.scss'
 
-const dateParser = timeParse('%d/%m/%Y')
+const dateParser = utcParse('%d/%m/%Y')
 
 // const tempSeriesConfig = [
 // 	{
@@ -64,18 +64,23 @@ const Editor = ({ preset }: { preset?: Partial<TimelineChartConfig> }) => {
 							])
 							setData(data)
 							set(
-								series.map((s: string, id: number) => ({
-									name: s,
-									type: preset?.modules?.[id].type,
-									showLegend:
-										//@ts-ignore
-										preset?.modules?.[id].showLegend !== undefined ? preset?.modules?.[id].showLegend : true,
-									legend: s,
-									...(preset?.modules?.[id]?.type !== 'periodAreas' && { side: preset?.modules?.[id].side }),
-									...(preset?.modules?.[id]?.type !== 'periodAreas' && {
-										color: preset?.modules?.[id].color,
-									}),
-								}))
+								series.map((s: string, id: number) => {
+									const seriesName = preset?.modules?.[id] ? series[preset.modules[id].series] : s
+									return {
+										name: seriesName,
+										series: id,
+										type: ModuleType.LineChart,
+										showLegend: true,
+										legend: seriesName,
+										...(preset?.modules?.[id]?.type !== 'periodAreas' && {
+											side: preset?.modules?.[id].side,
+										}),
+										...(preset?.modules?.[id]?.type !== 'periodAreas' && {
+											color: preset?.modules?.[id].color,
+										}),
+										...(preset?.modules?.[id] && { ...preset.modules[id] }),
+									}
+								})
 							)
 						}
 					},
@@ -92,21 +97,18 @@ const Editor = ({ preset }: { preset?: Partial<TimelineChartConfig> }) => {
 				width: chartSize.chartWidth,
 				height: chartSize.chartHeight,
 				xAxisConfig: getXAxisConfig(data, preset?.xAxisConfig?.ticksConfig),
-				yAxisConfig: getYAxisConfig(data, seriesConfig, chartSize.chartHeight),
+				yAxisConfig: getYAxisConfig(
+					data,
+					seriesConfig.filter(({ type }) => type !== ModuleType.PeriodAreas),
+					chartSize.chartHeight
+				),
 				legend: seriesConfig.map((c) => ({
 					text: c.legend,
 					hide: !c.showLegend,
 					color: c.color as ChartColor,
 				})),
 				//@ts-ignore
-				modules: seriesConfig.map((c, id) => {
-					return {
-						type: c.type,
-						series: id,
-						side: c.side,
-						color: c.color,
-					}
-				}),
+				modules: seriesConfig,
 			}
 
 			setTemplateConfig(chartConfig)
@@ -123,9 +125,8 @@ const Editor = ({ preset }: { preset?: Partial<TimelineChartConfig> }) => {
 	return (
 		<div className='editor' data-live-editor={showLiveEditor}>
 			{!seriesConfig.length && <UploadPanel handleUpload={handleFileDrop}></UploadPanel>}
-			{!!seriesConfig.length && !showLiveEditor && (
+			{!!seriesConfig.length && !showLiveEditor && !preset && (
 				<ConfigurationPanel
-					preset={preset}
 					seriesConfig={seriesConfig}
 					chartSize={chartSize}
 					updateChartSize={setChartSize}

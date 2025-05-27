@@ -1,10 +1,6 @@
 import { useEffect } from 'react'
 import { useObjectState } from '@uidotdev/usehooks'
 
-// import { TabView, TabPanel } from 'primereact/tabview'
-// import { Button } from 'primereact/button'
-// import { Panel } from 'primereact/panel'
-
 import { Tabs, Button, Panel } from 'rsuite'
 
 import {
@@ -23,10 +19,10 @@ import { ChartColorOptions } from '@lib/configUtils'
 import { ChartColor, ModuleType, YAxisSide } from '@/enums'
 
 import './configuration-panel.scss'
-import type { TimelineChartConfig } from '@/types'
 
 export type SeriesConfigProps = {
 	name: string
+	series: number
 	legend: string
 	showLegend: boolean
 	type: string
@@ -39,22 +35,21 @@ const configColors = Object.values(ChartColor)
 const SeriesConfig = ({
 	name,
 	seriesId,
-	preset,
 	updateHandler,
 }: {
 	name: string
 	seriesId: number
-	preset?: Partial<SeriesConfigProps>
 	updateHandler: (config: SeriesConfigProps) => void
 }) => {
 	const initialColor = configColors[seriesId % configColors.length]
 	const [config, setConfig] = useObjectState<SeriesConfigProps>({
 		name,
+		series: seriesId,
 		legend: name,
-		showLegend: preset?.showLegend !== undefined ? preset?.showLegend : true,
-		type: preset?.type || 'lineChart',
-		color: preset?.color || initialColor,
-		side: preset?.side || YAxisSide.Left,
+		showLegend: true,
+		type: 'lineChart',
+		color: initialColor,
+		side: YAxisSide.Left,
 	})
 
 	const updateConfig = (key: keyof SeriesConfigProps, value: any) => {
@@ -119,7 +114,6 @@ type Props = {
 	updateSeriesConfig: Function
 	clearSeriesConfig: Function
 	generateChartConfig: Function
-	preset?: Partial<TimelineChartConfig>
 }
 
 const ConfigurationPanel = ({
@@ -131,7 +125,6 @@ const ConfigurationPanel = ({
 	updateSeriesConfig,
 	clearSeriesConfig,
 	generateChartConfig,
-	preset,
 }: Props) => {
 	return (
 		<Panel header='Configure Chart' className='configuration-panel'>
@@ -176,9 +169,8 @@ const ConfigurationPanel = ({
 					{seriesConfig.map((s, id) => (
 						<Tabs.Tab key={s.name} title={s.name} eventKey={id.toString()}>
 							<SeriesConfig
-								seriesId={id}
+								seriesId={s.series}
 								name={s.name}
-								preset={preset?.modules?.[id]}
 								updateHandler={(config) => updateSeriesConfig(id, config)}
 							></SeriesConfig>
 						</Tabs.Tab>

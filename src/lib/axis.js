@@ -10,58 +10,106 @@ console.log(chartHeight, targetNumTicks)
 
 // --- Step 1: Define and Nice the PRIMARY (Left) Y-Axis Scale ---
 const leftDomain = d3.extent(data, (d) => d.left)
-const leftScale = d3.scaleLinear().domain(leftDomain).range([chartHeight, 0]) // D3 y-scales map to [height, 0]
-
-const leftNiceScale = leftScale.nice(targetNumTicks) // Apply nice() to get rounder domain with desired ticks
-const leftNiceDomain = leftNiceScale.domain()
-const leftNiceTicks = leftNiceScale.ticks(targetNumTicks)
-
-console.log('--- Left Y-Axis ---')
-console.log(`Raw Domain: ${leftDomain}`)
-console.log(`Nice Domain: ${leftNiceDomain}`)
-console.log(`Ticks: ${leftNiceTicks}`)
-console.log(`Left Ticks Count: ${leftNiceTicks.length}`)
-
-const leftRange = leftDomain[1] - leftDomain[0]
-const leftInterval = leftRange / (targetNumTicks - 1)
-
-const leftNiceInterval = d3.nice(leftDomain[0], leftDomain[0] + leftInterval, 2)
-const leftND = [
-	leftNiceInterval[0],
-	leftNiceInterval[0] + leftNiceInterval[1] * (targetNumTicks - 1),
-]
-console.log(targetNumTicks)
-console.log(leftInterval)
-console.log(leftNiceInterval)
-console.log(leftND)
-
-// --- Step 2: Calculate the Derived Domain for the SECONDARY (Right) Y-Axis ---
-
-// Get raw data range for the right axis
 const rightDomain = d3.extent(data, (d) => d.right)
-const rightScale = d3.scaleLinear().domain(rightDomain).range([chartHeight, 0]) // D3 y-scales map to [height, 0]
-const rightNiceScale = rightScale.nice(targetNumTicks) // Apply nice() to get rounder domain with desired ticks
-const rightNiceDomain = rightNiceScale.domain()
-const rightNiceTicks = rightNiceScale.ticks(targetNumTicks)
 
-console.log('--- Right Y-Axis ---')
-console.log(`Raw Domain: ${rightDomain}`)
-console.log(`Nice Domain: ${rightNiceDomain}`)
-console.log(`Ticks: ${rightNiceTicks}`)
-console.log(`Right Ticks Count: ${rightNiceTicks.length}`)
+const leftNiceDomain = d3.nice(...leftDomain, targetNumTicks)
+const rightNiceDomain = d3.nice(...rightDomain, targetNumTicks)
 
-const rightRange = rightDomain[1] - rightDomain[0]
-const rightInterval = rightRange / (targetNumTicks - 1)
+const leftNiceTicks = d3.ticks(...leftNiceDomain, targetNumTicks)
+const rightNiceTicks = d3.ticks(...rightNiceDomain, targetNumTicks)
 
-const rightNiceInterval = d3.nice(rightDomain[0], rightDomain[0] + rightInterval, 2)
-const rightND = [
-	rightNiceInterval[0],
-	rightNiceInterval[0] + rightNiceInterval[1] * (targetNumTicks - 1),
-]
-console.log(targetNumTicks)
-console.log(rightInterval)
-console.log(rightNiceInterval)
-console.log(rightND)
+// console.log(leftDomain)
+// console.log(leftNiceDomain)
+// console.log(leftNiceTicks.length)
+// console.log(rightDomain)
+// console.log(rightNiceDomain)
+// console.log(rightNiceTicks.length)
+
+const numTicks = Math.max(leftNiceTicks.length, rightNiceTicks.length)
+
+const getExtendedDomain = (domain, ticks, targetTicks) => {
+	// console.log(domain)
+	// console.log(ticks.length)
+	// console.log(targetTicks)
+	const tickStep = ticks[1] - ticks[0]
+	const increment = tickStep / 2
+	console.log(tickStep)
+
+	for (let i = 0; i < 10; i++) {
+		const d = d3.nice(domain[0], domain[1] + increment * i, targetTicks)
+		const t = d3.ticks(...d, targetTicks)
+		if (t.length === targetTicks) {
+			return d
+		}
+	}
+
+	return null
+}
+
+const lDom =
+	leftNiceTicks.length < numTicks
+		? getExtendedDomain(leftNiceDomain, leftNiceTicks, numTicks)
+		: leftNiceDomain
+const rDom =
+	rightNiceTicks.length < numTicks
+		? getExtendedDomain(rightNiceDomain, rightNiceTicks, numTicks)
+		: rightNiceDomain
+
+console.log(numTicks)
+
+console.log(lDom)
+console.log(rDom)
+
+// const leftScale = d3.scaleLinear().domain(leftDomain).range([chartHeight, 0]) // D3 y-scales map to [height, 0]
+
+// const leftNiceScale = leftScale.nice(targetNumTicks) // Apply nice() to get rounder domain with desired ticks
+// const leftNiceTicks = leftNiceScale.ticks(targetNumTicks)
+
+// console.log('--- Left Y-Axis ---')
+// console.log(`Raw Domain: ${leftDomain}`)
+// console.log(`Nice Domain: ${leftNiceDomain}`)
+// console.log(`Ticks: ${leftNiceTicks}`)
+// console.log(`Left Ticks Count: ${leftNiceTicks.length}`)
+
+// const leftRange = leftDomain[1] - leftDomain[0]
+// const leftInterval = leftRange / (targetNumTicks - 1)
+
+// const leftNiceInterval = d3.nice(leftDomain[0], leftDomain[0] + leftInterval, 2)
+// const leftND = [
+// 	leftNiceInterval[0],
+// 	leftNiceInterval[0] + leftNiceInterval[1] * (targetNumTicks - 1),
+// ]
+// console.log(targetNumTicks)
+// console.log(leftInterval)
+// console.log(leftNiceInterval)
+// console.log(leftND)
+
+// // --- Step 2: Calculate the Derived Domain for the SECONDARY (Right) Y-Axis ---
+
+// // Get raw data range for the right axis
+// const rightScale = d3.scaleLinear().domain(rightDomain).range([chartHeight, 0]) // D3 y-scales map to [height, 0]
+// const rightNiceScale = rightScale.nice(targetNumTicks) // Apply nice() to get rounder domain with desired ticks
+// const rightNiceDomain = rightNiceScale.domain()
+// const rightNiceTicks = rightNiceScale.ticks(targetNumTicks)
+
+// console.log('--- Right Y-Axis ---')
+// console.log(`Raw Domain: ${rightDomain}`)
+// console.log(`Nice Domain: ${rightNiceDomain}`)
+// console.log(`Ticks: ${rightNiceTicks}`)
+// console.log(`Right Ticks Count: ${rightNiceTicks.length}`)
+
+// const rightRange = rightDomain[1] - rightDomain[0]
+// const rightInterval = rightRange / (targetNumTicks - 1)
+
+// const rightNiceInterval = d3.nice(rightDomain[0], rightDomain[0] + rightInterval, 2)
+// const rightND = [
+// 	rightNiceInterval[0],
+// 	rightNiceInterval[0] + rightNiceInterval[1] * (targetNumTicks - 1),
+// ]
+// console.log(targetNumTicks)
+// console.log(rightInterval)
+// console.log(rightNiceInterval)
+// console.log(rightND)
 
 // Handle potential division by zero if left data range is zero (e.g., all same value)
 // let M = 0

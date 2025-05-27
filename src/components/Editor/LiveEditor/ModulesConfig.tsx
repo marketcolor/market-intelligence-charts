@@ -3,6 +3,9 @@ import { useEffect, useState } from 'react'
 import { CheckboxInput, ColorSelect, NumberInput, Select, TextInput } from './Inputs'
 
 import { ChartColor, YAxisSide } from '@/enums'
+import { useObjectState } from '@uidotdev/usehooks'
+
+import { ChartColorOptions } from '@lib/configUtils'
 
 import type {
 	AreaChartConfig,
@@ -11,9 +14,6 @@ import type {
 	Modules,
 	PeriodAreasConfig,
 } from '@/types'
-
-import { ChartColorOptions } from '@lib/configUtils'
-import { useObjectState } from '@uidotdev/usehooks'
 
 type LineChartProps = {
 	config: LineChartConfig

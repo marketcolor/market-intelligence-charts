@@ -5,7 +5,6 @@ import {
 	scaleLinear,
 	scaleTime,
 	timeDay,
-	timeFormat,
 	timeMonth,
 	timeWeek,
 	timeYear,
@@ -13,9 +12,13 @@ import {
 	extent,
 	max,
 	min,
-	utcTicks,
+	nice,
+	ticks,
+	tickStep,
 	utcYear,
 	utcMonth,
+	utcFormat,
+	utcTicks,
 } from 'd3'
 
 import type { ScaleLinear, ScaleTime } from 'd3'
@@ -47,10 +50,12 @@ export const getTimeScale = (
 
 export const getNumericTicks = (config: NumericTicksConfig): TickObject<number>[] => {
 	const { startVal, tickInterval, numTicks = 0, decimals } = config
+	const stopVal = startVal + tickInterval * (numTicks - 1)
+	const tickValues = ticks(startVal, stopVal, numTicks)
+
 	const formatter = format(decimals !== undefined ? `,.${decimals}f` : '')
 
-	return new Array(numTicks).fill(startVal).map((t, id) => {
-		const value = t + id * tickInterval
+	return tickValues.map((value, id) => {
 		const label = formatter(value)
 		return { value, label }
 	})
@@ -69,7 +74,7 @@ export function getDateTicks(config: TimelineTicksConfig): TickObject<Date>[] {
 	if (!interval) {
 		throw new Error('Invalid date interval')
 	}
-	const formatter = timeFormat(dateFormat)
+	const formatter = utcFormat(dateFormat)
 	const intervalStartDate = typeof startDate === 'string' ? new Date(startDate) : startDate
 
 	if (isNaN(intervalStartDate.getTime())) {
@@ -174,6 +179,7 @@ export const getXAxisConfig = (
 	preset?: Partial<TimelineTicksConfig>
 ) => {
 	const domain = extent(data, (d) => d[0]) as [Date, Date]
+
 	const ticksConfig = getTimeTicksConfig(domain, preset)
 	return { domain, ticksConfig }
 }
@@ -191,71 +197,80 @@ export const getYAxisConfig = (
 		return pv
 	}, {})
 
-	const numTicks = Math.round(height / 50)
+	const numTicks = Math.round(height / 75)
 	const config: { [key in YAxisSide]?: YAxisConfig } = {}
-
-	let primaryBaseDomain = [0, 100]
 
 	for (const [key, { dataIndices }] of Object.entries(sidesIndices)) {
 		const domain: [number, number] = [
 			min(data, (d) => min(d.filter((e, id) => dataIndices.includes(id)))) as number,
 			max(data, (d) => max(d.filter((e, id) => dataIndices.includes(id)))) as number,
 		]
-		if (Object.keys(config).length === 1) {
-			const primConfig = config.left!
-			// secondary scale should be adjusted to primary
-			const M = (domain[1] - domain[0]) / (primaryBaseDomain[1] - primaryBaseDomain[0])
-			const B = domain[0] - M * primaryBaseDomain[0]
+		const scale = scaleLinear(domain, [height, 0]).nice(numTicks)
+		const niceDomain = scale.domain() as [number, number]
+		const ticks = scale.ticks(numTicks)
 
-			// Apply this transformation to the LEFT's *nice* domain
-			// to get the *corresponding* domain for the right axis.
-			const y2DerivedMin = M * primConfig.domain[0] + B
-			const y2DerivedMax = M * primConfig.domain[1] + B
+		const tickInterval = tickStep(ticks.at(0)!, ticks.at(-1)!, numTicks)
+		const intervalParts = tickInterval.toString().split('.')
+		const decimals = intervalParts.length === 1 ? 0 : intervalParts[1].length
 
-			// Create the right Y-Axis scale
-			const ySecondaryScale = scaleLinear([y2DerivedMin, y2DerivedMax], [height, 0]).nice(numTicks)
-
-			const secondaryDomain = ySecondaryScale.domain() as [number, number]
-
-			const secondaryTicks = ySecondaryScale.ticks(numTicks)
-			const tickInterval = secondaryTicks[1] - secondaryTicks[0]
-			const intervalParts = tickInterval.toString().split('.')
-
-			const decimals = intervalParts.length === 1 ? 0 : intervalParts[1].length
-
-			config[key as YAxisSide] = {
-				domain: secondaryDomain,
-				guideLines: false,
-				ticksConfig: {
-					startVal: secondaryTicks[0],
-					numTicks: secondaryTicks.length,
-					tickInterval: secondaryTicks[1] - secondaryTicks[0],
-					decimals,
-				},
-			}
-		} else {
-			primaryBaseDomain = domain
-			const primaryYScale = scaleLinear(domain, [height, 0]).nice(numTicks)
-			const primaryYDomain = primaryYScale.domain() as [number, number]
-			const primaryTicks = primaryYScale.ticks(numTicks)
-
-			const tickInterval = primaryTicks[1] - primaryTicks[0]
-			const intervalParts = tickInterval.toString().split('.')
-			const decimals = intervalParts.length === 1 ? 0 : intervalParts[1].length
-
-			config[key as YAxisSide] = {
-				domain: primaryYDomain,
-				guideLines: key === 'left',
-				ticksConfig: {
-					startVal: primaryTicks[0],
-					numTicks: primaryTicks.length,
-					tickInterval: primaryTicks[1] - primaryTicks[0],
-					decimals,
-				},
-			}
+		config[key as YAxisSide] = {
+			domain: niceDomain,
+			guideLines: key === 'left',
+			ticksConfig: {
+				startVal: ticks[0],
+				numTicks: ticks.length,
+				tickInterval: ticks[1] - ticks[0],
+				decimals,
+			},
 		}
 	}
+
+	if (config.left && config.right) {
+		const targetNumTicks = Math.max(
+			config.left.ticksConfig!.numTicks!,
+			config.right.ticksConfig!.numTicks!
+		)
+
+		if (config.left.ticksConfig!.numTicks < targetNumTicks) {
+			getExtendedTicksConfig(config.left, targetNumTicks)
+		}
+		if (config.right.ticksConfig!.numTicks < targetNumTicks) {
+			getExtendedTicksConfig(config.right, targetNumTicks)
+		}
+	}
+
 	return config
+}
+
+const getExtendedTicksConfig = (config: YAxisConfig, numTicks: number): YAxisConfig => {
+	const { domain, ticksConfig } = config
+	let increment = ticksConfig!.tickInterval / 2
+	let exDomain
+	let exTicks
+	let count = 0
+
+	while (count < 10) {
+		exDomain = nice(domain[0], domain[1] + increment * count, numTicks)
+		exTicks = ticks(...exDomain, numTicks)
+		if (exTicks.length === numTicks) {
+			count = 11
+		} else {
+			count++
+		}
+	}
+	if (exTicks && exTicks.length === numTicks) {
+		const tickInterval = exTicks![1] - exTicks![0]
+		const intervalParts = tickInterval.toString().split('.')
+		const decimals = intervalParts.length === 1 ? 0 : intervalParts[1].length
+
+		config.domain = exDomain as [number, number]
+		config.ticksConfig = {
+			numTicks,
+			startVal: exDomain![0],
+			tickInterval: tickInterval,
+			decimals,
+		}
+	}
 }
 
 // const chartBandScale = (config: BandScaleConfig, range: [number, number]): ScaleBand<string> => {

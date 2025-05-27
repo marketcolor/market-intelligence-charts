@@ -1,17 +1,29 @@
 ---
 import Layout from '@layouts/Layout.astro'
-import Editor from '@components/Editor'
-import RSuiteProvider from '@/components/RSuiteProvider'
 
 import { presets } from '@/data/presets'
 
-// const cookie = Astro.request.headers.get('cookie')
-const url = new URL(Astro.request.url)
-const preset = url.searchParams.get('name')
+const presetKeys = Object.keys(presets)
 ---
 
 <Layout>
-	<RSuiteProvider client:load>
-		<Editor client:load preset={presets[preset]} />
-	</RSuiteProvider>
+	<div class='menu'>
+		<ul>
+			{
+				presetKeys.map((key) => (
+					<li>
+						<a href={`preset/${key}`}>{key}</a>
+					</li>
+				))
+			}
+		</ul>
+	</div>
 </Layout>
+
+<style>
+	.menu {
+		height: 100%;
+		display: grid;
+		place-content: center;
+	}
+</style>
