@@ -6,7 +6,7 @@
 	"xAxisConfig": {
 		"domain": ["2000-04-01", "2025-02-01"],
 		"ticksConfig": {
-			"startDate": "2001-04-01",
+			"startDate": "2000-04-01",
 			"numTicks": 9,
 			"dateInterval": "year",
 			"intervalStep": 3,
@@ -28,19 +28,19 @@
 	},
 	"modules": [
 		{
-			"type": "periodAreas",
-			"series": 1,
-			"legend": {
-				"text": "Recession"
-			}
-		},
-		{
 			"type": "areaChart",
 			"series": 0,
 			"side": "left",
 			"color": "Green",
 			"legend": {
 				"text": "Money Market Total Net Assets (ETF & Fund)"
+			}
+		},
+		{
+			"type": "periodAreas",
+			"series": 1,
+			"legend": {
+				"text": "Recession"
 			}
 		}
 	]

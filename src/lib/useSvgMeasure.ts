@@ -6,8 +6,8 @@ type SvgDimensions = {
 	svgHeight: number | null
 	svgLeft: number
 	svgRight: number
-	svgTop: number | null
-	svgBottom: number | null
+	svgTop: number
+	svgBottom: number
 }
 
 export function useSvgMeasure(
@@ -19,11 +19,11 @@ export function useSvgMeasure(
 		svgHeight: null,
 		svgLeft: 0,
 		svgRight: 0,
-		svgTop: null,
-		svgBottom: null,
+		svgTop: 0,
+		svgBottom: 0,
 	})
 	const [bbox, setBBox] = useState<DOMRect>()
-	const debouncedBbox = useDebounce(bbox, 1000)
+	const debouncedBbox = useDebounce(bbox, 300)
 
 	const ref = useRef<SVGGElement>(null)
 
@@ -44,49 +44,32 @@ export function useSvgMeasure(
 		}
 	}, [])
 
-	// useEffect(() => {
-	// 	if (debouncedBbox) {
-	// 		const svgWidth = Math.ceil(debouncedBbox.width)
-	// 		const svgHeight = Math.ceil(debouncedBbox.height)
-	// 		console.log(svgWidth, targetWidth)
+	useEffect(() => {
+		if (debouncedBbox) {
+			const bleedLeft = Math.ceil(-debouncedBbox.x)
+			const svgLeft = dimensions.svgLeft + bleedLeft
 
-	// 		if (svgWidth <= targetWidth && svgHeight <= targetHeight) {
-	// 			return
-	// 		}
+			const bleedRight = Math.ceil(debouncedBbox.width - targetWidth + debouncedBbox.x)
+			const svgRight = dimensions.svgRight + bleedRight
 
-	// 		const bleedLeft = debouncedBbox.x < 0 ? Math.ceil(-debouncedBbox.x) : 0
-	// 		// console.log(debouncedBbox.x)
-	// 		console.log(bleedLeft)
-	// 		const svgLeft = bleedLeft <= 0 ? dimensions.svgLeft : bleedLeft
+			const bleedTop = Math.ceil(-debouncedBbox.y)
+			const svgTop = dimensions.svgTop + bleedTop
 
-	// 		const bleedRight = Math.ceil(debouncedBbox.width - targetWidth + debouncedBbox.x)
-	// 		// console.log(bleedRight)
-	// 		const svgRight = bleedRight <= 0 ? dimensions.svgRight : bleedRight + 1
-	// 		// console.log(svgRight)
+			const bleedBottom = Math.ceil(debouncedBbox.height - targetHeight + debouncedBbox.y)
+			const svgBottom = dimensions.svgBottom + bleedBottom
 
-	// 		// const svgRight =
-	// 		// 	bleedRight > 0 && bleedRight !== dimensions.svgRight ? bleedRight : dimensions.svgRight
-	// 		// console.log(svgRight)
+			const newDimensions: SvgDimensions = {
+				svgWidth: debouncedBbox.width,
+				svgHeight: debouncedBbox.height,
+				svgLeft,
+				svgRight,
+				svgBottom,
+				svgTop,
+			}
 
-	// 		// const bleedTop = debouncedBbox.y < 0 ? Math.ceil(-debouncedBbox.y) : 0
-	// 		// const svgTop = bleedTop > 0 && bleedTop !== dimensions.svgTop ? bleedTop : dimensions.svgTop
-
-	// 		// const bleedBottom = Math.ceil(debouncedBbox.height - targetHeight + debouncedBbox.y)
-	// 		// const svgBottom =
-	// 		// 	bleedBottom > 0 && bleedBottom !== dimensions.svgBottom ? bleedBottom : dimensions.svgBottom
-
-	// 		const newDimensions: SvgDimensions = {
-	// 			svgWidth: debouncedBbox.width,
-	// 			svgHeight: debouncedBbox.height,
-	// 			svgLeft,
-	// 			svgRight: 0,
-	// 			svgBottom: null,
-	// 			svgTop: null,
-	// 		}
-
-	// 		// setDimensions(newDimensions)
-	// 	}
-	// }, [debouncedBbox])
+			setDimensions(newDimensions)
+		}
+	}, [debouncedBbox])
 
 	return [ref, dimensions]
 }

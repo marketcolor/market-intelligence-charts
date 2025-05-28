@@ -63,9 +63,9 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 	})
 
 	const [marginAdjust, setMarginAdjust] = useObjectState({
-		left: initialConfig.marginAdjust?.left || (!!initialConfig.yAxisConfig.left ? 0 : 24),
-		right: initialConfig.marginAdjust?.right || (!!initialConfig.yAxisConfig.right ? 0 : 24),
-		top: initialConfig.marginAdjust?.top || 12,
+		left: initialConfig.marginAdjust?.left || 0,
+		right: initialConfig.marginAdjust?.right || 0,
+		top: initialConfig.marginAdjust?.top || 0,
 		bottom: initialConfig.marginAdjust?.bottom || 0,
 	})
 

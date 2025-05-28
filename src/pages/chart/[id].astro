@@ -29,6 +29,7 @@ const { errors, data: parsedData }: { errors: any[]; data: any[] } = Papa.parse(
 	dataCollection.data.data,
 	{
 		dynamicTyping: true,
+		skipEmptyLines: true,
 	}
 )
 

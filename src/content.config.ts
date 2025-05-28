@@ -94,7 +94,7 @@ const chartConfigSchema = z.object({
 	height: z.number(),
 	xAxisConfig: axisConfigSchema,
 	yAxisConfig: z.object({
-		left: yAxisSchema,
+		left: yAxisSchema.optional(),
 		right: yAxisSchema.optional(),
 	}),
 	modules: z.array(modulesSchema),

@@ -21,6 +21,7 @@ import type {
 } from '@/types'
 
 import { ModuleType, YAxisSide } from '@/enums'
+import { useSvgMeasure } from '@/lib/useSvgMeasure'
 
 type Props = {
 	config: TimelineChartConfig
@@ -42,6 +43,7 @@ const TimelineChart = ({ data, config }: Props) => {
 	const { title, description, width, height, marginAdjust, xAxisConfig, yAxisConfig, modules } =
 		config
 	const [plotRef, dimensions] = usePlotMeasure(width, height)
+	const [svgRef, { svgRight, svgLeft, svgBottom, svgTop }] = useSvgMeasure(width, height)
 
 	const htmlOverlay = useRef<HTMLDivElement>(null)
 
@@ -66,10 +68,10 @@ const TimelineChart = ({ data, config }: Props) => {
 	const style = {
 		width,
 		height,
-		'--margin-left': `${marginAdjust?.left}px`,
-		'--margin-right': `${marginAdjust?.right}px`,
-		'--margin-top': `${marginAdjust?.top}px`,
-		'--margin-bottom': `${marginAdjust?.bottom}px`,
+		'--margin-left': `${Math.max(marginAdjust?.left || 0, svgLeft, 0)}px`,
+		'--margin-right': `${Math.max(marginAdjust?.right || 0, svgRight, 0)}px`,
+		'--margin-top': `${Math.max(marginAdjust?.top || 0, svgTop, 0)}px`,
+		'--margin-bottom': `${Math.max(marginAdjust?.bottom || 0, svgBottom, 0)}px`,
 	}
 
 	const underModules = modules?.filter((m) => m.type === 'periodAreas')
@@ -77,11 +79,13 @@ const TimelineChart = ({ data, config }: Props) => {
 
 	const legend =
 		modules &&
-		modules.map((m) => ({
-			text: m.legend.text,
-			color: m.color,
-			hide: m.legend.hide,
-		}))
+		modules
+			.map((m) => ({
+				text: m.legend.text,
+				color: m.color,
+				hide: m.legend.hide,
+			}))
+			.filter((l) => !l.hide)
 
 	return (
 		<div className='chart' style={style}>
@@ -96,43 +100,45 @@ const TimelineChart = ({ data, config }: Props) => {
 			<svg id='chart' xmlns='http://www.w3.org/2000/svg' width={width} height={height}>
 				{title && <title id='mi-chart-title'>{title}</title>}
 				{description && <desc id='mi-chart-description'>{description}</desc>}
-				{legend?.length && <Legend config={legend} htmlRef={htmlOverlay.current}></Legend>}
-				{underModules &&
-					underModules.map((module, id) =>
-						moduleComponents[module.type](id, {
-							config: module,
-							scales: chartScales,
-							measures,
-							data,
-							htmlRef: htmlOverlay.current,
-						})
+				<g ref={svgRef}>
+					{legend?.length && <Legend config={legend} htmlRef={htmlOverlay.current}></Legend>}
+					{underModules &&
+						underModules.map((module, id) =>
+							moduleComponents[module.type](id, {
+								config: module,
+								scales: chartScales,
+								measures,
+								data,
+								htmlRef: htmlOverlay.current,
+							})
+						)}
+					{yAxisConfig.left && (
+						<YAxis
+							side={YAxisSide.Left}
+							config={yAxisConfig.left}
+							scales={chartScales}
+							measures={measures}
+							htmlRef={htmlOverlay.current}
+						></YAxis>
 					)}
-				{yAxisConfig.left && (
-					<YAxis
-						side={YAxisSide.Left}
-						config={yAxisConfig.left}
-						scales={chartScales}
-						measures={measures}
-						htmlRef={htmlOverlay.current}
-					></YAxis>
-				)}
-				{yAxisConfig.right && (
-					<YAxis
-						side={YAxisSide.Right}
-						config={yAxisConfig.right}
-						scales={chartScales}
-						measures={measures}
-						htmlRef={htmlOverlay.current}
-					></YAxis>
-				)}
-				{xAxisConfig && (
-					<XAxis
-						config={xAxisConfig}
-						scales={chartScales}
-						measures={measures}
-						htmlRef={htmlOverlay.current}
-					></XAxis>
-				)}
+					{yAxisConfig.right && (
+						<YAxis
+							side={YAxisSide.Right}
+							config={yAxisConfig.right}
+							scales={chartScales}
+							measures={measures}
+							htmlRef={htmlOverlay.current}
+						></YAxis>
+					)}
+					{xAxisConfig && (
+						<XAxis
+							config={xAxisConfig}
+							scales={chartScales}
+							measures={measures}
+							htmlRef={htmlOverlay.current}
+						></XAxis>
+					)}
+				</g>
 				{overModules?.length &&
 					overModules.map((module, id) =>
 						moduleComponents[module.type](id, {
