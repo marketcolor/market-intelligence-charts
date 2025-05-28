@@ -2,7 +2,7 @@
 
 import { useCallback, useLayoutEffect, useState } from 'react'
 import Papa from 'papaparse'
-import { text, utcParse } from 'd3'
+import { utcParse } from 'd3'
 import { useList, useObjectState } from '@uidotdev/usehooks'
 
 import UploadPanel from './UploadPanel'
@@ -13,7 +13,7 @@ import { getXAxisConfig, getYAxisConfig } from '@/lib/chartUtils'
 
 import type { SeriesConfigProps } from './ConfigurationPanel'
 import type { TimelineChartConfig, TimelineChartDataEntry } from '@/types'
-import { ChartColor, ModuleType, YAxisSide } from '@/enums'
+import { ModuleType } from '@/enums'
 
 import './editor.scss'
 
