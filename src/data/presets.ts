@@ -65,8 +65,8 @@ export const presets = {
 		title: 's&p-midcap',
 		description:
 			'This chart shows the S&P MidCap 400 Index P/E ratio relative to the S&P 500 Index P/E ratio. The chart shows that mid caps are trading at a substantial discount to large cap equities.',
-		width: 900,
-		height: 450,
+		width: 975,
+		height: 495,
 		marginAdjust: {
 			right: 14,
 			top: 12,

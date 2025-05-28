@@ -1,0 +1,29 @@
+---
+import Layout from '@layouts/Layout.astro'
+
+import { getCollection } from 'astro:content'
+
+const configs = await getCollection('chart-config')
+---
+
+<Layout>
+	<div class='menu'>
+		<ul>
+			{
+				configs.map(({ id }) => (
+					<li>
+						<a href={`chart/${id}`}>{id}</a>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</Layout>
+
+<style>
+	.menu {
+		height: 100%;
+		display: grid;
+		place-content: center;
+	}
+</style>

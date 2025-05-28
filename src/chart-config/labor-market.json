@@ -1,0 +1,57 @@
+{
+	"title": "A steady labor market and tight high-yield spreads suggest the economy remains resilient",
+	"description": "A steady labor market and tight high-yield spreads suggest the economy remains resilient",
+	"width": 975,
+	"height": 452,
+	"xAxisConfig": {
+		"domain": ["2000-08-18", "2025-03-21"],
+		"ticksConfig": {
+			"startDate": "2001-03-01",
+			"numTicks": 13,
+			"dateInterval": "year",
+			"intervalStep": 2,
+			"dateFormat": "%m/%y"
+		}
+	},
+	"yAxisConfig": {
+		"left": {
+			"domain": [100, 700],
+			"ticksConfig": {
+				"startVal": 100,
+				"numTicks": 7,
+				"tickInterval": 100,
+				"decimals": 0
+			},
+			"guideLines": true
+		},
+		"right": {
+			"domain": [2, 20],
+			"ticksConfig": {
+				"startVal": 2,
+				"numTicks": 7,
+				"tickInterval": 3,
+				"decimals": 0
+			}
+		}
+	},
+	"modules": [
+		{
+			"type": "lineChart",
+			"series": 0,
+			"side": "left",
+			"color": "Green",
+			"legend": {
+				"text": "USA - Weekly Job Claims (left)"
+			}
+		},
+		{
+			"type": "lineChart",
+			"series": 1,
+			"side": "right",
+			"color": "Blue",
+			"legend": {
+				"text": "Bloomberg US High Yield - Corporate Spread to Treasuries (%) (right)"
+			}
+		}
+	]
+}

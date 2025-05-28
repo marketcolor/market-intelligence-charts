@@ -1,0 +1,130 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
+
+import { z, defineCollection } from 'astro:content'
+import { glob } from 'astro/loaders'
+
+import { ModuleType, ChartColor, YAxisSide } from '@/enums'
+import slug from 'slug'
+
+const ticksConfigSchema = z.object({
+	startDate: z.string(),
+	numTicks: z.number(),
+	dateInterval: z.string(),
+	intervalStep: z.number(),
+	dateFormat: z.string(),
+})
+
+const axisConfigSchema = z.object({
+	domain: z.array(z.string()),
+	ticksConfig: ticksConfigSchema,
+})
+
+const yAxisTicksConfigSchema = z.object({
+	startVal: z.number(),
+	numTicks: z.number(),
+	tickInterval: z.number(),
+	decimals: z.number(),
+})
+
+const yAxisSchema = z.object({
+	domain: z.array(z.number()),
+	ticksConfig: yAxisTicksConfigSchema,
+	guideLines: z.boolean().optional(),
+})
+
+const moduleType = z.enum(Object.keys(ModuleType) as [keyof typeof ModuleType])
+const yAxisSide = z.nativeEnum(YAxisSide)
+const chartColor = z.enum(Object.keys(ChartColor) as [keyof typeof ChartColor])
+
+const legendSchema = z.object({
+	text: z.string(),
+	color: chartColor.optional(),
+	hide: z.boolean().optional(),
+})
+
+const baseModuleConfig = z.object({
+	legend: legendSchema,
+})
+
+// LineChartConfig
+const lineChartConfig = baseModuleConfig.extend({
+	type: z.literal(ModuleType.LineChart),
+	series: z.number(),
+	side: yAxisSide,
+	color: chartColor,
+	threshold: z
+		.object({
+			value: z.number(),
+			bottomColor: chartColor,
+		})
+		.optional(),
+	lineType: z.enum(['solid', 'dashed']).optional(),
+	curve: z.enum(['linear', 'step', 'natural']).optional(),
+})
+
+// PeriodAreasConfig
+const periodAreasConfig = baseModuleConfig.extend({
+	type: z.literal(ModuleType.PeriodAreas),
+	series: z.number(),
+	color: z.literal(ChartColor.RecessionGrey).optional(),
+})
+
+// AreaChartConfig
+const areaChartConfig = baseModuleConfig.extend({
+	type: z.literal(ModuleType.AreaChart),
+	series: z.number(),
+	side: yAxisSide,
+	color: chartColor,
+})
+
+// Modules union
+export type Modules = z.infer<typeof modulesSchema>
+export const modulesSchema = z.discriminatedUnion('type', [
+	lineChartConfig,
+	areaChartConfig,
+	periodAreasConfig,
+])
+
+// Define the main chart configuration schema
+const chartConfigSchema = z.object({
+	title: z.string(),
+	description: z.string(),
+	width: z.number(),
+	height: z.number(),
+	xAxisConfig: axisConfigSchema,
+	yAxisConfig: z.object({
+		left: yAxisSchema,
+		right: yAxisSchema.optional(),
+	}),
+	modules: z.array(modulesSchema),
+})
+
+// Define the collection
+export const collections = {
+	'chart-config': defineCollection({
+		loader: glob({ pattern: '**/**.json', base: './src/chart-config' }),
+		schema: chartConfigSchema,
+	}),
+	'chart-data': defineCollection({
+		loader: async () => {
+			const dataDir = path.join(process.cwd(), 'src', 'chart-data')
+			const files = await fs.readdir(dataDir)
+			const csvFiles = files.filter((file) => file.endsWith('.csv'))
+
+			const chartData = await Promise.all(
+				csvFiles.map(async (file) => {
+					const filePath = path.join(dataDir, file)
+
+					const content = await fs.readFile(filePath, 'utf-8')
+					return {
+						id: path.basename(file, '.csv'),
+						data: content,
+					}
+				})
+			)
+
+			return chartData
+		},
+	}),
+}

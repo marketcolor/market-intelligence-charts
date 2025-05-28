@@ -101,6 +101,9 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 
 	const availableYAxis = Object.keys(yAxis).filter((key) => yAxis?.[key as YAxisSide]) as YAxisSide[]
 
+	// console.log(initialConfig.yAxisConfig.right)
+	// console.log(updatedConfig.yAxisConfig.right)
+
 	return (
 		<div className='live-editor'>
 			<Toolbar chartTitle={info.title}></Toolbar>

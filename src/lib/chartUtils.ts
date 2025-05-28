@@ -19,6 +19,7 @@ import {
 	utcMonth,
 	utcFormat,
 	utcTicks,
+	range,
 } from 'd3'
 
 import type { ScaleLinear, ScaleTime } from 'd3'
@@ -50,8 +51,8 @@ export const getTimeScale = (
 
 export const getNumericTicks = (config: NumericTicksConfig): TickObject<number>[] => {
 	const { startVal, tickInterval, numTicks = 0, decimals } = config
-	const stopVal = startVal + tickInterval * (numTicks - 1)
-	const tickValues = ticks(startVal, stopVal, numTicks)
+	const stopVal = startVal + tickInterval * numTicks
+	const tickValues = range(startVal, stopVal, tickInterval)
 
 	const formatter = format(decimals !== undefined ? `,.${decimals}f` : '')
 

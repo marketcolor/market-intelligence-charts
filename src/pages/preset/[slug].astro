@@ -1,18 +1,18 @@
 ---
-import type { GetStaticPaths } from 'astro'
+// import type { GetStaticPaths } from 'astro'
 import Layout from '@layouts/Layout.astro'
 import Editor from '@components/Editor'
 import RSuiteProvider from '@/components/RSuiteProvider'
 
 import { presets } from '@/data/presets'
-const presetKeys = Object.keys(presets)
+// const presetKeys = Object.keys(presets)
 
 // export const getStaticPaths = (() => {
 // 	return presetKeys.map((key) => ({ params: { slug: key } }))
 // }) satisfies GetStaticPaths
 
 const { slug } = Astro.params
-console.log(Astro.props)
+// console.log(Astro.props)
 ---
 
 <Layout>
