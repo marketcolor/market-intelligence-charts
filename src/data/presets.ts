@@ -119,6 +119,9 @@ export const presets = {
 			{
 				type: ModuleType.PeriodAreas,
 				series: 1,
+				legend: {
+					text: 'Recession',
+				},
 			},
 		],
 	},

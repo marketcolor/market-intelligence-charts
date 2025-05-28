@@ -32,36 +32,31 @@ export const config: TimelineChartConfig = {
 			guideLines: true,
 		},
 	},
-	legend: [
-		{
-			text: series[0],
-			color: ChartColor.Green,
-		},
-		{
-			text: series[1],
-			color: ChartColor.Blue,
-		},
-		{
-			text: series[2],
-			color: ChartColor.RecessionGrey,
-		},
-	],
 	modules: [
 		{
 			type: ModuleType.LineChart,
 			series: 0,
 			side: YAxisSide.Left,
 			color: ChartColor.Green,
+			legend: {
+				text: series[0],
+			},
 		},
 		{
 			type: ModuleType.LineChart,
 			series: 1,
 			side: YAxisSide.Left,
 			color: ChartColor.Blue,
+			legend: {
+				text: series[1],
+			},
 		},
 		{
 			type: ModuleType.PeriodAreas,
 			series: 2,
+			legend: {
+				text: series[2],
+			},
 		},
 	],
 }

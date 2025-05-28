@@ -40,28 +40,34 @@ export const config: TimelineChartConfig = {
 			},
 		},
 	},
-	legend: [
-		{
-			text: series[0],
-			color: ChartColor.Green,
-		},
-		{
-			text: series[1],
-			color: ChartColor.Blue,
-		},
-	],
+	// legend: [
+	// 	{
+	// 		text: series[0],
+	// 		color: ChartColor.Green,
+	// 	},
+	// 	{
+	// 		text: series[1],
+	// 		color: ChartColor.Blue,
+	// 	},
+	// ],
 	modules: [
 		{
 			type: ModuleType.LineChart,
 			series: 0,
 			side: YAxisSide.Left,
 			color: ChartColor.Green,
+			legend: {
+				text: series[0],
+			},
 		},
 		{
 			type: ModuleType.LineChart,
 			series: 1,
 			side: YAxisSide.Right,
 			color: ChartColor.Blue,
+			legend: {
+				text: series[1],
+			},
 		},
 	],
 }

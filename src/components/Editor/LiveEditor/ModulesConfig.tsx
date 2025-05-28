@@ -14,26 +14,21 @@ import type {
 	Modules,
 	PeriodAreasConfig,
 } from '@/types'
+import { color } from 'd3'
 
 type LineChartProps = {
 	config: LineChartConfig
 	availableAxis: YAxisSide[]
 	handleChange: Function
-	legendConfig: LegendConfig
-	handleLegendChange: Function
 }
 
-const LineChartEditor = ({
-	config,
-	availableAxis,
-	legendConfig,
-	handleChange,
-	handleLegendChange,
-}: LineChartProps) => {
+const LineChartEditor = ({ config, availableAxis, handleChange }: LineChartProps) => {
 	const [side, setSide] = useState<YAxisSide>(config.side)
 	const [color, setColor] = useState<ChartColor>(config.color)
-	const [legendText, setLegendText] = useState<string>(legendConfig?.text || '')
-	const [showLegend, setShowLegend] = useState<boolean>(!legendConfig?.hide)
+
+	const [legendText, setLegendText] = useState<string>(config.legend?.text || '')
+	const [showLegend, setShowLegend] = useState<boolean>(!config.legend?.hide)
+
 	const [threshold, setThreshold] = useObjectState({
 		active: !!config.threshold,
 		value: config.threshold?.value || 0,
@@ -45,15 +40,15 @@ const LineChartEditor = ({
 			...config,
 			side,
 			color,
+			legend: {
+				text: legendText,
+				hide: !showLegend,
+			},
 			threshold: threshold.active
 				? { value: threshold.value, bottomColor: threshold.bottomColor }
 				: null,
 		})
-	}, [side, color, threshold])
-
-	useEffect(() => {
-		handleLegendChange({ text: legendText, hide: !showLegend, color })
-	}, [legendText, showLegend, color])
+	}, [side, color, threshold, legendText, showLegend])
 
 	return (
 		<>
@@ -114,29 +109,18 @@ type AreaChartProps = {
 	config: AreaChartConfig
 	availableAxis: YAxisSide[]
 	handleChange: Function
-	legendConfig: LegendConfig
-	handleLegendChange: Function
 }
 
-const AreaChartEditor = ({
-	config,
-	availableAxis,
-	handleChange,
-	legendConfig,
-	handleLegendChange,
-}: AreaChartProps) => {
+const AreaChartEditor = ({ config, availableAxis, handleChange }: AreaChartProps) => {
 	const [side, setSide] = useState<YAxisSide>(config.side)
 	const [color, setColor] = useState<ChartColor>(config.color)
-	const [legendText, setLegendText] = useState<string>(legendConfig?.text || '')
-	const [showLegend, setShowLegend] = useState<boolean>(!legendConfig?.hide)
+	const [legendText, setLegendText] = useState<string>(config.legend?.text || '')
+	const [showLegend, setShowLegend] = useState<boolean>(!config.legend?.hide)
 
 	useEffect(() => {
-		handleChange({ ...config, side, color })
-	}, [side, color])
+		handleChange({ ...config, side, color, legend: { text: legendText, hide: !showLegend } })
+	}, [side, color, legendText, showLegend])
 
-	useEffect(() => {
-		handleLegendChange({ text: legendText, hide: !showLegend, color })
-	}, [legendText, showLegend, color])
 	return (
 		<>
 			<Select
@@ -172,16 +156,22 @@ const AreaChartEditor = ({
 
 type PeriodAreaProps = {
 	config: PeriodAreasConfig
-	legendConfig: LegendConfig
-	handleLegendChange: Function
+	handleChange: Function
 }
 
-const PeriodAreasEditor = ({ config, legendConfig, handleLegendChange }: PeriodAreaProps) => {
-	const [legendText, setLegendText] = useState<string>(legendConfig?.text || '')
-	const [showLegend, setShowLegend] = useState<boolean>(!legendConfig?.hide)
+const PeriodAreasEditor = ({ config, handleChange }: PeriodAreaProps) => {
+	const [legendText, setLegendText] = useState<string>(config.legend?.text || '')
+	const [showLegend, setShowLegend] = useState<boolean>(!config.legend?.hide)
 
 	useEffect(() => {
-		handleLegendChange({ text: legendText, hide: !showLegend, color: ChartColor.RecessionGrey })
+		handleChange({
+			...config,
+			color: ChartColor.RecessionGrey,
+			legend: {
+				text: legendText,
+				hide: !showLegend,
+			},
+		})
 	}, [legendText, showLegend])
 
 	return (
@@ -213,22 +203,16 @@ const ModulesConfig = ({
 	config,
 	availableAxis,
 	handleChange,
-	legendConfig,
-	handleLegendChange,
 }: {
 	config: Modules
 	availableAxis: YAxisSide[]
 	handleChange: Function
-	legendConfig: LegendConfig
-	handleLegendChange: Function
 }) => {
 	return moduleEditors[config.type]({
 		//@ts-ignore
 		config,
-		legendConfig,
 		availableAxis,
 		handleChange,
-		handleLegendChange,
 	})
 }
 

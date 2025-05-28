@@ -20,7 +20,7 @@ import type {
 	TimelineChartScales,
 } from '@/types'
 
-import { YAxisSide } from '@/enums'
+import { ModuleType, YAxisSide } from '@/enums'
 
 type Props = {
 	config: TimelineChartConfig
@@ -39,17 +39,8 @@ const modulesSorter = (ma: Modules, mb: Modules) => {
 }
 
 const TimelineChart = ({ data, config }: Props) => {
-	const {
-		title,
-		description,
-		width,
-		height,
-		marginAdjust,
-		xAxisConfig,
-		yAxisConfig,
-		legend,
-		modules,
-	} = config
+	const { title, description, width, height, marginAdjust, xAxisConfig, yAxisConfig, modules } =
+		config
 	const [plotRef, dimensions] = usePlotMeasure(width, height)
 
 	const htmlOverlay = useRef<HTMLDivElement>(null)
@@ -83,6 +74,14 @@ const TimelineChart = ({ data, config }: Props) => {
 
 	const underModules = modules?.filter((m) => m.type === 'periodAreas')
 	const overModules = modules?.filter((m) => m.type !== 'periodAreas').sort(modulesSorter)
+
+	const legend =
+		modules &&
+		modules.map((m) => ({
+			text: m.legend.text,
+			color: m.color,
+			hide: m.legend.hide,
+		}))
 
 	return (
 		<div className='chart' style={style}>

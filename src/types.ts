@@ -36,7 +36,7 @@ export type TimelineChartConfig = BaseChartConfig & {
 	yAxisConfig: {
 		[key in YAxisSide]?: YAxisConfig
 	}
-	legend?: LegendConfig[]
+	// legend?: LegendConfig[]
 	modules?: Modules[]
 }
 
@@ -78,7 +78,7 @@ export type YAxisConfig = {
 
 export type LegendConfig = {
 	text: string
-	color: ChartColor
+	color?: ChartColor
 	hide?: boolean
 }
 // data entry
@@ -90,7 +90,11 @@ export type TimelineChartRawDataEntry = [string, ...number[]]
 export type TimelineChartDataEntry = [Date, ...number[]]
 //
 // modules config
-export type LineChartConfig = {
+type BaseModuleConfig = {
+	legend: LegendConfig
+}
+
+export type LineChartConfig = BaseModuleConfig & {
 	type: ModuleType.LineChart
 	series: number
 	side: YAxisSide
@@ -103,12 +107,13 @@ export type LineChartConfig = {
 	curve?: 'linear' | 'step' | 'natural'
 }
 
-export type PeriodAreasConfig = {
+export type PeriodAreasConfig = BaseModuleConfig & {
 	type: ModuleType.PeriodAreas
 	series: number
+	color?: ChartColor.RecessionGrey
 }
 
-export type AreaChartConfig = {
+export type AreaChartConfig = BaseModuleConfig & {
 	type: ModuleType.AreaChart
 	series: number
 	side: YAxisSide

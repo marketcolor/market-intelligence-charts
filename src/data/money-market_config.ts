@@ -34,12 +34,19 @@ export const config: TimelineChartConfig = {
 		{
 			type: ModuleType.PeriodAreas,
 			series: 1,
+			color: ChartColor.RecessionGrey,
+			legend: {
+				text: 'Recession',
+			},
 		},
 		{
 			type: ModuleType.AreaChart,
 			series: 0,
 			side: YAxisSide.Left,
 			color: ChartColor.Green,
+			legend: {
+				text: 'Money Market Total Net Assets (ETF & Fund)',
+			},
 		},
 	],
 }

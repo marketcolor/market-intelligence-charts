@@ -19,13 +19,13 @@ import { ChartColorOptions } from '@lib/configUtils'
 import { ChartColor, ModuleType, YAxisSide } from '@/enums'
 
 import './configuration-panel.scss'
+import type { LegendConfig } from '@/types'
 
 export type SeriesConfigProps = {
 	name: string
 	series: number
-	legend: string
-	showLegend: boolean
 	type: string
+	legend?: LegendConfig
 	color: ChartColor
 	side: YAxisSide
 }
@@ -45,11 +45,14 @@ const SeriesConfig = ({
 	const [config, setConfig] = useObjectState<SeriesConfigProps>({
 		name,
 		series: seriesId,
-		legend: name,
-		showLegend: true,
 		type: 'lineChart',
 		color: initialColor,
 		side: YAxisSide.Left,
+	})
+
+	const [legendConfig, setLegendConfig] = useObjectState<LegendConfig>({
+		text: config.name,
+		hide: false,
 	})
 
 	const updateConfig = (key: keyof SeriesConfigProps, value: any) => {
@@ -57,9 +60,14 @@ const SeriesConfig = ({
 		setConfig((c: SeriesConfigProps) => ({ [key]: value }))
 	}
 
+	const updateLegendConfig = (key: keyof LegendConfig, value: any) => {
+		//@ts-ignore
+		setLegendConfig((c: LegendConfig) => ({ [key]: value }))
+	}
+
 	useEffect(() => {
-		updateHandler(config)
-	}, [config])
+		updateHandler({ ...config, legend: legendConfig })
+	}, [config, legendConfig])
 
 	return (
 		<div className='series-config'>
@@ -89,16 +97,16 @@ const SeriesConfig = ({
 			<InputBlock numColumns='2'>
 				<CheckboxInput
 					label='Show legend'
-					value={config.showLegend}
+					value={!legendConfig.hide}
 					//@ts-ignore
-					handleChange={(value) => updateConfig('showLegend', value)}
+					handleChange={(value) => updateLegendConfig('hide', !value)}
 				></CheckboxInput>
 				<TextInput
 					label='Legend text'
-					value={config.legend}
-					disabled={!config.showLegend}
+					value={legendConfig.text}
+					disabled={legendConfig.hide}
 					//@ts-ignore
-					handleChange={(value) => updateConfig('legend', value)}
+					handleChange={(value) => updateLegendConfig('text', value)}
 				></TextInput>
 			</InputBlock>
 		</div>

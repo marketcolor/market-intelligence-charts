@@ -82,10 +82,6 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		right: initialConfig.yAxisConfig.right,
 	})
 
-	const [legend, { updateAt: updateLegend }] = useList(
-		initialConfig.legend ? [...initialConfig.legend] : []
-	)
-
 	const [modules, { updateAt: updateModule }] = useList(
 		initialConfig.modules ? [...initialConfig.modules] : []
 	)
@@ -95,7 +91,6 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		...info,
 		...size,
 		marginAdjust,
-		legend,
 		xAxisConfig: {
 			...initialConfig.xAxisConfig,
 			ticksConfig: xAxisTicks,
@@ -286,8 +281,6 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 											config={module}
 											availableAxis={availableYAxis}
 											handleChange={(value: Modules) => updateModule(id, value)}
-											legendConfig={legend[module.series]}
-											handleLegendChange={(config: LegendConfig) => updateLegend(id, config)}
 										></ModulesConfig>
 									</InputBlock>
 								</Tabs.Tab>

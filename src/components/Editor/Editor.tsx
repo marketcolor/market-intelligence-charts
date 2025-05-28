@@ -2,7 +2,7 @@
 
 import { useCallback, useLayoutEffect, useState } from 'react'
 import Papa from 'papaparse'
-import { timeParse, utcParse } from 'd3'
+import { text, utcParse } from 'd3'
 import { useList, useObjectState } from '@uidotdev/usehooks'
 
 import UploadPanel from './UploadPanel'
@@ -70,8 +70,9 @@ const Editor = ({ preset }: { preset?: Partial<TimelineChartConfig> }) => {
 										name: seriesName,
 										series: id,
 										type: ModuleType.LineChart,
-										showLegend: true,
-										legend: seriesName,
+										legend: {
+											text: seriesName,
+										},
 										...(preset?.modules?.[id]?.type !== 'periodAreas' && {
 											side: preset?.modules?.[id].side,
 										}),
@@ -102,11 +103,6 @@ const Editor = ({ preset }: { preset?: Partial<TimelineChartConfig> }) => {
 					seriesConfig.filter(({ type }) => type !== ModuleType.PeriodAreas),
 					chartSize.chartHeight
 				),
-				legend: seriesConfig.map((c) => ({
-					text: c.legend,
-					hide: !c.showLegend,
-					color: c.color as ChartColor,
-				})),
 				//@ts-ignore
 				modules: seriesConfig,
 			}
