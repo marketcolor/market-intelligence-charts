@@ -5,9 +5,8 @@ import { z, defineCollection } from 'astro:content'
 import { glob } from 'astro/loaders'
 
 import { ModuleType, ChartColor, YAxisSide } from '@/enums'
-import slug from 'slug'
 
-const ticksConfigSchema = z.object({
+const timelineTicksConfig = z.object({
 	startDate: z.string(),
 	numTicks: z.number(),
 	dateInterval: z.string(),
@@ -15,21 +14,21 @@ const ticksConfigSchema = z.object({
 	dateFormat: z.string(),
 })
 
-const axisConfigSchema = z.object({
-	domain: z.array(z.string()),
-	ticksConfig: ticksConfigSchema,
-})
-
-const yAxisTicksConfigSchema = z.object({
+const numericTicksConfig = z.object({
 	startVal: z.number(),
 	numTicks: z.number(),
 	tickInterval: z.number(),
 	decimals: z.number(),
 })
 
-const yAxisSchema = z.object({
+const xAxisConfig = z.object({
+	domain: z.array(z.string()),
+	ticksConfig: timelineTicksConfig,
+})
+
+const yAxisConfig = z.object({
 	domain: z.array(z.number()),
-	ticksConfig: yAxisTicksConfigSchema,
+	ticksConfig: numericTicksConfig,
 	guideLines: z.boolean().optional(),
 })
 
@@ -37,18 +36,18 @@ const moduleType = z.enum(Object.keys(ModuleType) as [keyof typeof ModuleType])
 const yAxisSide = z.nativeEnum(YAxisSide)
 const chartColor = z.enum(Object.keys(ChartColor) as [keyof typeof ChartColor])
 
-const legendSchema = z.object({
+const legendConfig = z.object({
 	text: z.string(),
 	color: chartColor.optional(),
 	hide: z.boolean().optional(),
 })
 
-const baseModuleConfig = z.object({
-	legend: legendSchema,
+const seriesModuleConfig = z.object({
+	legend: legendConfig,
 })
 
 // LineChartConfig
-const lineChartConfig = baseModuleConfig.extend({
+const lineChartConfig = seriesModuleConfig.extend({
 	type: z.literal(ModuleType.LineChart),
 	series: z.number(),
 	side: yAxisSide,
@@ -64,14 +63,14 @@ const lineChartConfig = baseModuleConfig.extend({
 })
 
 // PeriodAreasConfig
-const periodAreasConfig = baseModuleConfig.extend({
+const periodAreasConfig = seriesModuleConfig.extend({
 	type: z.literal(ModuleType.PeriodAreas),
 	series: z.number(),
 	color: z.literal(ChartColor.RecessionGrey).optional(),
 })
 
 // AreaChartConfig
-const areaChartConfig = baseModuleConfig.extend({
+const areaChartConfig = seriesModuleConfig.extend({
 	type: z.literal(ModuleType.AreaChart),
 	series: z.number(),
 	side: yAxisSide,
@@ -92,10 +91,10 @@ const chartConfigSchema = z.object({
 	description: z.string(),
 	width: z.number(),
 	height: z.number(),
-	xAxisConfig: axisConfigSchema,
+	xAxisConfig: xAxisConfig,
 	yAxisConfig: z.object({
-		left: yAxisSchema.optional(),
-		right: yAxisSchema.optional(),
+		left: yAxisConfig.optional(),
+		right: yAxisConfig.optional(),
 	}),
 	modules: z.array(modulesSchema),
 })
