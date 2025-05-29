@@ -8,7 +8,6 @@
 		"top": 12
 	},
 	"xAxisConfig": {
-		"domain": ["1997-07-31", "2025-03-31"],
 		"ticksConfig": {
 			"startDate": "1999-01-01",
 			"numTicks": 14,
@@ -36,7 +35,8 @@
 			"side": "left",
 			"color": "Blue",
 			"legend": {
-				"text": "S&P MidCap"
+				"text": "S&P MidCap",
+				"hide": true
 			},
 			"threshold": {
 				"value": 1.0,

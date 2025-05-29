@@ -1,0 +1,9 @@
+{
+	"json.schemas": [
+		{
+			"fileMatch": ["/src/chart-config/**.json"],
+			"url": "./.astro/collections/chart-config.schema.json"
+		}
+	],
+	"typescript.tsdk": "node_modules\\typescript\\lib"
+}

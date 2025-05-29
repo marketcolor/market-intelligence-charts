@@ -4,7 +4,6 @@
 	"width": 975,
 	"height": 452,
 	"xAxisConfig": {
-		"domain": ["2000-08-18", "2025-03-21"],
 		"ticksConfig": {
 			"startDate": "2001-03-01",
 			"numTicks": 13,

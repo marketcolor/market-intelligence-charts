@@ -6,6 +6,13 @@ import { glob } from 'astro/loaders'
 
 import { ModuleType, ChartColor, YAxisSide } from '@/enums'
 
+const marginAdjustConfig = z.object({
+	left: z.number().optional(),
+	right: z.number().optional(),
+	top: z.number().optional(),
+	bottom: z.number().optional(),
+})
+
 const timelineTicksConfig = z.object({
 	startDate: z.string(),
 	numTicks: z.number(),
@@ -22,14 +29,15 @@ const numericTicksConfig = z.object({
 })
 
 const xAxisConfig = z.object({
-	domain: z.array(z.string()),
 	ticksConfig: timelineTicksConfig,
+	label: z.string().optional(),
 })
 
 const yAxisConfig = z.object({
 	domain: z.array(z.number()),
 	ticksConfig: numericTicksConfig,
 	guideLines: z.boolean().optional(),
+	label: z.string().optional(),
 })
 
 const moduleType = z.enum(Object.keys(ModuleType) as [keyof typeof ModuleType])
@@ -91,6 +99,7 @@ const chartConfigSchema = z.object({
 	description: z.string(),
 	width: z.number(),
 	height: z.number(),
+	marginAdjust: marginAdjustConfig.optional(),
 	xAxisConfig: xAxisConfig,
 	yAxisConfig: z.object({
 		left: yAxisConfig.optional(),

@@ -63,7 +63,6 @@ export type TickObject<T extends number | string | Date> = {
 }
 
 export type TimelineXAxisConfig = {
-	domain: [string, string] | [Date, Date]
 	ticksConfig: TimelineTicksConfig
 	label?: string
 	guideLines?: boolean

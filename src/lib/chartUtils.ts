@@ -32,6 +32,7 @@ import type {
 	TimelineTicksConfig,
 	YAxisConfig,
 } from '@types'
+
 import type { YAxisSide } from '@/enums'
 
 export const getLinearScale = (
@@ -42,10 +43,10 @@ export const getLinearScale = (
 }
 
 export const getTimeScale = (
-	domain: [string, string] | [Date, Date],
+	data: TimelineChartDataEntry[],
 	range: [number, number]
 ): ScaleTime<number, number, never> => {
-	const timeDomain = domain.map((d) => (typeof d === 'string' ? new Date(d) : d))
+	const timeDomain = getTimeDomain(data, 0)
 	return scaleTime(timeDomain, range)
 }
 

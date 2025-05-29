@@ -56,7 +56,7 @@ const TimelineChart = ({ data, config }: Props) => {
 				? getLinearScale(yAxisConfig.right.domain, [dimensions.plotHeight, 0])
 				: undefined,
 		},
-		x: getTimeScale(xAxisConfig.domain, [0, dimensions.plotWidth]),
+		x: getTimeScale(data, [0, dimensions.plotWidth]),
 	}
 
 	const measures = {
