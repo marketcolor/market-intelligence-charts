@@ -70,6 +70,20 @@ const lineChartConfig = seriesModuleConfig.extend({
 	curve: z.enum(['linear', 'step', 'natural']).optional(),
 })
 
+// BarChartConfig
+const barChartConfig = seriesModuleConfig.extend({
+	type: z.literal(ModuleType.BarChart),
+	series: z.number(),
+	side: yAxisSide,
+	color: chartColor,
+	baseline: z
+		.object({
+			value: z.number(),
+			bottomColor: chartColor,
+		})
+		.optional(),
+})
+
 // PeriodAreasConfig
 const periodAreasConfig = seriesModuleConfig.extend({
 	type: z.literal(ModuleType.PeriodAreas),
@@ -83,6 +97,13 @@ const areaChartConfig = seriesModuleConfig.extend({
 	series: z.number(),
 	side: yAxisSide,
 	color: chartColor,
+	baseline: z
+		.object({
+			value: z.number(),
+			bottomColor: chartColor,
+		})
+		.optional(),
+	curve: z.enum(['linear', 'step', 'natural']).optional(),
 })
 
 // Modules union
@@ -90,6 +111,7 @@ export type Modules = z.infer<typeof modulesSchema>
 export const modulesSchema = z.discriminatedUnion('type', [
 	lineChartConfig,
 	areaChartConfig,
+	barChartConfig,
 	periodAreasConfig,
 ])
 

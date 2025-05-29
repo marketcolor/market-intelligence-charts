@@ -51,7 +51,7 @@ const data: TimelineChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
 
 <Layout>
 	<div class='container'>
-		<TimelineChart config={config.data as TimelineChartConfig} data={data} />
+		<TimelineChart config={config.data as TimelineChartConfig} data={data} client:load />
 	</div>
 </Layout>
 

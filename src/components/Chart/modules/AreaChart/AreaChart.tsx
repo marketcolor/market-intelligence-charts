@@ -1,4 +1,5 @@
 'use client'
+
 import { getAreaString } from '@/lib/chartUtils'
 
 import type {
@@ -7,6 +8,7 @@ import type {
 	TimelineChartDataEntry,
 	TimelineChartScales,
 } from '@/types'
+import { ChartColor } from '@/enums'
 
 type Props = {
 	config: AreaChartConfig
@@ -16,11 +18,13 @@ type Props = {
 }
 
 const AreaChart = ({ config, data, scales, measures }: Props) => {
-	const { series, side, color } = config
+	const { series, side, color, baseline, curve } = config
 	const { leftMargin, topMargin, plotHeight, plotWidth } = measures
 
 	const yScale = scales.y[side]!
 	const xScale = scales.x
+
+	const baselineValue = !!baseline ? yScale(baseline.value) : plotHeight
 
 	return (
 		<g>
@@ -28,6 +32,27 @@ const AreaChart = ({ config, data, scales, measures }: Props) => {
 				<clipPath id={`area-chart-clip-${series}`}>
 					<rect width={plotWidth} height={plotHeight}></rect>
 				</clipPath>
+				{baseline?.bottomColor && (
+					<linearGradient
+						gradientUnits='userSpaceOnUse'
+						id={`area-baseline-gradient-${series}`}
+						x1={0}
+						x2={0}
+						y1={0}
+						y2={plotHeight}
+					>
+						<stop
+							offset={yScale(baseline.value) / plotHeight}
+							// @ts-ignore
+							stopColor={ChartColor[color]}
+						></stop>
+						<stop
+							offset={yScale(baseline.value) / plotHeight}
+							// @ts-ignore
+							stopColor={ChartColor[baseline.bottomColor]}
+						></stop>
+					</linearGradient>
+				)}
 			</defs>
 			<g
 				transform={`translate(${leftMargin}, ${topMargin})`}
@@ -35,8 +60,9 @@ const AreaChart = ({ config, data, scales, measures }: Props) => {
 			>
 				<path
 					key={series + 1}
-					d={getAreaString(data, 0, xScale, series + 1, yScale, plotHeight)!}
-					fill={color}
+					d={getAreaString(data, 0, xScale, series + 1, yScale, baselineValue, curve)!}
+					// @ts-ignore
+					fill={baseline?.bottomColor ? `url(#area-baseline-gradient-${series})` : ChartColor[color]}
 				></path>
 			</g>
 		</g>

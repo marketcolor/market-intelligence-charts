@@ -30,6 +30,7 @@ const XAxis = ({ config, scales, measures, htmlRef }: Props) => {
 
 	const axisScale = scales.x
 	const [min, max] = axisScale.domain()
+
 	const ticks = getDateTicks(ticksConfig).filter(({ value }) => value >= min && value <= max)
 
 	return (

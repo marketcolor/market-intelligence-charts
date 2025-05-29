@@ -106,6 +106,17 @@ export type LineChartConfig = BaseModuleConfig & {
 	curve?: 'linear' | 'step' | 'natural'
 }
 
+export type BarChartConfig = BaseModuleConfig & {
+	type: ModuleType.BarChart
+	series: number
+	side: YAxisSide
+	color: ChartColor
+	baseline?: {
+		value: number
+		bottomColor: ChartColor
+	}
+}
+
 export type PeriodAreasConfig = BaseModuleConfig & {
 	type: ModuleType.PeriodAreas
 	series: number
@@ -117,6 +128,11 @@ export type AreaChartConfig = BaseModuleConfig & {
 	series: number
 	side: YAxisSide
 	color: ChartColor
+	baseline?: {
+		value: number
+		bottomColor?: ChartColor
+	}
+	curve?: 'linear' | 'step' | 'natural'
 }
 
 export type Modules = LineChartConfig | AreaChartConfig | PeriodAreasConfig

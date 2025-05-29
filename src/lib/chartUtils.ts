@@ -20,6 +20,8 @@ import {
 	utcFormat,
 	utcTicks,
 	range,
+	curveLinear,
+	curveNatural,
 } from 'd3'
 
 import type { ScaleLinear, ScaleTime } from 'd3'
@@ -47,6 +49,7 @@ export const getTimeScale = (
 	range: [number, number]
 ): ScaleTime<number, number, never> => {
 	const timeDomain = getTimeDomain(data, 0)
+
 	return scaleTime(timeDomain, range)
 }
 
@@ -91,6 +94,18 @@ export function getDateTicks(config: TimelineTicksConfig): TickObject<Date>[] {
 	})
 }
 
+const getCurveFunc = (name: string) => {
+	switch (name) {
+		case 'linear':
+			return curveLinear
+		case 'step':
+			return curveStep
+		case 'natural':
+			return curveNatural
+		default:
+			return curveLinear
+	}
+}
 export const getPathString = (
 	data: TimelineChartDataEntry[],
 	xSeries: number,
@@ -111,12 +126,14 @@ export const getAreaString = (
 	xScale: ScaleTime<number, number, never>,
 	ySeries: number,
 	yScale: ScaleLinear<number, number, never>,
-	baseline: number
+	baseline: number,
+	curve?: string
 ): string | null => {
 	const lineFunc = area<TimelineChartDataEntry>()
 		.x((entry) => xScale(entry[xSeries] as any) as number)
 		.y0((entry) => yScale(entry[ySeries] as any) as number)
 		.y1((entry) => baseline)
+	// .curve(getCurveFunc(curve || 'linear'))
 
 	return lineFunc(data)
 }

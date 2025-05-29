@@ -20,8 +20,9 @@ import type {
 	TimelineChartScales,
 } from '@/types'
 
-import { ModuleType, YAxisSide } from '@/enums'
+import { ChartColor, ModuleType, YAxisSide } from '@/enums'
 import { useSvgMeasure } from '@/lib/useSvgMeasure'
+import BarChart from './modules/BarChart'
 
 type Props = {
 	config: TimelineChartConfig
@@ -31,10 +32,11 @@ type Props = {
 const moduleComponents = {
 	lineChart: (key: number, props: any) => <LineChart key={key} {...props}></LineChart>,
 	areaChart: (key: number, props: any) => <AreaChart key={key} {...props}></AreaChart>,
+	barChart: (key: number, props: any) => <BarChart key={key} {...props}></BarChart>,
 	periodAreas: (key: number, props: any) => <PeriodAreas key={key} {...props}></PeriodAreas>,
 }
 
-const modulesOrder = ['periodAreas', 'areaChart', 'lineChart']
+const modulesOrder = ['periodAreas', 'areaChart', 'barChart', 'lineChart']
 const modulesSorter = (ma: Modules, mb: Modules) => {
 	return modulesOrder.indexOf(ma.type) - modulesOrder.indexOf(mb.type)
 }
@@ -82,7 +84,7 @@ const TimelineChart = ({ data, config }: Props) => {
 		modules
 			.map((m) => ({
 				text: m.legend.text,
-				color: m.color,
+				color: m.type === ModuleType.PeriodAreas ? ChartColor.RecessionGrey : m.color,
 				hide: m.legend.hide,
 			}))
 			.filter((l) => !l.hide)

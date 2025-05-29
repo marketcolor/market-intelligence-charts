@@ -1,0 +1,51 @@
+{
+	"title": "YoY change in the LEI (%)",
+	"description": "The graph shows the year-over-year change in LEI since 1970. Currently, the year-over-year change in LEI has been negative since July 2022, indicating economic growth may slow.",
+	"width": 975,
+	"height": 495,
+	"xAxisConfig": {
+		"ticksConfig": {
+			"startDate": "1970-01-01",
+			"numTicks": 12,
+			"dateInterval": "year",
+			"intervalStep": 5,
+			"dateFormat": "%Y"
+		}
+	},
+	"yAxisConfig": {
+		"left": {
+			"domain": [-25, 15],
+			"ticksConfig": {
+				"startVal": -25,
+				"numTicks": 9,
+				"tickInterval": 5,
+				"decimals": 0
+			},
+			"guideLines": true
+		}
+	},
+	"modules": [
+		{
+			"type": "areaChart",
+			"series": 0,
+			"side": "left",
+			"color": "Green",
+			"baseline": {
+				"value": 0,
+				"bottomColor": "Blue"
+			},
+			"legend": {
+				"text": "USA - Leading Economic Index (YoY%)",
+				"hide": true
+			},
+			"curve": "step"
+		},
+		{
+			"type": "periodAreas",
+			"series": 1,
+			"legend": {
+				"text": "Recessions"
+			}
+		}
+	]
+}

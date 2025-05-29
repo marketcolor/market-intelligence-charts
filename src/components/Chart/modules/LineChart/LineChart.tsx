@@ -9,6 +9,7 @@ import type {
 	TimelineChartDataEntry,
 	TimelineChartScales,
 } from '@/types'
+import { ChartColor } from '@/enums'
 
 type Props = {
 	config: LineChartConfig
@@ -39,8 +40,16 @@ const LineChart = ({ config, data, scales, measures }: Props) => {
 						y1={0}
 						y2={plotHeight}
 					>
-						<stop offset={yScale(threshold.value) / plotHeight} stopColor={color}></stop>
-						<stop offset={yScale(threshold.value) / plotHeight} stopColor={threshold.bottomColor}></stop>
+						<stop
+							offset={yScale(threshold.value) / plotHeight}
+							//@ts-ignore
+							stopColor={ChartColor[color]}
+						></stop>
+						<stop
+							offset={yScale(threshold.value) / plotHeight}
+							//@ts-ignore
+							stopColor={ChartColor[threshold.bottomColor]}
+						></stop>
 					</linearGradient>
 				)}
 			</defs>
@@ -61,7 +70,8 @@ const LineChart = ({ config, data, scales, measures }: Props) => {
 					key={series + 1}
 					d={getPathString(data, 0, xScale, series + 1, yScale)!}
 					fill='none'
-					stroke={threshold ? `url(#threshold-gradient-${series})` : color}
+					//@ts-ignore
+					stroke={threshold ? `url(#threshold-gradient-${series})` : ChartColor[color]}
 					strokeWidth='2.5'
 				></path>
 			</g>
