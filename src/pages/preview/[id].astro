@@ -1,0 +1,64 @@
+---
+import { getEntry } from 'astro:content'
+
+import Layout from '@layouts/Layout.astro'
+import Papa from 'papaparse'
+import type {
+	TimelineChartRawDataEntry,
+	TimelineChartDataEntry,
+	TimelineChartConfig,
+} from '@/types'
+import { timeParse } from 'd3'
+import LiveEditor from '@/components/Editor/LiveEditor'
+import RSuiteProvider from '@/components/RSuiteProvider'
+import TimelineChart from '@/components/Chart'
+
+const { id } = Astro.params
+
+if (id === undefined) {
+	return Astro.redirect('/404')
+}
+
+const config = await getEntry('chart-config', id)
+const dataCollection = await getEntry('chart-data', id)
+
+if (config === undefined || dataCollection === undefined) {
+	return Astro.redirect('/404')
+}
+
+const { errors, data: parsedData }: { errors: any[]; data: any[] } = Papa.parse(
+	dataCollection.data.data,
+	{
+		dynamicTyping: true,
+		skipEmptyLines: true,
+	}
+)
+
+if (errors.length) {
+	throw new Error(`Error parsing data: ${JSON.stringify(errors)}`)
+}
+
+const columns: string[] = parsedData[0]
+const dataset: TimelineChartRawDataEntry[] = parsedData.slice(1)
+
+const [dateKey, ...series] = columns
+const dateParser = timeParse('%d/%m/%Y')
+const data: TimelineChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
+	dateParser(dateStr)!,
+	...values,
+])
+---
+
+<Layout>
+	<div class='container'>
+		<TimelineChart config={config.data as TimelineChartConfig} data={data} />
+	</div>
+</Layout>
+
+<style>
+	.container {
+		height: 100%;
+		display: grid;
+		place-content: center;
+	}
+</style>

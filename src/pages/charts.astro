@@ -12,7 +12,9 @@ const configs = await getCollection('chart-config')
 			{
 				configs.map(({ id }) => (
 					<li>
-						<a href={`chart/${id}`}>{id}</a>
+						<span>{id}</span>
+						<a href={`chart/${id}`}>Editor</a>
+						<a href={`preview/${id}`}>Preview</a>
 					</li>
 				))
 			}
@@ -25,5 +27,17 @@ const configs = await getCollection('chart-config')
 		height: 100%;
 		display: grid;
 		place-content: center;
+
+		ul {
+			list-style: none;
+		}
+
+		li {
+			padding: 0.5rem;
+			display: grid;
+			grid-template-columns: 1fr auto auto;
+			gap: 1rem;
+			border-bottom: 1px solid #22222222;
+		}
 	}
 </style>
