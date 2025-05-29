@@ -11,6 +11,7 @@ import {
 } from 'rsuite'
 
 import type { ReactNode } from 'react'
+import { ChartColor } from '@/enums'
 
 export const ControlTab = ({
 	title,
@@ -152,7 +153,8 @@ export const ColorSelect = ({
 		<VStack>
 			<label htmlFor={label}>{label}</label>
 			<RadioTileGroup
-				defaultValue={value}
+				//@ts-ignore
+				defaultValue={ChartColor[value]}
 				onChange={(value) => {
 					handleChange(value)
 				}}
@@ -161,7 +163,11 @@ export const ColorSelect = ({
 			>
 				{options.map(({ value, label }) => (
 					<RadioTile value={value}>
-						<div className='swatch-bullet' style={{ color: value }}></div>
+						<div
+							className='swatch-bullet'
+							//@ts-ignore
+							style={{ color: ChartColor[value] }}
+						></div>
 					</RadioTile>
 				))}
 			</RadioTileGroup>

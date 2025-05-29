@@ -117,9 +117,29 @@ const AreaChartEditor = ({ config, availableAxis, handleChange }: AreaChartProps
 	const [legendText, setLegendText] = useState<string>(config.legend?.text || '')
 	const [showLegend, setShowLegend] = useState<boolean>(!config.legend?.hide)
 
+	const [baseline, setBaseline] = useObjectState({
+		active: !!config.baseline,
+		value: config.baseline?.value || 0,
+		bottomColor: config.baseline?.bottomColor || ChartColor.Green,
+	})
+
 	useEffect(() => {
-		handleChange({ ...config, side, color, legend: { text: legendText, hide: !showLegend } })
-	}, [side, color, legendText, showLegend])
+		handleChange({
+			...config,
+			side,
+			color,
+			legend: {
+				text: legendText,
+				hide: !showLegend,
+			},
+			baseline: baseline.active
+				? {
+						value: baseline.value,
+						bottomColor: baseline.bottomColor,
+				  }
+				: null,
+		})
+	}, [side, color, legendText, showLegend, baseline])
 
 	return (
 		<>
@@ -150,6 +170,28 @@ const AreaChartEditor = ({ config, availableAxis, handleChange }: AreaChartProps
 				//@ts-ignore
 				handleChange={(value) => setLegendText(value)}
 			></TextInput>
+			<CheckboxInput
+				label='Threshold line?'
+				value={baseline.active}
+				//@ts-ignore
+				handleChange={(value) => setBaseline(() => ({ active: value }))}
+			></CheckboxInput>
+			<NumberInput
+				label='Threshold value'
+				value={baseline.value}
+				step={0.1}
+				disabled={!baseline.active}
+				//@ts-ignore
+				handleChange={(value) => setBaseline(() => ({ value }))}
+			></NumberInput>
+			<ColorSelect
+				label='Bottom color'
+				value={baseline.bottomColor}
+				options={ChartColorOptions}
+				disabled={!baseline.active}
+				//@ts-ignore
+				handleChange={(value) => setBaseline(() => ({ bottomColor: value }))}
+			></ColorSelect>
 		</>
 	)
 }

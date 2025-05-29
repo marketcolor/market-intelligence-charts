@@ -1,6 +1,7 @@
 'use client'
 
 import { getAreaString } from '@/lib/chartUtils'
+import { colors as themeColors } from '@/styles/theme'
 
 import type {
 	AreaChartConfig,
@@ -64,6 +65,15 @@ const AreaChart = ({ config, data, scales, measures }: Props) => {
 					// @ts-ignore
 					fill={baseline?.bottomColor ? `url(#area-baseline-gradient-${series})` : ChartColor[color]}
 				></path>
+				{baseline && (
+					<line
+						x2={plotWidth}
+						y1={baselineValue}
+						y2={baselineValue}
+						fill='none'
+						stroke={themeColors.dark}
+					></line>
+				)}
 			</g>
 		</g>
 	)
