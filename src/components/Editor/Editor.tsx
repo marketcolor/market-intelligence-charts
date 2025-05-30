@@ -12,8 +12,8 @@ import LiveEditor from './LiveEditor'
 import { getXAxisConfig, getYAxisConfig } from '@/lib/chartUtils'
 
 import type { SeriesConfigProps } from './ConfigurationPanel'
-import type { ChartConfig, ChartDataEntry } from '@/types'
-import { ModuleType } from '@/enums'
+import type { ChartConfig, ChartDataEntry, QuantChartDataEntry } from '@/types'
+import { ChartType, ModuleType } from '@/enums'
 
 import './editor.scss'
 
@@ -32,6 +32,7 @@ const dateParser = utcParse('%d/%m/%Y')
 
 const Editor = ({ preset }: { preset?: Partial<ChartConfig> }) => {
 	const [data, setData] = useState<ChartDataEntry[]>()
+
 	const [chartSize, setChartSize] = useObjectState<{ chartWidth: number; chartHeight: number }>({
 		chartWidth: preset?.width || 800,
 		chartHeight: preset?.height || 500,
@@ -58,10 +59,19 @@ const Editor = ({ preset }: { preset?: Partial<ChartConfig> }) => {
 							const columns = parsedData[0]
 							const dataset = parsedData.slice(1)
 							const [dateKey, ...series] = columns
-							const data: ChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
-								dateParser(dateStr)!,
-								...values,
-							])
+							// const data: ChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
+							// 	dateParser(dateStr)!,
+							// 	...values,
+							// ])
+							const presetType = preset?.type || ChartType.Time
+							const data: ChartDataEntry[] =
+								presetType === 'time'
+									? dataset.map(
+											([dateStr, ...values]) => [dateParser(dateStr)!, ...values] as ChartDataEntry
+									  )
+									: presetType === 'quant'
+									? (dataset as unknown as QuantChartDataEntry[])
+									: dataset
 							setData(data)
 							set(
 								series.map((s: string, id: number) => {
@@ -94,12 +104,14 @@ const Editor = ({ preset }: { preset?: Partial<ChartConfig> }) => {
 	const generateChartConfig = useCallback(() => {
 		if (data) {
 			const chartConfig: ChartConfig = {
+				type: preset?.type || ChartType.Time,
 				...info,
 				width: chartSize.chartWidth,
 				height: chartSize.chartHeight,
-				xAxisConfig: getXAxisConfig(data, preset?.xAxisConfig?.ticksConfig),
+				//@ts-ignore
+				xAxisConfig: getXAxisConfig(data, preset?.xAxisConfig, preset?.type),
 				yAxisConfig: getYAxisConfig(
-					data,
+					data as QuantChartDataEntry[],
 					seriesConfig.filter(({ type }) => type !== ModuleType.PeriodAreas),
 					chartSize.chartHeight
 				),
@@ -117,6 +129,8 @@ const Editor = ({ preset }: { preset?: Partial<ChartConfig> }) => {
 			generateChartConfig()
 		}
 	}, [preset, data, seriesConfig])
+
+	// console.log(seriesConfig)
 
 	return (
 		<div className='editor' data-live-editor={showLiveEditor}>

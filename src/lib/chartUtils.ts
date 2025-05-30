@@ -33,18 +33,21 @@ import type {
 	TickObject,
 	ChartDataEntry,
 	TimeTicksConfig,
-	YAxisConfig,
 	QuantChartDataEntry,
 	QuantChartDomain,
-	TimelineChartDataEntry,
+	TimeChartDataEntry,
 	BandChartDataEntry,
 	CartesianXScales,
 	XAxisConfig,
-	QuantXAxisConfig,
-	TimeXAxisConfig,
+	QuantAxisConfig,
+	TimeAxisConfig,
 } from '@types'
 
 import { ChartType, YAxisSide } from '@/enums'
+
+export const getTimeDomain = (data: TimeChartDataEntry[], timeSeries: number) => {
+	return extent(data, (d) => d[timeSeries]) as [Date, Date]
+}
 
 export const getLinearScale = (
 	domain: [number, number],
@@ -54,7 +57,7 @@ export const getLinearScale = (
 }
 
 export const getTimeScale = (
-	data: TimelineChartDataEntry[],
+	data: TimeChartDataEntry[],
 	range: [number, number]
 ): ScaleTime<number, number, never> => {
 	const timeDomain = getTimeDomain(data, 0)
@@ -86,9 +89,9 @@ export const getCartesianXScale = (
 ): CartesianXScales => {
 	switch (type) {
 		case ChartType.Time:
-			return getTimeScale(data as TimelineChartDataEntry[], range)
+			return getTimeScale(data as TimeChartDataEntry[], range)
 		case ChartType.Quant:
-			const quantConfig = config as QuantXAxisConfig
+			const quantConfig = config as QuantAxisConfig
 			return getQuantScale(data as QuantChartDataEntry[], range, quantConfig.domain)
 		case ChartType.Band:
 			return getBandScale(data as BandChartDataEntry[], range)
@@ -139,10 +142,10 @@ export function getTimeTicks(config: TimeTicksConfig): TickObject<Date>[] {
 export function getXAxisTicks(type: ChartType, config: XAxisConfig) {
 	switch (type) {
 		case ChartType.Time:
-			const timeTicksConfig = config as TimeXAxisConfig
+			const timeTicksConfig = config as TimeAxisConfig
 			return getTimeTicks(timeTicksConfig.ticksConfig)
 		case ChartType.Quant:
-			const quantTicksConfig = config as QuantXAxisConfig
+			const quantTicksConfig = config as QuantAxisConfig
 			return getQuantTicks(quantTicksConfig.ticksConfig)
 		case ChartType.Band:
 			return []
@@ -209,10 +212,6 @@ export const getPeriodAreaString = (
 	return lineFunc(data)
 }
 
-export const getTimeDomain = (data: ChartDataEntry[], timeSeries: number) => {
-	return extent(data, (d) => d[timeSeries]) as [Date, Date]
-}
-
 const getTimeInterval = (start: Date, end: Date) => {
 	const yearInterval = utcYear.count(start, end)
 	const monthInterval = utcMonth.count(start, end)
@@ -248,15 +247,26 @@ export const getTimeTicksConfig = (domain: [Date, Date], preset?: Partial<TimeTi
 	return config
 }
 
-export const getXAxisConfig = (data: ChartDataEntry[], preset?: Partial<TimeTicksConfig>) => {
-	const domain = extent(data, (d) => d[0]) as [Date, Date]
+export const getXAxisConfig = (
+	data: ChartDataEntry[],
+	preset?: Partial<XAxisConfig>,
+	type?: ChartType
+) => {
+	const configType = type || ChartType.Time
+	switch (configType) {
+		case ChartType.Time: {
+			const timeData = data as TimeChartDataEntry[]
+			const timePreset = (preset as TimeAxisConfig) || {}
+			const domain = extent(timeData, (d) => d[0]) as [Date, Date]
 
-	const ticksConfig = getTimeTicksConfig(domain, preset)
-	return { domain, ticksConfig }
+			const ticksConfig = getTimeTicksConfig(domain, timePreset.ticksConfig)
+			return { domain, ticksConfig }
+		}
+	}
 }
 
 export const getYAxisConfig = (
-	data: ChartDataEntry[],
+	data: QuantChartDataEntry[],
 	series: { side: YAxisSide }[],
 	height = 500
 ) => {
@@ -269,7 +279,7 @@ export const getYAxisConfig = (
 	}, {})
 
 	const numTicks = Math.round(height / 75)
-	const config: { [key in YAxisSide]?: YAxisConfig } = {}
+	const config: { [key in YAxisSide]?: QuantAxisConfig } = {}
 
 	for (const [key, { dataIndices }] of Object.entries(sidesIndices)) {
 		const domain: [number, number] = [

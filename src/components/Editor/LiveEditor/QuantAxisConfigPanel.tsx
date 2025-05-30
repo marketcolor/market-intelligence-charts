@@ -1,25 +1,25 @@
-import type { YAxisSide } from '@/enums'
-import { CheckboxInput, InputBlock, NumberInput, Select, TextInput } from './Inputs'
-import { useObjectState } from '@uidotdev/usehooks'
-import type { YAxisConfig } from '@/types'
 import { useEffect, useState } from 'react'
+import { useObjectState } from '@uidotdev/usehooks'
+
+import { CheckboxInput, InputBlock, NumberInput, TextInput } from './Inputs'
+
+import type { QuantAxisConfig } from '@/types'
 
 type Props = {
-	side: YAxisSide
-	initialConfig: YAxisConfig
+	initialConfig: QuantAxisConfig
 	handleChange: Function
 }
 
-const YAxisSideInput = ({ side, initialConfig, handleChange }: Props) => {
+const QuantAxisConfigPanel = ({ initialConfig, handleChange }: Props) => {
 	const [guideLines, setGuideLines] = useState<boolean>(!!initialConfig.guideLines)
 	const [label, setLabel] = useState<string | undefined>(initialConfig.label)
 
 	const [domain, setDomain] = useObjectState({
-		start: initialConfig.domain[0],
-		end: initialConfig.domain[1],
+		start: initialConfig.domain![0],
+		end: initialConfig.domain![1],
 	})
 
-	const [yAxisTicks, setYAxisTicks] = useObjectState({
+	const [ticksConfig, setTicksConfig] = useObjectState({
 		startVal: initialConfig.ticksConfig?.startVal,
 		numTicks: initialConfig.ticksConfig?.numTicks,
 		tickInterval: initialConfig.ticksConfig?.tickInterval,
@@ -30,11 +30,11 @@ const YAxisSideInput = ({ side, initialConfig, handleChange }: Props) => {
 		handleChange({
 			...initialConfig,
 			domain: [domain.start, domain.end],
-			ticksConfig: yAxisTicks,
+			ticksConfig: ticksConfig,
 			guideLines,
 			label,
 		})
-	}, [domain, yAxisTicks, guideLines, label])
+	}, [domain, ticksConfig, guideLines, label])
 
 	return (
 		<div className='y-axis-side'>
@@ -53,32 +53,32 @@ const YAxisSideInput = ({ side, initialConfig, handleChange }: Props) => {
 				></NumberInput>
 				<NumberInput
 					label='Start value'
-					value={yAxisTicks.startVal!}
+					value={ticksConfig.startVal!}
 					// min={2}
 					//@ts-ignore
-					handleChange={(v) => setYAxisTicks(() => ({ startVal: Number(v) }))}
+					handleChange={(v) => setTicksConfig(() => ({ startVal: Number(v) }))}
 				></NumberInput>
 				<NumberInput
 					label='Ticks number'
-					value={yAxisTicks.numTicks!}
+					value={ticksConfig.numTicks!}
 					min={0}
 					//@ts-ignore
-					handleChange={(v) => setYAxisTicks(() => ({ numTicks: Number(v) }))}
+					handleChange={(v) => setTicksConfig(() => ({ numTicks: Number(v) }))}
 				></NumberInput>
 				<NumberInput
 					label='Step'
-					value={yAxisTicks.tickInterval!}
+					value={ticksConfig.tickInterval!}
 					min={0}
 					//@ts-ignore
-					handleChange={(v) => setYAxisTicks(() => ({ tickInterval: Number(v) }))}
+					handleChange={(v) => setTicksConfig(() => ({ tickInterval: Number(v) }))}
 				></NumberInput>
 				<NumberInput
 					label='Decimals'
-					value={yAxisTicks.decimals!}
+					value={ticksConfig.decimals!}
 					min={0}
 					max={3}
 					//@ts-ignore
-					handleChange={(v) => setYAxisTicks(() => ({ decimals: Number(v) }))}
+					handleChange={(v) => setTicksConfig(() => ({ decimals: Number(v) }))}
 				></NumberInput>
 				<CheckboxInput
 					label='Guide lines'
@@ -97,4 +97,4 @@ const YAxisSideInput = ({ side, initialConfig, handleChange }: Props) => {
 	)
 }
 
-export default YAxisSideInput
+export default QuantAxisConfigPanel

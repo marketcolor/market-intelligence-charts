@@ -6,25 +6,17 @@ import { useList, useObjectState } from '@uidotdev/usehooks'
 import { Tabs, Button } from 'rsuite'
 
 import CartesianChart from '@/components/Chart'
-import {
-	ControlTab,
-	InputBlock,
-	NumberInput,
-	DateInput,
-	Select,
-	TextInput,
-	TextAreaInput,
-} from './Inputs'
+import { ControlTab, InputBlock, NumberInput, Select, TextInput, TextAreaInput } from './Inputs'
 
 import Toolbar from './Toolbar'
 import ModulesConfig from './ModulesConfig'
-import YAxisSideInput from './YAxisSideInput'
+import QuantAxisConfigPanel from './QuantAxisConfigPanel'
+import TimeAxisConfigPanel from './TimeAxisConfigPanel'
+
+import type { Modules, ChartConfig, ChartDataEntry, QuantAxisConfig } from '@/types'
+import { ChartColor, ChartType, ModuleType, YAxisSide } from '@/enums'
 
 import './live-editor.scss'
-
-import type { Modules, ChartConfig, ChartDataEntry, YAxisConfig } from '@/types'
-import { ChartColor, ChartType, ModuleType, YAxisSide } from '@/enums'
-import TimeAxisTicksTab from './TimeAxisTicksTab'
 
 type Props = {
 	data: ChartDataEntry[]
@@ -32,7 +24,7 @@ type Props = {
 	series: string[]
 }
 
-const defaultYAxisConfig: YAxisConfig = {
+const defaultYAxisConfig: QuantAxisConfig = {
 	domain: [0, 100],
 	ticksConfig: {
 		startVal: 0,
@@ -45,8 +37,10 @@ const defaultYAxisConfig: YAxisConfig = {
 }
 
 const LiveEditor = ({ data, initialConfig, series }: Props) => {
+	const { type } = initialConfig
+
 	const [config, setConfig] = useState<ChartConfig>(structuredClone(initialConfig))
-	const [ticksConfig, setTicksConfig] = useState(null)
+	const [xAxisConfig, setXAxisConfig] = useState(initialConfig.xAxisConfig)
 
 	const [info, setInfo] = useObjectState({
 		title: initialConfig.title,
@@ -65,7 +59,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		bottom: initialConfig.marginAdjust?.bottom || 0,
 	})
 
-	const [yAxis, setYAxis] = useObjectState({
+	const [yAxisConfig, setYAxisConfig] = useObjectState({
 		left: initialConfig.yAxisConfig.left,
 		right: initialConfig.yAxisConfig.right,
 	})
@@ -79,19 +73,18 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		...info,
 		...size,
 		marginAdjust,
-		xAxisConfig: {
-			...initialConfig.xAxisConfig,
-			...(initialConfig.type === ChartType.Time && { ticksConfig: ticksConfig }),
-			// ticksConfig: xAxisTicks,
-		},
-		yAxisConfig: yAxis,
+		...(type === ChartType.Time && xAxisConfig),
+		...(type === ChartType.Quant && xAxisConfig),
+		yAxisConfig: yAxisConfig,
 		modules,
 	}
 
-	const availableYAxis = Object.keys(yAxis).filter((key) => yAxis?.[key as YAxisSide]) as YAxisSide[]
+	const availableYAxis = Object.keys(yAxisConfig).filter(
+		(key) => yAxisConfig?.[key as YAxisSide]
+	) as YAxisSide[]
 
-	// console.log(initialConfig.yAxisConfig.right)
-	// console.log(updatedConfig.yAxisConfig.right)
+	// console.log(initialConfig.xAxisConfig)
+	// console.log(updatedConfig.xAxisConfig)
 
 	return (
 		<div className='live-editor'>
@@ -166,27 +159,36 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 					</InputBlock>
 				</ControlTab>
 				{initialConfig.type === ChartType.Time && (
-					<TimeAxisTicksTab
-						initialConfig={initialConfig.xAxisConfig.ticksConfig}
-						handleUpdate={setTicksConfig}
-					></TimeAxisTicksTab>
+					<ControlTab title='X Axis Ticks'>
+						<TimeAxisConfigPanel
+							initialConfig={initialConfig.xAxisConfig}
+							handleChange={setXAxisConfig}
+						></TimeAxisConfigPanel>
+					</ControlTab>
+				)}
+				{initialConfig.type === ChartType.Quant && (
+					<ControlTab title='X Axis Ticks'>
+						<QuantAxisConfigPanel
+							initialConfig={initialConfig.xAxisConfig}
+							handleChange={setXAxisConfig}
+						></QuantAxisConfigPanel>
+					</ControlTab>
 				)}
 				<ControlTab title='Y Axis'>
 					<Tabs defaultActiveKey='1'>
 						<Tabs.Tab title='Left Y Axis' eventKey='1'>
-							{yAxis.left ? (
-								<YAxisSideInput
-									side={YAxisSide.Left}
-									initialConfig={yAxis.left}
+							{yAxisConfig.left ? (
+								<QuantAxisConfigPanel
+									initialConfig={yAxisConfig.left}
 									//@ts-ignore
-									handleChange={(v) => setYAxis(() => ({ left: v }))}
-								></YAxisSideInput>
+									handleChange={(v) => setYAxisConfig(() => ({ left: v }))}
+								></QuantAxisConfigPanel>
 							) : (
 								<InputBlock numColumns='2'>
 									<div>Left axis is not defined</div>
 									<Button
 										//@ts-ignore
-										onClick={() => setYAxis(() => ({ left: defaultYAxisConfig }))}
+										onClick={() => setYAxisConfig(() => ({ left: defaultYAxisConfig }))}
 									>
 										Click to create one
 									</Button>
@@ -194,20 +196,19 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 							)}
 						</Tabs.Tab>
 						<Tabs.Tab title='Right Y Axis' eventKey='2'>
-							{yAxis.right ? (
-								<YAxisSideInput
-									side={YAxisSide.Right}
-									initialConfig={yAxis.right}
+							{yAxisConfig.right ? (
+								<QuantAxisConfigPanel
+									initialConfig={yAxisConfig.right}
 									//@ts-ignore
-									handleChange={(v) => setYAxis(() => ({ right: v }))}
-								></YAxisSideInput>
+									handleChange={(v) => setYAxisConfig(() => ({ right: v }))}
+								></QuantAxisConfigPanel>
 							) : (
 								<InputBlock numColumns='1'>
 									<div className='input-wrapper'>
 										<label>Right axis is not defined</label>
 										<Button
 											//@ts-ignore
-											onClick={() => setYAxis(() => ({ right: defaultYAxisConfig }))}
+											onClick={() => setYAxisConfig(() => ({ right: defaultYAxisConfig }))}
 										>
 											Click to create one
 										</Button>
@@ -228,6 +229,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 											value={module.type}
 											options={Object.values(ModuleType).map((value) => ({ value }))}
 											handleChange={(type: string) =>
+												//@ts-ignore
 												updateModule(id, getDefaultModuleConfig(type as ModuleType, module)!)
 											}
 										></Select>

@@ -3,7 +3,7 @@ import type z from 'zod'
 
 import type {
 	areaChartConfigSchema,
-	bandXAxisConfigSchema,
+	bandAxisConfigSchema,
 	barChartConfigSchema,
 	chartConfigSchema,
 	chartMarginsSchema,
@@ -15,12 +15,11 @@ import type {
 	periodAreasConfigSchema,
 	plotDimensionsSchema,
 	quantTicksConfigSchema,
-	quantXAxisConfigSchema,
+	quantAxisConfigSchema,
 	timeIntervalSchema,
 	timeTicksConfigSchema,
-	timeXAxisConfigSchema,
+	timeAxisConfigSchema,
 	xAxisConfigSchema,
-	yAxisConfigSchema,
 } from './chart-config-schema'
 
 export type PlotDimensions = z.infer<typeof plotDimensionsSchema>
@@ -34,13 +33,13 @@ export type DateInterval = z.infer<typeof timeIntervalSchema>
 export type TimeTicksConfig = z.infer<typeof timeTicksConfigSchema>
 export type QuantTicksConfig = z.infer<typeof quantTicksConfigSchema>
 
-export type TimeXAxisConfig = z.infer<typeof timeXAxisConfigSchema>
-export type QuantXAxisConfig = z.infer<typeof quantXAxisConfigSchema>
-export type BandXAxisConfig = z.infer<typeof bandXAxisConfigSchema>
+export type TimeAxisConfig = z.infer<typeof timeAxisConfigSchema>
+export type QuantAxisConfig = z.infer<typeof quantAxisConfigSchema>
+export type BandAxisConfig = z.infer<typeof bandAxisConfigSchema>
 
 export type XAxisConfig = z.infer<typeof xAxisConfigSchema>
 
-export type YAxisConfig = z.infer<typeof yAxisConfigSchema>
+// export type YAxisConfig = z.infer<typeof yAxisConfigSchema>
 
 export type LineChartConfig = z.infer<typeof lineChartConfigSchema>
 export type BarChartConfig = z.infer<typeof barChartConfigSchema>
@@ -74,10 +73,10 @@ export type ChartModuleBasicProps = {
 
 export type TimelineChartRawDataEntry = [string, ...number[]]
 
-export type TimelineChartDataEntry = [Date, ...number[]]
+export type TimeChartDataEntry = [Date, ...number[]]
 export type QuantChartDataEntry = [number, ...number[]]
 export type BandChartDataEntry = [string, ...number[]]
-export type ChartDataEntry = TimelineChartDataEntry | QuantChartDataEntry | BandChartDataEntry
+export type ChartDataEntry = TimeChartDataEntry | QuantChartDataEntry | BandChartDataEntry
 
 export type TimeChartDomain = [Date, Date]
 export type QuantChartDomain = [number, number]

@@ -26,11 +26,11 @@ export type SeriesConfigProps = {
 	series: number
 	type: string
 	legend?: LegendConfig
-	color: ChartColor
+	color: string
 	side: YAxisSide
 }
 
-const configColors = Object.values(ChartColor)
+const configColors = Object.keys(ChartColor)
 
 const SeriesConfig = ({
 	name,
@@ -50,7 +50,7 @@ const SeriesConfig = ({
 		side: YAxisSide.Left,
 	})
 
-	const [legendConfig, setLegendConfig] = useObjectState<LegendConfig>({
+	const [legendConfig, setLegendConfig] = useObjectState({
 		text: config.name,
 		hide: false,
 	})
@@ -66,7 +66,7 @@ const SeriesConfig = ({
 	}
 
 	useEffect(() => {
-		updateHandler({ ...config, legend: legendConfig })
+		updateHandler({ ...config, legend: legendConfig as LegendConfig })
 	}, [config, legendConfig])
 
 	return (

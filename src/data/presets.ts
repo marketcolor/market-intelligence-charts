@@ -1,7 +1,8 @@
-import { ChartColor, ModuleType, YAxisSide } from '@/enums'
+import { ModuleType, YAxisSide } from '@/enums'
 
 export const presets = {
 	'non-us-earnings': {
+		type: 'time',
 		title: 'Non-U.S. earnings estimates and stock prices have typically moved together over time',
 		description:
 			'This graph shows the MSCI EAFE Index price and the MSCI EAFE Index EPS forecast, which tend to move together over time.',
@@ -21,17 +22,18 @@ export const presets = {
 				type: ModuleType.LineChart,
 				series: 0,
 				side: YAxisSide.Left,
-				color: ChartColor.Green,
+				color: 'Green',
 			},
 			{
 				type: ModuleType.LineChart,
 				series: 1,
 				side: YAxisSide.Right,
-				color: ChartColor.Blue,
+				color: 'Blue',
 			},
 		],
 	},
 	'stock-prices': {
+		type: 'time',
 		title: 'Stock prices and earnings',
 		description:
 			'This graph shows the S&P 500 Index price and the S&P 500 Index EPS forecast, which tend to move together over time.',
@@ -51,17 +53,18 @@ export const presets = {
 				type: ModuleType.LineChart,
 				series: 0,
 				side: YAxisSide.Left,
-				color: ChartColor.Green,
+				color: 'Green',
 			},
 			{
 				type: ModuleType.LineChart,
 				series: 1,
 				side: YAxisSide.Right,
-				color: ChartColor.Blue,
+				color: 'Blue',
 			},
 		],
 	},
 	's&p-midcap': {
+		type: 'time',
 		title: 's&p-midcap',
 		description:
 			'This chart shows the S&P MidCap 400 Index P/E ratio relative to the S&P 500 Index P/E ratio. The chart shows that mid caps are trading at a substantial discount to large cap equities.',
@@ -85,16 +88,17 @@ export const presets = {
 				type: ModuleType.LineChart,
 				series: 0,
 				side: YAxisSide.Left,
-				color: ChartColor.Blue,
+				color: 'Blue',
 				showLegend: false,
 				threshold: {
 					value: 1.0,
-					bottomColor: ChartColor.Green,
+					bottomColor: 'Green',
 				},
 			},
 		],
 	},
 	'money-market': {
+		type: 'time',
 		title: 'Money market assets remain at all-time highs, with balances nearing $7 trillion',
 		description:
 			'This chart shows how money market assets have tended to peak near recessions and stock market bottoms. Currently, these assets have been rising since the start of the pandemic and remain elevated.',
@@ -114,7 +118,7 @@ export const presets = {
 				type: ModuleType.AreaChart,
 				series: 0,
 				side: YAxisSide.Left,
-				color: ChartColor.Green,
+				color: 'Green',
 			},
 			{
 				type: ModuleType.PeriodAreas,
@@ -126,6 +130,7 @@ export const presets = {
 		],
 	},
 	'labor-market': {
+		type: 'time',
 		title: 'A steady labor market and tight high-yield spreads suggest the economy remains resilient',
 		description:
 			'A steady labor market and tight high-yield spreads suggest the economy remains resilient',
@@ -145,17 +150,18 @@ export const presets = {
 				type: ModuleType.LineChart,
 				series: 0,
 				side: YAxisSide.Left,
-				color: ChartColor.Green,
+				color: 'Green',
 			},
 			{
 				type: ModuleType.LineChart,
 				series: 1,
 				side: YAxisSide.Right,
-				color: ChartColor.Blue,
+				color: 'Blue',
 			},
 		],
 	},
 	'fed-funds': {
+		type: 'time',
 		title:
 			'The fed funds target rate tends to fall further than the 10-year U.S. Treasury yield once the Fed shifts policy',
 		description:
@@ -176,13 +182,13 @@ export const presets = {
 				type: ModuleType.LineChart,
 				series: 0,
 				side: YAxisSide.Left,
-				color: ChartColor.Green,
+				color: 'Green',
 			},
 			{
 				type: ModuleType.LineChart,
 				series: 1,
 				side: YAxisSide.Left,
-				color: ChartColor.Blue,
+				color: 'Blue',
 			},
 			{
 				type: ModuleType.PeriodAreas,
@@ -191,6 +197,7 @@ export const presets = {
 		],
 	},
 	'mega-cap': {
+		type: 'time',
 		title:
 			'Mega-cap tech stocks have recently reversed course, decreasing the market concentration within these names',
 		description:
@@ -214,7 +221,7 @@ export const presets = {
 				type: ModuleType.LineChart,
 				series: 0,
 				side: YAxisSide.Left,
-				color: ChartColor.Blue,
+				color: 'Blue',
 			},
 		],
 	},

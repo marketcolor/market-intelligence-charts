@@ -7,14 +7,7 @@ import { useObjectState } from '@uidotdev/usehooks'
 
 import { ChartColorOptions } from '@lib/configUtils'
 
-import type {
-	AreaChartConfig,
-	LegendConfig,
-	LineChartConfig,
-	Modules,
-	PeriodAreasConfig,
-} from '@/types'
-import { color } from 'd3'
+import type { AreaChartConfig, LineChartConfig, Modules, PeriodAreasConfig } from '@/types'
 
 type LineChartProps = {
 	config: LineChartConfig

@@ -56,6 +56,7 @@ const CartesianChart = ({ data, config }: Props) => {
 		yAxisConfig,
 		modules,
 	} = config
+
 	const [plotRef, dimensions] = usePlotMeasure(width, height)
 	const [svgRef, { svgRight, svgLeft, svgBottom, svgTop }] = useSvgMeasure(width, height)
 
@@ -64,10 +65,10 @@ const CartesianChart = ({ data, config }: Props) => {
 	const chartScales: CartesianChartScales = {
 		y: {
 			left: yAxisConfig.left
-				? getLinearScale(yAxisConfig.left.domain, [dimensions.plotHeight, 0])
+				? getLinearScale(yAxisConfig.left.domain!, [dimensions.plotHeight, 0])
 				: undefined,
 			right: yAxisConfig.right
-				? getLinearScale(yAxisConfig.right.domain, [dimensions.plotHeight, 0])
+				? getLinearScale(yAxisConfig.right.domain!, [dimensions.plotHeight, 0])
 				: undefined,
 		},
 		x: getCartesianXScale(type, data, [0, dimensions.plotWidth], xAxisConfig),

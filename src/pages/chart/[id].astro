@@ -3,7 +3,7 @@ import { getEntry } from 'astro:content'
 
 import Layout from '@layouts/Layout.astro'
 import Papa from 'papaparse'
-import type { TimeChartRawDataEntry, ChartDataEntry, ChartConfig } from '@/types'
+import type { ChartDataEntry, ChartConfig, QuantChartDataEntry } from '@/types'
 import { timeParse } from 'd3'
 import LiveEditor from '@/components/Editor/LiveEditor'
 import RSuiteProvider from '@/components/RSuiteProvider'
@@ -38,10 +38,13 @@ const dataset: TimeChartRawDataEntry[] = parsedData.slice(1)
 
 const [dateKey, ...series] = columns
 const dateParser = timeParse('%d/%m/%Y')
-const data: ChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
-	dateParser(dateStr)!,
-	...values,
-])
+
+const data: ChartDataEntry[] =
+	config.data.type === 'time'
+		? dataset.map(([dateStr, ...values]) => [dateParser(dateStr)!, ...values] as ChartDataEntry)
+		: config.data.type === 'quant'
+			? (dataset as unknown as QuantChartDataEntry[])
+			: dataset
 ---
 
 <Layout>

@@ -73,35 +73,27 @@ export const quantTicksConfigSchema = z.object({
 })
 /////////////////////////////////////////////////////////
 // X axis config
-export const baseXAxisConfigSchema = z.object({
+export const baseAxisConfigSchema = z.object({
 	label: z.string().optional(),
 	guideLines: z.boolean().optional(),
 })
 
-export const timeXAxisConfigSchema = baseXAxisConfigSchema.extend({
+export const timeAxisConfigSchema = baseAxisConfigSchema.extend({
 	ticksConfig: timeTicksConfigSchema,
 })
 
-export const quantXAxisConfigSchema = baseXAxisConfigSchema.extend({
+export const quantAxisConfigSchema = baseAxisConfigSchema.extend({
 	domain: z.tuple([z.number(), z.number()]).optional(),
 	ticksConfig: quantTicksConfigSchema,
 })
 
-export const bandXAxisConfigSchema = baseXAxisConfigSchema
+export const bandAxisConfigSchema = baseAxisConfigSchema
 
 export const xAxisConfigSchema = z.union([
-	timeXAxisConfigSchema,
-	quantXAxisConfigSchema,
-	bandXAxisConfigSchema,
+	timeAxisConfigSchema,
+	quantAxisConfigSchema,
+	bandAxisConfigSchema,
 ])
-////////////////////////////////////////////////////
-// Y axis config
-export const yAxisConfigSchema = z.object({
-	domain: z.tuple([z.number(), z.number()]),
-	ticksConfig: quantTicksConfigSchema.optional(),
-	label: z.string().optional(),
-	guideLines: z.boolean().optional(),
-})
 ////////////////////////////////////////////////////
 // Legend
 export const legendConfigSchema = z.object({
@@ -176,23 +168,23 @@ export const baseChartConfigSchema = z.object({
 	width: z.number(),
 	height: z.number(),
 	marginAdjust: chartMarginsSchema.optional(),
-	yAxisConfig: z.record(yAxisSideSchema, yAxisConfigSchema),
+	yAxisConfig: z.record(yAxisSideSchema, quantAxisConfigSchema),
 	modules: z.array(modulesSchema).optional(),
 })
 
 export const timelineChartConfigSchema = baseChartConfigSchema.extend({
 	type: z.literal(ChartType.Time),
-	xAxisConfig: timeXAxisConfigSchema,
+	xAxisConfig: timeAxisConfigSchema,
 })
 
 export const quantChartConfigSchema = baseChartConfigSchema.extend({
 	type: z.literal(ChartType.Quant),
-	xAxisConfig: quantXAxisConfigSchema,
+	xAxisConfig: quantAxisConfigSchema,
 })
 
 export const bandChartConfigSchema = baseChartConfigSchema.extend({
 	type: z.literal(ChartType.Band),
-	xAxisConfig: bandXAxisConfigSchema,
+	xAxisConfig: bandAxisConfigSchema,
 })
 
 export const chartConfigSchema = z.discriminatedUnion('type', [
