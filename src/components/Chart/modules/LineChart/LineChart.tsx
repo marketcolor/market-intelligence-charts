@@ -3,6 +3,7 @@
 import { getPathString } from '@/lib/chartUtils'
 
 import { colors as themeColors } from '@styles/theme'
+
 import type { ChartMeasures, LineChartConfig, ChartDataEntry, CartesianChartScales } from '@/types'
 import { ChartColor } from '@/enums'
 
@@ -35,14 +36,9 @@ const LineChart = ({ config, data, scales, measures }: Props) => {
 						y1={0}
 						y2={plotHeight}
 					>
+						<stop offset={yScale(threshold.value) / plotHeight} stopColor={ChartColor[color]}></stop>
 						<stop
 							offset={yScale(threshold.value) / plotHeight}
-							//@ts-ignore
-							stopColor={ChartColor[color]}
-						></stop>
-						<stop
-							offset={yScale(threshold.value) / plotHeight}
-							//@ts-ignore
 							stopColor={ChartColor[threshold.bottomColor]}
 						></stop>
 					</linearGradient>
@@ -65,7 +61,6 @@ const LineChart = ({ config, data, scales, measures }: Props) => {
 					key={series + 1}
 					d={getPathString(data, 0, xScale, series + 1, yScale)!}
 					fill='none'
-					//@ts-ignore
 					stroke={threshold ? `url(#threshold-gradient-${series})` : ChartColor[color]}
 					strokeWidth='2.5'
 				></path>

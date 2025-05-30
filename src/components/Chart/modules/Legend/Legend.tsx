@@ -8,6 +8,7 @@ import { colors, fonts } from '@/styles/theme'
 import type { LegendConfig } from '@/types'
 
 import './legend.scss'
+import { ChartColor } from '@/enums'
 
 type Props = {
 	config: LegendConfig[]
@@ -83,7 +84,7 @@ const Svg = memo(({ config, offsets }: SvgProps) => {
 						visibility={hide ? 'hidden' : 'visible'}
 						transform={`translate(${offsets[id][0]}, ${offsets[id][1]})`}
 					>
-						<rect fill={color} width={10} height={10} y={-5}></rect>
+						<rect fill={ChartColor[color]} width={10} height={10} y={-5}></rect>
 						<text
 							x='19'
 							fontFamily={fonts.manulife}

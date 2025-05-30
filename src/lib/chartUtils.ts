@@ -34,7 +34,6 @@ import type {
 	ChartDataEntry,
 	TimeTicksConfig,
 	YAxisConfig,
-	CartesianChartDomain,
 	QuantChartDataEntry,
 	QuantChartDomain,
 	TimelineChartDataEntry,
@@ -45,7 +44,7 @@ import type {
 	TimeXAxisConfig,
 } from '@types'
 
-import { ChartType, type YAxisSide } from '@/enums'
+import { ChartType, YAxisSide } from '@/enums'
 
 export const getLinearScale = (
 	domain: [number, number],
@@ -165,7 +164,7 @@ const getCurveFunc = (name: string) => {
 export const getPathString = (
 	data: ChartDataEntry[],
 	xSeries: number,
-	xScale: ScaleTime<number, number, never>,
+	xScale: CartesianXScales,
 	ySeries: number,
 	yScale: ScaleLinear<number, number, never>
 ): string | null => {
@@ -179,7 +178,7 @@ export const getPathString = (
 export const getAreaString = (
 	data: ChartDataEntry[],
 	xSeries: number,
-	xScale: ScaleTime<number, number, never>,
+	xScale: CartesianXScales,
 	ySeries: number,
 	yScale: ScaleLinear<number, number, never>,
 	baseline: number,
@@ -197,7 +196,7 @@ export const getAreaString = (
 export const getPeriodAreaString = (
 	data: ChartDataEntry[],
 	xSeries: number,
-	xScale: ScaleTime<number, number, never>,
+	xScale: CartesianXScales,
 	ySeries: number,
 	height: number
 ): string | null => {

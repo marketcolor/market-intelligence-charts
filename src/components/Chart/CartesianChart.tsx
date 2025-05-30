@@ -2,7 +2,7 @@
 import { useRef } from 'react'
 
 import { usePlotMeasure } from '@lib/usePlotMeasure'
-import { getTimeScale, getLinearScale, getQuantScale, getCartesianXScale } from '@/lib/chartUtils'
+import { getLinearScale, getCartesianXScale } from '@/lib/chartUtils'
 
 import Legend from './modules/Legend'
 
@@ -22,10 +22,9 @@ import type {
 	CartesianChartScales,
 	ChartConfig,
 	LegendConfig,
-	XAxisConfig,
 } from '@/types'
 
-import { ChartColor, ModuleType, YAxisSide } from '@/enums'
+import { ModuleType, YAxisSide } from '@/enums'
 import { useSvgMeasure } from '@/lib/useSvgMeasure'
 
 type Props = {
@@ -90,7 +89,6 @@ const CartesianChart = ({ data, config }: Props) => {
 	}
 
 	const underModules = modules?.filter((m) => m.type === 'periodAreas')
-	//@ts-ignore
 	const overModules = modules?.filter((m) => m.type !== 'periodAreas').sort(modulesSorter)
 
 	const legend =
@@ -100,7 +98,7 @@ const CartesianChart = ({ data, config }: Props) => {
 				(m) =>
 					({
 						text: m.legend.text,
-						color: m.type === ModuleType.PeriodAreas ? ChartColor.RecessionGrey : m.color,
+						color: m.type === ModuleType.PeriodAreas ? 'RecessionGrey' : m.color,
 						hide: m.legend.hide,
 					} as LegendConfig)
 			)
@@ -121,7 +119,7 @@ const CartesianChart = ({ data, config }: Props) => {
 				{description && <desc id='mi-chart-description'>{description}</desc>}
 				<g ref={svgRef}>
 					{legend?.length && <Legend config={legend} htmlRef={htmlOverlay.current}></Legend>}
-					{/* {underModules &&
+					{underModules &&
 						underModules.map((module, id) =>
 							moduleComponents[module.type](id, {
 								config: module,
@@ -130,7 +128,7 @@ const CartesianChart = ({ data, config }: Props) => {
 								data,
 								htmlRef: htmlOverlay.current,
 							})
-						)} */}
+						)}
 					{yAxisConfig.left && (
 						<YAxis
 							side={YAxisSide.Left}
@@ -159,7 +157,7 @@ const CartesianChart = ({ data, config }: Props) => {
 						></XAxis>
 					)}
 				</g>
-				{/* {overModules?.length &&
+				{overModules?.length &&
 					overModules.map((module, id) =>
 						moduleComponents[module.type](id, {
 							config: module,
@@ -168,7 +166,7 @@ const CartesianChart = ({ data, config }: Props) => {
 							data,
 							htmlRef: htmlOverlay.current,
 						})
-					)} */}
+					)}
 			</svg>
 		</div>
 	)

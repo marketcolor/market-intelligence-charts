@@ -55,12 +55,12 @@ export const chartMarginsSchema = z.object({
 })
 ////////////////////////////////////////////////////////
 // Ticks
-export const dateIntervalSchema = z.union([z.literal('day'), z.literal('month'), z.literal('year')])
+export const timeIntervalSchema = z.union([z.literal('day'), z.literal('month'), z.literal('year')])
 
 export const timeTicksConfigSchema = z.object({
 	startDate: z.union([z.string(), z.date()]),
 	numTicks: z.number(),
-	dateInterval: dateIntervalSchema,
+	dateInterval: timeIntervalSchema,
 	intervalStep: z.number(),
 	dateFormat: z.string().optional(),
 })
@@ -106,7 +106,7 @@ export const yAxisConfigSchema = z.object({
 // Legend
 export const legendConfigSchema = z.object({
 	text: z.string(),
-	color: chartColorSchema.optional(),
+	color: chartColorSchema,
 	hide: z.boolean().optional(),
 })
 ////////////////////////////////////////////////////

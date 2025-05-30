@@ -37,14 +37,9 @@ const AreaChart = ({ config, data, scales, measures }: Props) => {
 						y1={0}
 						y2={plotHeight}
 					>
+						<stop offset={yScale(baseline.value) / plotHeight} stopColor={ChartColor[color]}></stop>
 						<stop
 							offset={yScale(baseline.value) / plotHeight}
-							// @ts-ignore
-							stopColor={ChartColor[color]}
-						></stop>
-						<stop
-							offset={yScale(baseline.value) / plotHeight}
-							// @ts-ignore
 							stopColor={ChartColor[baseline.bottomColor]}
 						></stop>
 					</linearGradient>
@@ -57,7 +52,6 @@ const AreaChart = ({ config, data, scales, measures }: Props) => {
 				<path
 					key={series + 1}
 					d={getAreaString(data, 0, xScale, series + 1, yScale, baselineValue, curve)!}
-					// @ts-ignore
 					fill={baseline?.bottomColor ? `url(#area-baseline-gradient-${series})` : ChartColor[color]}
 				></path>
 				{baseline && (
