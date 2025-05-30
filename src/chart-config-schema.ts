@@ -58,7 +58,7 @@ export const chartMarginsSchema = z.object({
 export const timeIntervalSchema = z.union([z.literal('day'), z.literal('month'), z.literal('year')])
 
 export const timeTicksConfigSchema = z.object({
-	startDate: z.union([z.string(), z.date()]),
+	startDate: z.date(),
 	numTicks: z.number(),
 	dateInterval: timeIntervalSchema,
 	intervalStep: z.number(),

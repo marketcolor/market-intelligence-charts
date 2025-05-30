@@ -22,8 +22,9 @@ import YAxisSideInput from './YAxisSideInput'
 
 import './live-editor.scss'
 
-import type { LegendConfig, Modules, ChartConfig, ChartDataEntry, YAxisConfig } from '@/types'
-import { ChartColor, ModuleType, YAxisSide } from '@/enums'
+import type { Modules, ChartConfig, ChartDataEntry, YAxisConfig } from '@/types'
+import { ChartColor, ChartType, ModuleType, YAxisSide } from '@/enums'
+import TimeAxisTicksTab from './TimeAxisTicksTab'
 
 type Props = {
 	data: ChartDataEntry[]
@@ -45,6 +46,7 @@ const defaultYAxisConfig: YAxisConfig = {
 
 const LiveEditor = ({ data, initialConfig, series }: Props) => {
 	const [config, setConfig] = useState<ChartConfig>(structuredClone(initialConfig))
+	const [ticksConfig, setTicksConfig] = useState(null)
 
 	const [info, setInfo] = useObjectState({
 		title: initialConfig.title,
@@ -63,14 +65,6 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		bottom: initialConfig.marginAdjust?.bottom || 0,
 	})
 
-	const [xAxisTicks, setXAxisTicks] = useObjectState({
-		startDate: initialConfig.xAxisConfig.ticksConfig.startDate,
-		numTicks: initialConfig.xAxisConfig.ticksConfig.numTicks,
-		dateInterval: initialConfig.xAxisConfig.ticksConfig.dateInterval,
-		intervalStep: initialConfig.xAxisConfig.ticksConfig.intervalStep,
-		dateFormat: initialConfig.xAxisConfig.ticksConfig.dateFormat || '%m/%y',
-	})
-
 	const [yAxis, setYAxis] = useObjectState({
 		left: initialConfig.yAxisConfig.left,
 		right: initialConfig.yAxisConfig.right,
@@ -87,7 +81,8 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		marginAdjust,
 		xAxisConfig: {
 			...initialConfig.xAxisConfig,
-			ticksConfig: xAxisTicks,
+			...(initialConfig.type === ChartType.Time && { ticksConfig: ticksConfig }),
+			// ticksConfig: xAxisTicks,
 		},
 		yAxisConfig: yAxis,
 		modules,
@@ -170,48 +165,12 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 						></NumberInput>
 					</InputBlock>
 				</ControlTab>
-				<ControlTab title='X Axis Ticks'>
-					<InputBlock numColumns='2'>
-						<DateInput
-							label='Start date'
-							value={xAxisTicks.startDate}
-							//@ts-ignore
-							handleChange={(v) => setXAxisTicks(() => ({ startDate: v }))}
-						></DateInput>
-						<Select
-							label='Date interval'
-							value={xAxisTicks.dateInterval}
-							options={[{ value: 'day' }, { value: 'month' }, { value: 'year' }]}
-							//@ts-ignore
-							handleChange={(v) => setXAxisTicks(() => ({ dateInterval: v }))}
-						></Select>
-						<NumberInput
-							label='Ticks number'
-							value={xAxisTicks.numTicks}
-							min={2}
-							//@ts-ignore
-							handleChange={(v) => setXAxisTicks(() => ({ numTicks: v }))}
-						></NumberInput>
-						<NumberInput
-							label='Step'
-							value={xAxisTicks.intervalStep}
-							min={1}
-							//@ts-ignore
-							handleChange={(v) => setXAxisTicks(() => ({ intervalStep: v }))}
-						></NumberInput>
-						<Select
-							label='Date format'
-							value={xAxisTicks.dateFormat}
-							options={[
-								{ value: '%m/%y', label: 'mm/yy' },
-								{ value: '%m/%Y', label: 'mm/yyyy' },
-								{ value: '%Y', label: 'yyyy' },
-							]}
-							//@ts-ignore
-							handleChange={(v) => setXAxisTicks(() => ({ dateFormat: v }))}
-						></Select>
-					</InputBlock>
-				</ControlTab>
+				{initialConfig.type === ChartType.Time && (
+					<TimeAxisTicksTab
+						initialConfig={initialConfig.xAxisConfig.ticksConfig}
+						handleUpdate={setTicksConfig}
+					></TimeAxisTicksTab>
+				)}
 				<ControlTab title='Y Axis'>
 					<Tabs defaultActiveKey='1'>
 						<Tabs.Tab title='Left Y Axis' eventKey='1'>
