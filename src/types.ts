@@ -1,92 +1,60 @@
-import type { ScaleLinear, ScaleTime } from 'd3'
-import type { ChartColor, ModuleType, YAxisSide } from './enums'
+import type { ScaleBand, ScaleLinear, ScaleTime } from 'd3'
+import type { ChartColor, ChartType, CurveType, LineType, ModuleType, YAxisSide } from './enums'
+import type z from 'zod'
+import type {
+	bandXAxisConfigSchema,
+	chartConfigSchema,
+	chartMarginsSchema,
+	chartMeasuresSchema,
+	chartSizeSchema,
+	legendConfigSchema,
+	modulesSchema,
+	plotDimensionsSchema,
+	quantTicksConfigSchema,
+	quantXAxisConfigSchema,
+	timeTicksConfigSchema,
+	timeXAxisConfigSchema,
+	xAxisConfigSchema,
+	yAxisConfigSchema,
+} from './chart-config-schema'
 
-export type PlotDimensions = {
-	plotWidth: number
-	plotHeight: number
-	leftMargin: number
-	rightMargin: number
-	topMargin: number
-	bottomMargin: number
-}
+export type PlotDimensions = z.infer<typeof plotDimensionsSchema>
+export type ChartSize = z.infer<typeof chartSizeSchema>
+export type ChartMeasures = z.infer<typeof chartMeasuresSchema>
 
-export type ChartSize = {
-	width: number
-	height: number
-}
-
-export type ChartMeasures = PlotDimensions & ChartSize
-
-export type ChartMargins = {
-	top?: number
-	bottom?: number
-	left?: number
-	right?: number
-}
-export type BaseChartConfig = {
-	title?: string
-	description?: string
-	width: number
-	height: number
-	marginAdjust?: ChartMargins
-}
-
-export type TimelineChartConfig = BaseChartConfig & {
-	xAxisConfig: TimelineXAxisConfig
-	yAxisConfig: {
-		[key in YAxisSide]?: YAxisConfig
-	}
-	// legend?: LegendConfig[]
-	modules?: Modules[]
-}
+export type ChartMargins = z.infer<typeof chartMarginsSchema>
 
 export type DateInterval = 'day' | 'month' | 'year'
 
-export type TimelineTicksConfig = {
-	startDate: string | Date
-	numTicks: number
-	dateInterval: DateInterval
-	intervalStep: number
-	dateFormat?: string
-}
-
-export type NumericTicksConfig = {
-	startVal: number
-	numTicks: number
-	tickInterval: number
-	decimals?: number
-}
+export type TimeTicksConfig = z.infer<typeof timeTicksConfigSchema>
+export type QuantTicksConfig = z.infer<typeof quantTicksConfigSchema>
 
 export type TickObject<T extends number | string | Date> = {
 	value: T
 	label: string
 }
 
-export type TimelineXAxisConfig = {
-	ticksConfig: TimelineTicksConfig
-	label?: string
-	guideLines?: boolean
-}
+export type TimeXAxisConfig = z.infer<typeof timeXAxisConfigSchema>
+export type QuantXAxisConfig = z.infer<typeof quantXAxisConfigSchema>
+export type BandXAxisConfig = z.infer<typeof bandXAxisConfigSchema>
 
-export type YAxisConfig = {
-	domain: [number, number]
-	ticksConfig?: NumericTicksConfig
-	label?: string
-	guideLines?: boolean
-}
+export type XAxisConfig = z.infer<typeof xAxisConfigSchema>
 
-export type LegendConfig = {
-	text: string
-	color?: ChartColor
-	hide?: boolean
-}
-// data entry
-export type GeneralDataEntry = {
-	[key: string]: number
-}
+export type YAxisConfig = z.infer<typeof yAxisConfigSchema>
 
 export type TimelineChartRawDataEntry = [string, ...number[]]
+
 export type TimelineChartDataEntry = [Date, ...number[]]
+export type QuantChartDataEntry = [number, ...number[]]
+export type BandChartDataEntry = [string, ...number[]]
+
+export type ChartDataEntry = TimelineChartDataEntry | QuantChartDataEntry | BandChartDataEntry
+
+export type TimeChartDomain = [Date, Date]
+export type QuantChartDomain = [number, number]
+export type BandChartDomain = string[]
+
+export type CartesianChartDomain = TimeChartDomain | QuantChartDomain | BandChartDomain
 //
 // modules config
 type BaseModuleConfig = {
@@ -102,8 +70,8 @@ export type LineChartConfig = BaseModuleConfig & {
 		value: number
 		bottomColor: ChartColor
 	}
-	lineType?: 'solid' | 'dashed'
-	curve?: 'linear' | 'step' | 'natural'
+	lineType?: LineType
+	curve?: CurveType
 }
 
 export type BarChartConfig = BaseModuleConfig & {
@@ -132,21 +100,30 @@ export type AreaChartConfig = BaseModuleConfig & {
 		value: number
 		bottomColor?: ChartColor
 	}
-	curve?: 'linear' | 'step' | 'natural'
+	curve?: CurveType
 }
 
-export type Modules = LineChartConfig | AreaChartConfig | PeriodAreasConfig
+// export type Modules = LineChartConfig | AreaChartConfig | PeriodAreasConfig
+export type Modules = z.infer<typeof modulesSchema>
 /////////////////
-export type TimelineChartScales = {
+export type CartesianXScales =
+	| ScaleLinear<number, number, never>
+	| ScaleTime<number, number, never>
+	| ScaleBand<string>
+
+export type CartesianChartScales = {
 	y: {
 		left?: ScaleLinear<number, number, never>
 		right?: ScaleLinear<number, number, never>
 	}
-	x: ScaleTime<number, number, never>
+	x: CartesianXScales
 }
 
 export type ChartModuleBasicProps = {
 	measures: ChartMeasures
-	scales: TimelineChartScales
+	scales: CartesianChartScales
 	htmlRef?: HTMLElement | null
 }
+
+export type ChartConfig = z.infer<typeof chartConfigSchema>
+export type LegendConfig = z.infer<typeof legendConfigSchema>

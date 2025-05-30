@@ -1,8 +1,28 @@
 .x-axis-html {
 	grid-area: margin-bottom;
 	display: grid;
+	grid-template-rows: auto auto;
+	grid-template-areas: 'ticks' 'label';
+
+	&[data-has-label='false'] {
+		gap: 0;
+	}
+	.label-container {
+		grid-area: label;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding-top: var(--x-axis-label-offset);
+
+		.label {
+			font-size: 18px;
+			text-align: center;
+			text-wrap: balance;
+		}
+	}
 
 	.ticks-container {
+		grid-area: ticks;
 		display: grid;
 
 		.tick {

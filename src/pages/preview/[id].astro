@@ -5,12 +5,13 @@ import Layout from '@layouts/Layout.astro'
 import Papa from 'papaparse'
 import type {
 	TimelineChartRawDataEntry,
-	TimelineChartDataEntry,
-	TimelineChartConfig,
+	ChartDataEntry,
+	ChartConfig,
+	QuantChartDataEntry,
 } from '@/types'
 import { timeParse } from 'd3'
 
-import TimelineChart from '@/components/Chart'
+import CartesianChart from '@/components/Chart'
 
 const { id } = Astro.params
 
@@ -42,15 +43,16 @@ const dataset: TimelineChartRawDataEntry[] = parsedData.slice(1)
 
 const [dateKey, ...series] = columns
 const dateParser = timeParse('%d/%m/%Y')
-const data: TimelineChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
-	dateParser(dateStr)!,
-	...values,
-])
+
+const data: ChartDataEntry[] =
+	config.data.type === 'time'
+		? dataset.map(([dateStr, ...values]) => [dateParser(dateStr)!, ...values] as ChartDataEntry)
+		: (dataset as unknown as QuantChartDataEntry[])
 ---
 
 <Layout>
 	<div class='container'>
-		<TimelineChart config={config.data as TimelineChartConfig} data={data} client:load />
+		<CartesianChart config={config.data as ChartConfig} data={data} client:load />
 	</div>
 </Layout>
 

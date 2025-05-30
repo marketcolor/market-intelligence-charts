@@ -5,7 +5,7 @@ import { useList, useObjectState } from '@uidotdev/usehooks'
 
 import { Tabs, Button } from 'rsuite'
 
-import TimelineChart from '@/components/Chart'
+import CartesianChart from '@/components/Chart'
 import {
 	ControlTab,
 	InputBlock,
@@ -22,18 +22,12 @@ import YAxisSideInput from './YAxisSideInput'
 
 import './live-editor.scss'
 
-import type {
-	LegendConfig,
-	Modules,
-	TimelineChartConfig,
-	TimelineChartDataEntry,
-	YAxisConfig,
-} from '@/types'
+import type { LegendConfig, Modules, ChartConfig, ChartDataEntry, YAxisConfig } from '@/types'
 import { ChartColor, ModuleType, YAxisSide } from '@/enums'
 
 type Props = {
-	data: TimelineChartDataEntry[]
-	initialConfig: TimelineChartConfig
+	data: ChartDataEntry[]
+	initialConfig: ChartConfig
 	series: string[]
 }
 
@@ -50,7 +44,7 @@ const defaultYAxisConfig: YAxisConfig = {
 }
 
 const LiveEditor = ({ data, initialConfig, series }: Props) => {
-	const [config, setConfig] = useState<TimelineChartConfig>(structuredClone(initialConfig))
+	const [config, setConfig] = useState<ChartConfig>(structuredClone(initialConfig))
 
 	const [info, setInfo] = useObjectState({
 		title: initialConfig.title,
@@ -86,7 +80,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		initialConfig.modules ? [...initialConfig.modules] : []
 	)
 
-	const updatedConfig: TimelineChartConfig = {
+	const updatedConfig: ChartConfig = {
 		...initialConfig,
 		...info,
 		...size,
@@ -293,7 +287,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 			</div>
 			<div className='preview-container'>
 				<div className='sticky-container'>
-					<TimelineChart data={data} config={updatedConfig}></TimelineChart>
+					<CartesianChart data={data} config={updatedConfig}></CartesianChart>
 				</div>
 			</div>
 		</div>

@@ -2,31 +2,35 @@
 import { useRef } from 'react'
 
 import { usePlotMeasure } from '@lib/usePlotMeasure'
-import { getTimeScale, getLinearScale, getXAxisConfig } from '@/lib/chartUtils'
+import { getTimeScale, getLinearScale, getQuantScale, getCartesianXScale } from '@/lib/chartUtils'
+
+import Legend from './modules/Legend'
 
 import YAxis from './modules/YAxis'
 import XAxis from './modules/XAxis'
+
 import LineChart from './modules/LineChart'
 import AreaChart from './modules/AreaChart'
 import PeriodAreas from './modules/PeriodAreas'
-import Legend from './modules/Legend'
+import BarChart from './modules/BarChart'
 
 import './chart.scss'
 
 import type {
 	Modules,
-	TimelineChartConfig,
-	TimelineChartDataEntry,
-	TimelineChartScales,
+	ChartDataEntry,
+	CartesianChartScales,
+	ChartConfig,
+	LegendConfig,
+	XAxisConfig,
 } from '@/types'
 
 import { ChartColor, ModuleType, YAxisSide } from '@/enums'
 import { useSvgMeasure } from '@/lib/useSvgMeasure'
-import BarChart from './modules/BarChart'
 
 type Props = {
-	config: TimelineChartConfig
-	data: TimelineChartDataEntry[]
+	config: ChartConfig
+	data: ChartDataEntry[]
 }
 
 const moduleComponents = {
@@ -41,15 +45,24 @@ const modulesSorter = (ma: Modules, mb: Modules) => {
 	return modulesOrder.indexOf(ma.type) - modulesOrder.indexOf(mb.type)
 }
 
-const TimelineChart = ({ data, config }: Props) => {
-	const { title, description, width, height, marginAdjust, xAxisConfig, yAxisConfig, modules } =
-		config
+const CartesianChart = ({ data, config }: Props) => {
+	const {
+		type,
+		title,
+		description,
+		width,
+		height,
+		marginAdjust,
+		xAxisConfig,
+		yAxisConfig,
+		modules,
+	} = config
 	const [plotRef, dimensions] = usePlotMeasure(width, height)
 	const [svgRef, { svgRight, svgLeft, svgBottom, svgTop }] = useSvgMeasure(width, height)
 
 	const htmlOverlay = useRef<HTMLDivElement>(null)
 
-	const chartScales: TimelineChartScales = {
+	const chartScales: CartesianChartScales = {
 		y: {
 			left: yAxisConfig.left
 				? getLinearScale(yAxisConfig.left.domain, [dimensions.plotHeight, 0])
@@ -58,7 +71,7 @@ const TimelineChart = ({ data, config }: Props) => {
 				? getLinearScale(yAxisConfig.right.domain, [dimensions.plotHeight, 0])
 				: undefined,
 		},
-		x: getTimeScale(data, [0, dimensions.plotWidth]),
+		x: getCartesianXScale(type, data, [0, dimensions.plotWidth], xAxisConfig),
 	}
 
 	const measures = {
@@ -77,16 +90,20 @@ const TimelineChart = ({ data, config }: Props) => {
 	}
 
 	const underModules = modules?.filter((m) => m.type === 'periodAreas')
+	//@ts-ignore
 	const overModules = modules?.filter((m) => m.type !== 'periodAreas').sort(modulesSorter)
 
 	const legend =
 		modules &&
 		modules
-			.map((m) => ({
-				text: m.legend.text,
-				color: m.type === ModuleType.PeriodAreas ? ChartColor.RecessionGrey : m.color,
-				hide: m.legend.hide,
-			}))
+			.map(
+				(m) =>
+					({
+						text: m.legend.text,
+						color: m.type === ModuleType.PeriodAreas ? ChartColor.RecessionGrey : m.color,
+						hide: m.legend.hide,
+					} as LegendConfig)
+			)
 			.filter((l) => !l.hide)
 
 	return (
@@ -104,7 +121,7 @@ const TimelineChart = ({ data, config }: Props) => {
 				{description && <desc id='mi-chart-description'>{description}</desc>}
 				<g ref={svgRef}>
 					{legend?.length && <Legend config={legend} htmlRef={htmlOverlay.current}></Legend>}
-					{underModules &&
+					{/* {underModules &&
 						underModules.map((module, id) =>
 							moduleComponents[module.type](id, {
 								config: module,
@@ -113,7 +130,7 @@ const TimelineChart = ({ data, config }: Props) => {
 								data,
 								htmlRef: htmlOverlay.current,
 							})
-						)}
+						)} */}
 					{yAxisConfig.left && (
 						<YAxis
 							side={YAxisSide.Left}
@@ -134,6 +151,7 @@ const TimelineChart = ({ data, config }: Props) => {
 					)}
 					{xAxisConfig && (
 						<XAxis
+							type={type}
 							config={xAxisConfig}
 							scales={chartScales}
 							measures={measures}
@@ -141,7 +159,7 @@ const TimelineChart = ({ data, config }: Props) => {
 						></XAxis>
 					)}
 				</g>
-				{overModules?.length &&
+				{/* {overModules?.length &&
 					overModules.map((module, id) =>
 						moduleComponents[module.type](id, {
 							config: module,
@@ -150,10 +168,10 @@ const TimelineChart = ({ data, config }: Props) => {
 							data,
 							htmlRef: htmlOverlay.current,
 						})
-					)}
+					)} */}
 			</svg>
 		</div>
 	)
 }
 
-export default TimelineChart
+export default CartesianChart

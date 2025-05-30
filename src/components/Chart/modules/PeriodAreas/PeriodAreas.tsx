@@ -6,16 +6,16 @@ import { colors } from '@/styles/theme'
 import type {
 	ChartMeasures,
 	PeriodAreasConfig,
-	TimelineChartDataEntry,
-	TimelineChartScales,
+	ChartDataEntry,
+	CartesianChartScales,
 } from '@/types'
 
 import './period-areas.scss'
 
 type Props = {
 	config: PeriodAreasConfig
-	data: TimelineChartDataEntry[]
-	scales: TimelineChartScales
+	data: ChartDataEntry[]
+	scales: CartesianChartScales
 	measures: ChartMeasures
 }
 

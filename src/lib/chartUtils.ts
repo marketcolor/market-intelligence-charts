@@ -22,20 +22,30 @@ import {
 	range,
 	curveLinear,
 	curveNatural,
+	scaleBand,
 } from 'd3'
 
-import type { ScaleLinear, ScaleTime } from 'd3'
+import type { ScaleBand, ScaleLinear, ScaleTime } from 'd3'
 
 import type {
 	DateInterval,
-	NumericTicksConfig,
+	QuantTicksConfig,
 	TickObject,
-	TimelineChartDataEntry,
-	TimelineTicksConfig,
+	ChartDataEntry,
+	TimeTicksConfig,
 	YAxisConfig,
+	CartesianChartDomain,
+	QuantChartDataEntry,
+	QuantChartDomain,
+	TimelineChartDataEntry,
+	BandChartDataEntry,
+	CartesianXScales,
+	XAxisConfig,
+	QuantXAxisConfig,
+	TimeXAxisConfig,
 } from '@types'
 
-import type { YAxisSide } from '@/enums'
+import { ChartType, type YAxisSide } from '@/enums'
 
 export const getLinearScale = (
 	domain: [number, number],
@@ -49,11 +59,44 @@ export const getTimeScale = (
 	range: [number, number]
 ): ScaleTime<number, number, never> => {
 	const timeDomain = getTimeDomain(data, 0)
-
 	return scaleTime(timeDomain, range)
 }
 
-export const getNumericTicks = (config: NumericTicksConfig): TickObject<number>[] => {
+export const getQuantScale = (
+	data: QuantChartDataEntry[],
+	range: [number, number],
+	domain?: QuantChartDomain
+): ScaleLinear<number, number, never> => {
+	const numericDomain = domain ? domain : (extent(data, (d) => d[0]) as [number, number])
+	return scaleLinear(numericDomain, range)
+}
+
+export const getBandScale = (
+	data: BandChartDataEntry[],
+	range: [number, number]
+): ScaleBand<string> => {
+	const domain = data.map((d) => d[0])
+	return scaleBand(domain, range)
+}
+
+export const getCartesianXScale = (
+	type: ChartType,
+	data: ChartDataEntry[],
+	range: [number, number],
+	config: XAxisConfig
+): CartesianXScales => {
+	switch (type) {
+		case ChartType.Time:
+			return getTimeScale(data as TimelineChartDataEntry[], range)
+		case ChartType.Quant:
+			const quantConfig = config as QuantXAxisConfig
+			return getQuantScale(data as QuantChartDataEntry[], range, quantConfig.domain)
+		case ChartType.Band:
+			return getBandScale(data as BandChartDataEntry[], range)
+	}
+}
+
+export const getQuantTicks = (config: QuantTicksConfig): TickObject<number>[] => {
 	const { startVal, tickInterval, numTicks = 0, decimals } = config
 	const stopVal = startVal + tickInterval * numTicks
 	const tickValues = range(startVal, stopVal, tickInterval)
@@ -66,7 +109,7 @@ export const getNumericTicks = (config: NumericTicksConfig): TickObject<number>[
 	})
 }
 
-export function getDateTicks(config: TimelineTicksConfig): TickObject<Date>[] {
+export function getTimeTicks(config: TimeTicksConfig): TickObject<Date>[] {
 	const { startDate, dateInterval, intervalStep, numTicks, dateFormat = '%b ʼ%y' } = config
 
 	const intervals = {
@@ -94,6 +137,19 @@ export function getDateTicks(config: TimelineTicksConfig): TickObject<Date>[] {
 	})
 }
 
+export function getXAxisTicks(type: ChartType, config: XAxisConfig) {
+	switch (type) {
+		case ChartType.Time:
+			const timeTicksConfig = config as TimeXAxisConfig
+			return getTimeTicks(timeTicksConfig.ticksConfig)
+		case ChartType.Quant:
+			const quantTicksConfig = config as QuantXAxisConfig
+			return getQuantTicks(quantTicksConfig.ticksConfig)
+		case ChartType.Band:
+			return []
+	}
+}
+
 const getCurveFunc = (name: string) => {
 	switch (name) {
 		case 'linear':
@@ -107,13 +163,13 @@ const getCurveFunc = (name: string) => {
 	}
 }
 export const getPathString = (
-	data: TimelineChartDataEntry[],
+	data: ChartDataEntry[],
 	xSeries: number,
 	xScale: ScaleTime<number, number, never>,
 	ySeries: number,
 	yScale: ScaleLinear<number, number, never>
 ): string | null => {
-	const lineFunc = line<TimelineChartDataEntry>()
+	const lineFunc = line<ChartDataEntry>()
 		.x((entry) => xScale(entry[xSeries] as any) as number)
 		.y((entry) => yScale(entry[ySeries] as any) as number)
 
@@ -121,7 +177,7 @@ export const getPathString = (
 }
 
 export const getAreaString = (
-	data: TimelineChartDataEntry[],
+	data: ChartDataEntry[],
 	xSeries: number,
 	xScale: ScaleTime<number, number, never>,
 	ySeries: number,
@@ -129,23 +185,23 @@ export const getAreaString = (
 	baseline: number,
 	curve?: string
 ): string | null => {
-	const lineFunc = area<TimelineChartDataEntry>()
+	const lineFunc = area<ChartDataEntry>()
 		.x((entry) => xScale(entry[xSeries] as any) as number)
 		.y0((entry) => yScale(entry[ySeries] as any) as number)
 		.y1((entry) => baseline)
-	// .curve(getCurveFunc(curve || 'linear'))
+		.curve(getCurveFunc(curve || 'linear'))
 
 	return lineFunc(data)
 }
 
 export const getPeriodAreaString = (
-	data: TimelineChartDataEntry[],
+	data: ChartDataEntry[],
 	xSeries: number,
 	xScale: ScaleTime<number, number, never>,
 	ySeries: number,
 	height: number
 ): string | null => {
-	const lineFunc = area<TimelineChartDataEntry>()
+	const lineFunc = area<ChartDataEntry>()
 		.x((entry) => xScale(entry[xSeries] as any) as number)
 		.y0((entry) => 0)
 		.y1((entry) => (entry[ySeries] === 1 ? height : 0))
@@ -154,7 +210,7 @@ export const getPeriodAreaString = (
 	return lineFunc(data)
 }
 
-export const getTimeDomain = (data: TimelineChartDataEntry[], timeSeries: number) => {
+export const getTimeDomain = (data: ChartDataEntry[], timeSeries: number) => {
 	return extent(data, (d) => d[timeSeries]) as [Date, Date]
 }
 
@@ -177,12 +233,12 @@ const getTimeInterval = (start: Date, end: Date) => {
 	return result
 }
 
-export const getTimeTicksConfig = (domain: [Date, Date], preset?: Partial<TimelineTicksConfig>) => {
+export const getTimeTicksConfig = (domain: [Date, Date], preset?: Partial<TimeTicksConfig>) => {
 	const ticks = utcTicks(domain[0], domain[1], 9)
 	const [start, end] = ticks
 	const { dateInterval, intervalStep } = getTimeInterval(start, end)
 
-	const config: TimelineTicksConfig = {
+	const config: TimeTicksConfig = {
 		startDate: preset?.startDate || start,
 		numTicks: preset?.numTicks || ticks.length,
 		dateInterval: preset?.dateInterval || dateInterval,
@@ -193,10 +249,7 @@ export const getTimeTicksConfig = (domain: [Date, Date], preset?: Partial<Timeli
 	return config
 }
 
-export const getXAxisConfig = (
-	data: TimelineChartDataEntry[],
-	preset?: Partial<TimelineTicksConfig>
-) => {
+export const getXAxisConfig = (data: ChartDataEntry[], preset?: Partial<TimeTicksConfig>) => {
 	const domain = extent(data, (d) => d[0]) as [Date, Date]
 
 	const ticksConfig = getTimeTicksConfig(domain, preset)
@@ -204,7 +257,7 @@ export const getXAxisConfig = (
 }
 
 export const getYAxisConfig = (
-	data: TimelineChartDataEntry[],
+	data: ChartDataEntry[],
 	series: { side: YAxisSide }[],
 	height = 500
 ) => {

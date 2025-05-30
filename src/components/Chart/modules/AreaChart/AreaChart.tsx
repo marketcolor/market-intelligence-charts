@@ -3,18 +3,13 @@
 import { getAreaString } from '@/lib/chartUtils'
 import { colors as themeColors } from '@/styles/theme'
 
-import type {
-	AreaChartConfig,
-	ChartMeasures,
-	TimelineChartDataEntry,
-	TimelineChartScales,
-} from '@/types'
+import type { AreaChartConfig, ChartMeasures, ChartDataEntry, CartesianChartScales } from '@/types'
 import { ChartColor } from '@/enums'
 
 type Props = {
 	config: AreaChartConfig
-	data: TimelineChartDataEntry[]
-	scales: TimelineChartScales
+	data: ChartDataEntry[]
+	scales: CartesianChartScales
 	measures: ChartMeasures
 }
 

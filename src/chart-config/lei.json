@@ -1,4 +1,5 @@
 {
+	"type": "time",
 	"title": "YoY change in the LEI (%)",
 	"description": "The graph shows the year-over-year change in LEI since 1970. Currently, the year-over-year change in LEI has been negative since July 2022, indicating economic growth may slow.",
 	"width": 975,

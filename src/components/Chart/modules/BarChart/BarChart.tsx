@@ -2,17 +2,12 @@
 
 import { colors as themeColors } from '@styles/theme'
 
-import type {
-	ChartMeasures,
-	BarChartConfig,
-	TimelineChartDataEntry,
-	TimelineChartScales,
-} from '@/types'
+import type { ChartMeasures, BarChartConfig, ChartDataEntry, CartesianChartScales } from '@/types'
 
 type Props = {
 	config: BarChartConfig
-	data: TimelineChartDataEntry[]
-	scales: TimelineChartScales
+	data: ChartDataEntry[]
+	scales: CartesianChartScales
 	measures: ChartMeasures
 }
 

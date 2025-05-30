@@ -12,7 +12,7 @@ import LiveEditor from './LiveEditor'
 import { getXAxisConfig, getYAxisConfig } from '@/lib/chartUtils'
 
 import type { SeriesConfigProps } from './ConfigurationPanel'
-import type { TimelineChartConfig, TimelineChartDataEntry } from '@/types'
+import type { ChartConfig, ChartDataEntry } from '@/types'
 import { ModuleType } from '@/enums'
 
 import './editor.scss'
@@ -30,8 +30,8 @@ const dateParser = utcParse('%d/%m/%Y')
 // 	},
 // ]
 
-const Editor = ({ preset }: { preset?: Partial<TimelineChartConfig> }) => {
-	const [data, setData] = useState<TimelineChartDataEntry[]>()
+const Editor = ({ preset }: { preset?: Partial<ChartConfig> }) => {
+	const [data, setData] = useState<ChartDataEntry[]>()
 	const [chartSize, setChartSize] = useObjectState<{ chartWidth: number; chartHeight: number }>({
 		chartWidth: preset?.width || 800,
 		chartHeight: preset?.height || 500,
@@ -42,7 +42,7 @@ const Editor = ({ preset }: { preset?: Partial<TimelineChartConfig> }) => {
 	})
 	const [showLiveEditor, setShowLiveEditor] = useState<boolean>(false)
 	const [seriesConfig, { set, updateAt, clear }] = useList<SeriesConfigProps>()
-	const [templateConfig, setTemplateConfig] = useState<TimelineChartConfig>()
+	const [templateConfig, setTemplateConfig] = useState<ChartConfig>()
 
 	const handleFileDrop = useCallback(
 		(file: File) => {
@@ -58,7 +58,7 @@ const Editor = ({ preset }: { preset?: Partial<TimelineChartConfig> }) => {
 							const columns = parsedData[0]
 							const dataset = parsedData.slice(1)
 							const [dateKey, ...series] = columns
-							const data: TimelineChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
+							const data: ChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
 								dateParser(dateStr)!,
 								...values,
 							])
@@ -93,7 +93,7 @@ const Editor = ({ preset }: { preset?: Partial<TimelineChartConfig> }) => {
 
 	const generateChartConfig = useCallback(() => {
 		if (data) {
-			const chartConfig: TimelineChartConfig = {
+			const chartConfig: ChartConfig = {
 				...info,
 				width: chartSize.chartWidth,
 				height: chartSize.chartHeight,

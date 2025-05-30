@@ -1,17 +1,18 @@
 'use client'
-import { createPortal } from 'react-dom'
 import { memo, useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { useMeasure } from '@uidotdev/usehooks'
 
-import { getNumericTicks } from '@lib/chartUtils'
+import { getQuantTicks } from '@lib/chartUtils'
 import { colors, fonts } from '@styles/theme'
 
 import type { CSSProperties } from 'react'
 import type { ScaleLinear } from 'd3'
 
-import './y-axis.scss'
 import type { YAxisSide } from '@/enums'
 import type { ChartMeasures, ChartModuleBasicProps, TickObject, YAxisConfig } from '@/types'
-import { useMeasure } from '@uidotdev/usehooks'
+
+import './y-axis.scss'
 
 type Props = ChartModuleBasicProps & {
 	side: YAxisSide
@@ -38,7 +39,7 @@ const YAxis = ({ side, config, scales, measures, htmlRef }: Props) => {
 	const [min, max] = axisScale.domain()
 
 	const ticks = ticksConfig
-		? getNumericTicks(ticksConfig).filter(({ value }) => value >= min && value <= max)
+		? getQuantTicks(ticksConfig).filter(({ value }) => value >= min && value <= max)
 		: []
 
 	return (

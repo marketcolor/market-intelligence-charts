@@ -3,11 +3,7 @@ import { getEntry } from 'astro:content'
 
 import Layout from '@layouts/Layout.astro'
 import Papa from 'papaparse'
-import type {
-	TimelineChartRawDataEntry,
-	TimelineChartDataEntry,
-	TimelineChartConfig,
-} from '@/types'
+import type { TimelineChartRawDataEntry, ChartDataEntry, ChartConfig } from '@/types'
 import { timeParse } from 'd3'
 import LiveEditor from '@/components/Editor/LiveEditor'
 import RSuiteProvider from '@/components/RSuiteProvider'
@@ -42,7 +38,7 @@ const dataset: TimelineChartRawDataEntry[] = parsedData.slice(1)
 
 const [dateKey, ...series] = columns
 const dateParser = timeParse('%d/%m/%Y')
-const data: TimelineChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
+const data: ChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
 	dateParser(dateStr)!,
 	...values,
 ])
@@ -51,12 +47,7 @@ const data: TimelineChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
 <Layout>
 	<div class='container'>
 		<RSuiteProvider client:load>
-			<LiveEditor
-				data={data}
-				initialConfig={config.data as TimelineChartConfig}
-				series={series}
-				client:load
-			/>
+			<LiveEditor data={data} initialConfig={config.data as ChartConfig} series={series} client:load />
 		</RSuiteProvider>
 	</div>
 </Layout>

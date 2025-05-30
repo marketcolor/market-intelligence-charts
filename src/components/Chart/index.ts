@@ -1,3 +1,3 @@
-import TimelineChart from './TimelineChart'
+import CartesianChart from './CartesianChart'
 
-export default TimelineChart
+export default CartesianChart

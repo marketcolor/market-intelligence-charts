@@ -26,3 +26,20 @@ export enum ModuleType {
 	BarChart = 'barChart',
 	PeriodAreas = 'periodAreas',
 }
+
+export enum ChartType {
+	Time = 'time',
+	Quant = 'quant',
+	Band = 'band',
+}
+
+export enum LineType {
+	Solid = 'solid',
+	Dashed = 'dashed',
+}
+
+export enum CurveType {
+	Linear = 'linear',
+	Step = 'step',
+	Natural = 'natural',
+}

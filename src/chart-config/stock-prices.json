@@ -1,4 +1,5 @@
 {
+	"type": "time",
 	"title": "Stock prices and earnings",
 	"description": "This graph shows the S&P 500 Index price and the S&P 500 Index EPS forecast, which tend to move together over time.",
 	"width": 975,

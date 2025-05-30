@@ -4,131 +4,134 @@ import path from 'node:path'
 import { z, defineCollection } from 'astro:content'
 import { glob } from 'astro/loaders'
 
-import { ModuleType, ChartColor, YAxisSide } from '@/enums'
+import { chartConfigSchema } from './chart-config-schema'
+// import { ModuleType, ChartColor, YAxisSide, ChartType } from '@/enums'
 
-const marginAdjustConfig = z.object({
-	left: z.number().optional(),
-	right: z.number().optional(),
-	top: z.number().optional(),
-	bottom: z.number().optional(),
-})
+// const moduleType = z.enum(Object.keys(ModuleType) as [keyof typeof ModuleType])
+// const chartType = z.nativeEnum(ChartType)
+// const yAxisSide = z.nativeEnum(YAxisSide)
+// const chartColor = z.enum(Object.keys(ChartColor) as [keyof typeof ChartColor])
 
-const timelineTicksConfig = z.object({
-	startDate: z.string(),
-	numTicks: z.number(),
-	dateInterval: z.string(),
-	intervalStep: z.number(),
-	dateFormat: z.string(),
-})
+// const marginAdjustConfig = z.object({
+// 	left: z.number().optional(),
+// 	right: z.number().optional(),
+// 	top: z.number().optional(),
+// 	bottom: z.number().optional(),
+// })
 
-const numericTicksConfig = z.object({
-	startVal: z.number(),
-	numTicks: z.number(),
-	tickInterval: z.number(),
-	decimals: z.number(),
-})
+// const timelineTicksConfig = z.object({
+// 	startDate: z.string(),
+// 	numTicks: z.number(),
+// 	dateInterval: z.string(),
+// 	intervalStep: z.number(),
+// 	dateFormat: z.string(),
+// })
 
-const xAxisConfig = z.object({
-	ticksConfig: timelineTicksConfig,
-	label: z.string().optional(),
-})
+// const numericTicksConfig = z.object({
+// 	startVal: z.number(),
+// 	numTicks: z.number(),
+// 	tickInterval: z.number(),
+// 	decimals: z.number(),
+// })
 
-const yAxisConfig = z.object({
-	domain: z.array(z.number()),
-	ticksConfig: numericTicksConfig,
-	guideLines: z.boolean().optional(),
-	label: z.string().optional(),
-})
+// const xAxisConfig = z.object({
+// 	ticksConfig: timelineTicksConfig,
+// 	label: z.string().optional(),
+// })
 
-const moduleType = z.enum(Object.keys(ModuleType) as [keyof typeof ModuleType])
-const yAxisSide = z.nativeEnum(YAxisSide)
-const chartColor = z.enum(Object.keys(ChartColor) as [keyof typeof ChartColor])
+// const yAxisConfig = z.object({
+// 	domain: z.array(z.number()),
+// 	ticksConfig: numericTicksConfig,
+// 	guideLines: z.boolean().optional(),
+// 	label: z.string().optional(),
+// })
 
-const legendConfig = z.object({
-	text: z.string(),
-	color: chartColor.optional(),
-	hide: z.boolean().optional(),
-})
+// const legendConfig = z.object({
+// 	text: z.string(),
+// 	color: chartColor.optional(),
+// 	hide: z.boolean().optional(),
+// })
 
-const seriesModuleConfig = z.object({
-	legend: legendConfig,
-})
+// const seriesModuleConfig = z.object({
+// 	legend: legendConfig,
+// })
 
-// LineChartConfig
-const lineChartConfig = seriesModuleConfig.extend({
-	type: z.literal(ModuleType.LineChart),
-	series: z.number(),
-	side: yAxisSide,
-	color: chartColor,
-	threshold: z
-		.object({
-			value: z.number(),
-			bottomColor: chartColor,
-		})
-		.optional(),
-	lineType: z.enum(['solid', 'dashed']).optional(),
-	curve: z.enum(['linear', 'step', 'natural']).optional(),
-})
+// // LineChartConfig
+// const lineChartConfig = seriesModuleConfig.extend({
+// 	type: z.literal(ModuleType.LineChart),
+// 	series: z.number(),
+// 	side: yAxisSide,
+// 	color: chartColor,
+// 	threshold: z
+// 		.object({
+// 			value: z.number(),
+// 			bottomColor: chartColor,
+// 		})
+// 		.optional(),
+// 	lineType: z.enum(['solid', 'dashed']).optional(),
+// 	curve: z.enum(['linear', 'step', 'natural']).optional(),
+// })
 
-// BarChartConfig
-const barChartConfig = seriesModuleConfig.extend({
-	type: z.literal(ModuleType.BarChart),
-	series: z.number(),
-	side: yAxisSide,
-	color: chartColor,
-	baseline: z
-		.object({
-			value: z.number(),
-			bottomColor: chartColor,
-		})
-		.optional(),
-})
+// // BarChartConfig
+// const barChartConfig = seriesModuleConfig.extend({
+// 	type: z.literal(ModuleType.BarChart),
+// 	series: z.number(),
+// 	side: yAxisSide,
+// 	color: chartColor,
+// 	baseline: z
+// 		.object({
+// 			value: z.number(),
+// 			bottomColor: chartColor,
+// 		})
+// 		.optional(),
+// })
 
-// PeriodAreasConfig
-const periodAreasConfig = seriesModuleConfig.extend({
-	type: z.literal(ModuleType.PeriodAreas),
-	series: z.number(),
-	color: z.literal(ChartColor.RecessionGrey).optional(),
-})
+// // PeriodAreasConfig
+// const periodAreasConfig = seriesModuleConfig.extend({
+// 	type: z.literal(ModuleType.PeriodAreas),
+// 	series: z.number(),
+// 	color: z.literal(ChartColor.RecessionGrey).optional(),
+// })
 
-// AreaChartConfig
-const areaChartConfig = seriesModuleConfig.extend({
-	type: z.literal(ModuleType.AreaChart),
-	series: z.number(),
-	side: yAxisSide,
-	color: chartColor,
-	baseline: z
-		.object({
-			value: z.number(),
-			bottomColor: chartColor,
-		})
-		.optional(),
-	curve: z.enum(['linear', 'step', 'natural']).optional(),
-})
+// // AreaChartConfig
+// const areaChartConfig = seriesModuleConfig.extend({
+// 	type: z.literal(ModuleType.AreaChart),
+// 	series: z.number(),
+// 	side: yAxisSide,
+// 	color: chartColor,
+// 	baseline: z
+// 		.object({
+// 			value: z.number(),
+// 			bottomColor: chartColor,
+// 		})
+// 		.optional(),
+// 	curve: z.enum(['linear', 'step', 'natural']).optional(),
+// })
 
-// Modules union
-export type Modules = z.infer<typeof modulesSchema>
-export const modulesSchema = z.discriminatedUnion('type', [
-	lineChartConfig,
-	areaChartConfig,
-	barChartConfig,
-	periodAreasConfig,
-])
+// // Modules union
+// export type Modules = z.infer<typeof modulesSchema>
+// export const modulesSchema = z.discriminatedUnion('type', [
+// 	lineChartConfig,
+// 	areaChartConfig,
+// 	barChartConfig,
+// 	periodAreasConfig,
+// ])
 
-// Define the main chart configuration schema
-const chartConfigSchema = z.object({
-	title: z.string(),
-	description: z.string(),
-	width: z.number(),
-	height: z.number(),
-	marginAdjust: marginAdjustConfig.optional(),
-	xAxisConfig: xAxisConfig,
-	yAxisConfig: z.object({
-		left: yAxisConfig.optional(),
-		right: yAxisConfig.optional(),
-	}),
-	modules: z.array(modulesSchema),
-})
+// // Define the main chart configuration schema
+// const chartConfigSchema = z.object({
+// 	type: chartType,
+// 	title: z.string(),
+// 	description: z.string(),
+// 	width: z.number(),
+// 	height: z.number(),
+// 	marginAdjust: marginAdjustConfig.optional(),
+// 	xAxisConfig: xAxisConfig,
+// 	yAxisConfig: z.object({
+// 		left: yAxisConfig.optional(),
+// 		right: yAxisConfig.optional(),
+// 	}),
+// 	modules: z.array(modulesSchema),
+// })
 
 // Define the collection
 export const collections = {

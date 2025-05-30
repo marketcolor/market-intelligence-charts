@@ -3,18 +3,13 @@
 import { getPathString } from '@/lib/chartUtils'
 
 import { colors as themeColors } from '@styles/theme'
-import type {
-	ChartMeasures,
-	LineChartConfig,
-	TimelineChartDataEntry,
-	TimelineChartScales,
-} from '@/types'
+import type { ChartMeasures, LineChartConfig, ChartDataEntry, CartesianChartScales } from '@/types'
 import { ChartColor } from '@/enums'
 
 type Props = {
 	config: LineChartConfig
-	data: TimelineChartDataEntry[]
-	scales: TimelineChartScales
+	data: ChartDataEntry[]
+	scales: CartesianChartScales
 	measures: ChartMeasures
 }
 

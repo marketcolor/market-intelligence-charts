@@ -1,0 +1,43 @@
+{
+	"type": "quant",
+	"title": "Correlation between five-year total return and starting yield",
+	"description": "This chart shows the correlation between five-year total return and starting yield to maturity for the Bloomberg U.S. Aggregate bond index. The two measures are linked, with starting yield explaining 89% of a bond's performance.",
+	"width": 1089,
+	"height": 495,
+	"xAxisConfig": {
+		"domain": [0, 18],
+		"ticksConfig": {
+			"startVal": 0,
+			"numTicks": 10,
+			"tickInterval": 2,
+			"decimals": 0
+		},
+		"guideLines": true,
+		"label": "Bloomberg U.S. Aggregate Bond Index yield to maturity"
+	},
+	"yAxisConfig": {
+		"left": {
+			"domain": [-2, 22],
+			"guideLines": true,
+			"ticksConfig": {
+				"startVal": -2,
+				"numTicks": 15,
+				"tickInterval": 2,
+				"decimals": 0
+			},
+			"label": "5-year total return"
+		}
+	},
+	"modules": [
+		{
+			"type": "lineChart",
+			"series": 0,
+			"side": "left",
+			"color": "Green",
+			"legend": {
+				"text": "Fed funds target rate (%)",
+				"hide": true
+			}
+		}
+	]
+}
