@@ -58,7 +58,7 @@ export const chartMarginsSchema = z.object({
 export const timeIntervalSchema = z.union([z.literal('day'), z.literal('month'), z.literal('year')])
 
 export const timeTicksConfigSchema = z.object({
-	startDate: z.date(),
+	startDate: z.union([z.date(), z.string()]),
 	numTicks: z.number(),
 	dateInterval: timeIntervalSchema,
 	intervalStep: z.number(),
@@ -98,7 +98,7 @@ export const xAxisConfigSchema = z.union([
 // Legend
 export const legendConfigSchema = z.object({
 	text: z.string(),
-	color: chartColorSchema,
+	color: chartColorSchema.optional(),
 	hide: z.boolean().optional(),
 })
 ////////////////////////////////////////////////////
@@ -122,18 +122,18 @@ export const lineChartConfigSchema = baseModuleConfigSchema.extend({
 	curve: curveTypeSchema.optional(),
 })
 
-export const barChartConfigSchema = baseModuleConfigSchema.extend({
-	type: z.literal(ModuleType.BarChart),
-	series: z.number(),
-	side: yAxisSideSchema,
-	color: chartColorSchema,
-	baseline: z
-		.object({
-			value: z.number(),
-			bottomColor: chartColorSchema,
-		})
-		.optional(),
-})
+// export const barChartConfigSchema = baseModuleConfigSchema.extend({
+// 	type: z.literal(ModuleType.BarChart),
+// 	series: z.number(),
+// 	side: yAxisSideSchema,
+// 	color: chartColorSchema,
+// 	baseline: z
+// 		.object({
+// 			value: z.number(),
+// 			bottomColor: chartColorSchema,
+// 		})
+// 		.optional(),
+// })
 
 export const periodAreasConfigSchema = baseModuleConfigSchema.extend({
 	type: z.literal(ModuleType.PeriodAreas),
@@ -155,10 +155,21 @@ export const areaChartConfigSchema = baseModuleConfigSchema.extend({
 	curve: curveTypeSchema.optional(),
 })
 
+export const scatterPlotConfigSchema = baseModuleConfigSchema.extend({
+	type: z.literal(ModuleType.ScatterPlot),
+	series: z.number(),
+	side: yAxisSideSchema,
+	color: chartColorSchema,
+	size: z.number(),
+	trendLine: z.boolean().optional(),
+	trendLineColor: chartColorSchema.optional(),
+})
+
 export const modulesSchema = z.discriminatedUnion('type', [
 	lineChartConfigSchema,
 	areaChartConfigSchema,
 	periodAreasConfigSchema,
+	scatterPlotConfigSchema,
 ])
 //////////////////////////////////////////////////////////////
 // Charts config

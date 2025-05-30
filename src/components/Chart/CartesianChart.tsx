@@ -12,7 +12,7 @@ import XAxis from './modules/XAxis'
 import LineChart from './modules/LineChart'
 import AreaChart from './modules/AreaChart'
 import PeriodAreas from './modules/PeriodAreas'
-import BarChart from './modules/BarChart'
+import ScatterPlot from './modules/ScatterPlot'
 
 import './chart.scss'
 
@@ -35,11 +35,11 @@ type Props = {
 const moduleComponents = {
 	lineChart: (key: number, props: any) => <LineChart key={key} {...props}></LineChart>,
 	areaChart: (key: number, props: any) => <AreaChart key={key} {...props}></AreaChart>,
-	barChart: (key: number, props: any) => <BarChart key={key} {...props}></BarChart>,
+	scatterPlot: (key: number, props: any) => <ScatterPlot key={key} {...props}></ScatterPlot>,
 	periodAreas: (key: number, props: any) => <PeriodAreas key={key} {...props}></PeriodAreas>,
 }
 
-const modulesOrder = ['periodAreas', 'areaChart', 'barChart', 'lineChart']
+const modulesOrder = ['periodAreas', 'areaChart', 'scatterPlot', 'lineChart']
 const modulesSorter = (ma: Modules, mb: Modules) => {
 	return modulesOrder.indexOf(ma.type) - modulesOrder.indexOf(mb.type)
 }

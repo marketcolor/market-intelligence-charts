@@ -4,7 +4,7 @@ import type z from 'zod'
 import type {
 	areaChartConfigSchema,
 	bandAxisConfigSchema,
-	barChartConfigSchema,
+	// barChartConfigSchema,
 	chartConfigSchema,
 	chartMarginsSchema,
 	chartMeasuresSchema,
@@ -20,6 +20,8 @@ import type {
 	timeTicksConfigSchema,
 	timeAxisConfigSchema,
 	xAxisConfigSchema,
+	scatterPlotConfigSchema,
+	chartColorSchema,
 } from './chart-config-schema'
 
 export type PlotDimensions = z.infer<typeof plotDimensionsSchema>
@@ -27,6 +29,8 @@ export type ChartSize = z.infer<typeof chartSizeSchema>
 export type ChartMeasures = z.infer<typeof chartMeasuresSchema>
 
 export type ChartMargins = z.infer<typeof chartMarginsSchema>
+
+export type ChartColorSchema = z.infer<typeof chartColorSchema>
 
 export type DateInterval = z.infer<typeof timeIntervalSchema>
 
@@ -42,8 +46,9 @@ export type XAxisConfig = z.infer<typeof xAxisConfigSchema>
 // export type YAxisConfig = z.infer<typeof yAxisConfigSchema>
 
 export type LineChartConfig = z.infer<typeof lineChartConfigSchema>
-export type BarChartConfig = z.infer<typeof barChartConfigSchema>
+// export type BarChartConfig = z.infer<typeof barChartConfigSchema>
 export type AreaChartConfig = z.infer<typeof areaChartConfigSchema>
+export type ScaterPlotConfig = z.infer<typeof scatterPlotConfigSchema>
 export type PeriodAreasConfig = z.infer<typeof periodAreasConfigSchema>
 
 export type Modules = z.infer<typeof modulesSchema>

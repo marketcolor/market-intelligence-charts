@@ -30,10 +30,13 @@
 	},
 	"modules": [
 		{
-			"type": "lineChart",
-			"series": 0,
+			"type": "scatterPlot",
+			"series": 1,
 			"side": "left",
 			"color": "Green",
+			"size": 12,
+			"trendLine": true,
+			"trendLineColor": "Blue",
 			"legend": {
 				"text": "Fed funds target rate (%)",
 				"hide": true
