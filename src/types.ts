@@ -48,7 +48,7 @@ export type XAxisConfig = z.infer<typeof xAxisConfigSchema>
 export type LineChartConfig = z.infer<typeof lineChartConfigSchema>
 // export type BarChartConfig = z.infer<typeof barChartConfigSchema>
 export type AreaChartConfig = z.infer<typeof areaChartConfigSchema>
-export type ScaterPlotConfig = z.infer<typeof scatterPlotConfigSchema>
+export type ScatterPlotConfig = z.infer<typeof scatterPlotConfigSchema>
 export type PeriodAreasConfig = z.infer<typeof periodAreasConfigSchema>
 
 export type Modules = z.infer<typeof modulesSchema>

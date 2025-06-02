@@ -83,7 +83,6 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		(key) => yAxisConfig?.[key as YAxisSide]
 	) as YAxisSide[]
 
-	// console.log(initialConfig.xAxisConfig)
 	// console.log(updatedConfig.xAxisConfig)
 
 	return (

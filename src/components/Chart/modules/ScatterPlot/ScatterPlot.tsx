@@ -1,12 +1,19 @@
 'use client'
 
-import type { CartesianChartScales, ChartDataEntry, ChartMeasures, ScaterPlotConfig } from '@/types'
-import { ChartColor } from '@/enums'
-import './scatter-plot.scss'
 import TrendLine from './TrendLine'
 
+import type {
+	CartesianChartScales,
+	ChartDataEntry,
+	ChartMeasures,
+	ScatterPlotConfig,
+} from '@/types'
+import { ChartColor } from '@/enums'
+
+import './scatter-plot.scss'
+
 type Props = {
-	config: ScaterPlotConfig
+	config: ScatterPlotConfig
 	data: ChartDataEntry[]
 	scales: CartesianChartScales
 	measures: ChartMeasures
@@ -14,11 +21,9 @@ type Props = {
 
 const ScatterPlot = ({ config, data, scales, measures }: Props) => {
 	const { series, side, color, size, trendLine, trendLineColor } = config
-	const { leftMargin, topMargin, plotHeight, plotWidth } = measures
+	const { leftMargin, topMargin } = measures
 	const yScale = scales.y[side]!
 	const xScale = scales.x
-
-	console.log(trendLine)
 
 	return (
 		<g transform={`translate(${leftMargin}, ${topMargin})`}>
@@ -27,7 +32,7 @@ const ScatterPlot = ({ config, data, scales, measures }: Props) => {
 					key={id}
 					r={size / 2}
 					cx={xScale(d[0] as any)}
-					cy={yScale(d[series] as any)}
+					cy={yScale(d[series + 1] as any)}
 					fill={ChartColor[color]}
 					stroke='#fff'
 				></circle>
@@ -36,7 +41,7 @@ const ScatterPlot = ({ config, data, scales, measures }: Props) => {
 				<TrendLine
 					data={data}
 					series={series}
-					color={trendLineColor}
+					color={trendLineColor || 'Blue'}
 					xScale={xScale}
 					yScale={yScale}
 				></TrendLine>

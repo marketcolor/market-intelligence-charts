@@ -7,7 +7,14 @@ import { useObjectState } from '@uidotdev/usehooks'
 
 import { ChartColorOptions } from '@lib/configUtils'
 
-import type { AreaChartConfig, LineChartConfig, Modules, PeriodAreasConfig } from '@/types'
+import type {
+	AreaChartConfig,
+	ChartColorSchema,
+	LineChartConfig,
+	Modules,
+	PeriodAreasConfig,
+	ScatterPlotConfig,
+} from '@/types'
 
 type LineChartProps = {
 	config: LineChartConfig
@@ -17,7 +24,7 @@ type LineChartProps = {
 
 const LineChartEditor = ({ config, availableAxis, handleChange }: LineChartProps) => {
 	const [side, setSide] = useState<YAxisSide>(config.side)
-	const [color, setColor] = useState<ChartColor>(config.color)
+	const [color, setColor] = useState<ChartColorSchema>(config.color)
 
 	const [legendText, setLegendText] = useState<string>(config.legend?.text || '')
 	const [showLegend, setShowLegend] = useState<boolean>(!config.legend?.hide)
@@ -106,7 +113,7 @@ type AreaChartProps = {
 
 const AreaChartEditor = ({ config, availableAxis, handleChange }: AreaChartProps) => {
 	const [side, setSide] = useState<YAxisSide>(config.side)
-	const [color, setColor] = useState<ChartColor>(config.color)
+	const [color, setColor] = useState<ChartColorSchema>(config.color)
 	const [legendText, setLegendText] = useState<string>(config.legend?.text || '')
 	const [showLegend, setShowLegend] = useState<boolean>(!config.legend?.hide)
 
@@ -189,6 +196,84 @@ const AreaChartEditor = ({ config, availableAxis, handleChange }: AreaChartProps
 	)
 }
 
+type ScatterPlotProps = {
+	config: ScatterPlotConfig
+	availableAxis: YAxisSide[]
+	handleChange: Function
+}
+
+const ScatterPlotEditor = ({ config, availableAxis, handleChange }: ScatterPlotProps) => {
+	const [side, setSide] = useState<YAxisSide>(config.side)
+	const [color, setColor] = useState<ChartColorSchema>(config.color)
+	const [legendText, setLegendText] = useState<string>(config.legend?.text || '')
+	const [showLegend, setShowLegend] = useState<boolean>(!config.legend?.hide)
+
+	const [trendLine, setTrendLine] = useObjectState({
+		active: !!config.trendLine,
+		trendLineColor: config?.trendLineColor || ChartColor.Green,
+	})
+
+	useEffect(() => {
+		handleChange({
+			...config,
+			side,
+			color,
+			legend: {
+				text: legendText,
+				hide: !showLegend,
+			},
+			trendLine: trendLine.active,
+			trendLineColor: trendLine.trendLineColor,
+		})
+	}, [side, color, legendText, showLegend, trendLine])
+
+	return (
+		<>
+			<Select
+				label='Axis side'
+				value={config.side}
+				options={availableAxis.map((s) => ({ value: s }))}
+				//@ts-ignore
+				handleChange={(v) => setSide(v)}
+			></Select>
+			<ColorSelect
+				label='Color'
+				value={config.color}
+				options={ChartColorOptions}
+				//@ts-ignore
+				handleChange={(v) => setColor(v)}
+			></ColorSelect>
+			<CheckboxInput
+				label='Show legend'
+				value={showLegend}
+				//@ts-ignore
+				handleChange={(value) => setShowLegend(value)}
+			></CheckboxInput>
+			<TextInput
+				label='Legend text'
+				value={legendText}
+				disabled={!showLegend}
+				//@ts-ignore
+				handleChange={(value) => setLegendText(value)}
+			></TextInput>
+			<CheckboxInput
+				label='Trend line?'
+				value={trendLine.active}
+				//@ts-ignore
+				handleChange={(value) => setTrendLine(() => ({ active: value }))}
+			></CheckboxInput>
+			<ColorSelect
+				label='Trend line color'
+				value={trendLine.trendLineColor}
+				options={ChartColorOptions}
+				disabled={!trendLine.active}
+				//@ts-ignore
+				handleChange={(value) => setTrendLine(() => ({ trendLineColor: value }))}
+			></ColorSelect>
+		</>
+	)
+}
+
 type PeriodAreaProps = {
 	config: PeriodAreasConfig
 	handleChange: Function
@@ -231,6 +316,7 @@ const PeriodAreasEditor = ({ config, handleChange }: PeriodAreaProps) => {
 const moduleEditors = {
 	lineChart: (props: LineChartProps) => <LineChartEditor {...props} />,
 	areaChart: (props: AreaChartProps) => <AreaChartEditor {...props} />,
+	scatterPlot: (props: ScatterPlotProps) => <ScatterPlotEditor {...props} />,
 	periodAreas: (props: PeriodAreaProps) => <PeriodAreasEditor {...props} />,
 }
 

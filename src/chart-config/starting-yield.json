@@ -31,7 +31,7 @@
 	"modules": [
 		{
 			"type": "scatterPlot",
-			"series": 1,
+			"series": 0,
 			"side": "left",
 			"color": "Green",
 			"size": 12,
