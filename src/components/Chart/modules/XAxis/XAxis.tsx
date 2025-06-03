@@ -30,7 +30,7 @@ type Props = ChartModuleBasicProps & {
 }
 
 type SubProps = {
-	ticks: (TickObject<Date> | TickObject<number>)[]
+	ticks: (TickObject<Date> | TickObject<number> | TickObject<string>)[]
 	scale: CartesianXScales
 	label?: string
 	guides: boolean
@@ -45,9 +45,11 @@ const XAxis = ({ type = ChartType.Time, config, scales, measures, htmlRef }: Pro
 	const { guideLines, label } = config
 	const axisScale = scales.x
 	const [min, max] = axisScale.domain()
-	const allTicks = getXAxisTicks(type, config)
 
-	const ticks = allTicks.filter(({ value }) => value >= min && value <= max)
+	const allTicks = getXAxisTicks(type, config, axisScale)
+
+	const ticks =
+		type === ChartType.Band ? allTicks : allTicks.filter(({ value }) => value >= min && value <= max)
 
 	return (
 		<>

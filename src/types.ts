@@ -4,7 +4,7 @@ import type z from 'zod'
 import type {
 	areaChartConfigSchema,
 	bandAxisConfigSchema,
-	// barChartConfigSchema,
+	barChartConfigSchema,
 	chartConfigSchema,
 	chartMarginsSchema,
 	chartMeasuresSchema,
@@ -46,7 +46,7 @@ export type XAxisConfig = z.infer<typeof xAxisConfigSchema>
 // export type YAxisConfig = z.infer<typeof yAxisConfigSchema>
 
 export type LineChartConfig = z.infer<typeof lineChartConfigSchema>
-// export type BarChartConfig = z.infer<typeof barChartConfigSchema>
+export type BarChartConfig = z.infer<typeof barChartConfigSchema>
 export type AreaChartConfig = z.infer<typeof areaChartConfigSchema>
 export type ScatterPlotConfig = z.infer<typeof scatterPlotConfigSchema>
 export type PeriodAreasConfig = z.infer<typeof periodAreasConfigSchema>
@@ -62,10 +62,12 @@ export type CartesianXScales =
 	| ScaleTime<number, number, never>
 	| ScaleBand<string>
 
+export type CartesianYScales = ScaleLinear<number, number, never>
+
 export type CartesianChartScales = {
 	y: {
-		left?: ScaleLinear<number, number, never>
-		right?: ScaleLinear<number, number, never>
+		left?: CartesianYScales
+		right?: CartesianYScales
 	}
 	x: CartesianXScales
 }

@@ -23,6 +23,7 @@ export enum ChartColor {
 export enum ModuleType {
 	LineChart = 'lineChart',
 	AreaChart = 'areaChart',
+	BarChart = 'barChart',
 	ScatterPlot = 'scatterPlot',
 	PeriodAreas = 'periodAreas',
 }

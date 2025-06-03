@@ -2,7 +2,7 @@
 import { useRef } from 'react'
 
 import { usePlotMeasure } from '@lib/usePlotMeasure'
-import { getLinearScale, getCartesianXScale } from '@/lib/chartUtils'
+import { getLinearScale, getCartesianXScale, getXAxisBandwidth } from '@/lib/chartUtils'
 
 import Legend from './modules/Legend'
 
@@ -11,6 +11,7 @@ import XAxis from './modules/XAxis'
 
 import LineChart from './modules/LineChart'
 import AreaChart from './modules/AreaChart'
+import BarChart from './modules/BarChart'
 import PeriodAreas from './modules/PeriodAreas'
 import ScatterPlot from './modules/ScatterPlot'
 
@@ -24,7 +25,7 @@ import type {
 	LegendConfig,
 } from '@/types'
 
-import { ModuleType, YAxisSide } from '@/enums'
+import { ChartType, ModuleType, YAxisSide } from '@/enums'
 import { useSvgMeasure } from '@/lib/useSvgMeasure'
 
 type Props = {
@@ -35,6 +36,7 @@ type Props = {
 const moduleComponents = {
 	lineChart: (key: number, props: any) => <LineChart key={key} {...props}></LineChart>,
 	areaChart: (key: number, props: any) => <AreaChart key={key} {...props}></AreaChart>,
+	barChart: (key: number, props: any) => <BarChart key={key} {...props}></BarChart>,
 	scatterPlot: (key: number, props: any) => <ScatterPlot key={key} {...props}></ScatterPlot>,
 	periodAreas: (key: number, props: any) => <PeriodAreas key={key} {...props}></PeriodAreas>,
 }
@@ -62,6 +64,9 @@ const CartesianChart = ({ data, config }: Props) => {
 
 	const htmlOverlay = useRef<HTMLDivElement>(null)
 
+	const xScaleBandwidth: number =
+		type === ChartType.Band && !!modules ? getXAxisBandwidth(modules) : 0
+
 	const chartScales: CartesianChartScales = {
 		y: {
 			left: yAxisConfig.left
@@ -71,7 +76,7 @@ const CartesianChart = ({ data, config }: Props) => {
 				? getLinearScale(yAxisConfig.right.domain!, [dimensions.plotHeight, 0])
 				: undefined,
 		},
-		x: getCartesianXScale(type, data, [0, dimensions.plotWidth], xAxisConfig),
+		x: getCartesianXScale(type, data, [0, dimensions.plotWidth], xAxisConfig, xScaleBandwidth),
 	}
 
 	const measures = {

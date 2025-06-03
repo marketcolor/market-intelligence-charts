@@ -84,7 +84,7 @@ export const timeAxisConfigSchema = baseAxisConfigSchema.extend({
 
 export const quantAxisConfigSchema = baseAxisConfigSchema.extend({
 	domain: z.tuple([z.number(), z.number()]).optional(),
-	ticksConfig: quantTicksConfigSchema,
+	ticksConfig: quantTicksConfigSchema.optional(),
 })
 
 export const bandAxisConfigSchema = baseAxisConfigSchema
@@ -122,18 +122,28 @@ export const lineChartConfigSchema = baseModuleConfigSchema.extend({
 	curve: curveTypeSchema.optional(),
 })
 
-// export const barChartConfigSchema = baseModuleConfigSchema.extend({
-// 	type: z.literal(ModuleType.BarChart),
-// 	series: z.number(),
-// 	side: yAxisSideSchema,
-// 	color: chartColorSchema,
-// 	baseline: z
-// 		.object({
-// 			value: z.number(),
-// 			bottomColor: chartColorSchema,
-// 		})
-// 		.optional(),
-// })
+export const barChartConfigSchema = baseModuleConfigSchema.extend({
+	type: z.literal(ModuleType.BarChart),
+	series: z.number(),
+	side: yAxisSideSchema,
+	color: chartColorSchema,
+	barWidth: z.number(),
+	labels: z
+		.object({
+			hide: z.boolean().optional(),
+			decimals: z.number().optional(),
+			suffix: z.string().optional(),
+			inside: z.boolean().optional(),
+		})
+		.optional(),
+	baseline: z
+		.object({
+			value: z.number(),
+			extend: z.number().optional(),
+			bottomColor: chartColorSchema.optional(),
+		})
+		.optional(),
+})
 
 export const periodAreasConfigSchema = baseModuleConfigSchema.extend({
 	type: z.literal(ModuleType.PeriodAreas),
@@ -168,6 +178,7 @@ export const scatterPlotConfigSchema = baseModuleConfigSchema.extend({
 export const modulesSchema = z.discriminatedUnion('type', [
 	lineChartConfigSchema,
 	areaChartConfigSchema,
+	barChartConfigSchema,
 	periodAreasConfigSchema,
 	scatterPlotConfigSchema,
 ])

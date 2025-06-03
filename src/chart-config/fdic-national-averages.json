@@ -1,0 +1,41 @@
+{
+	"type": "band",
+	"title": "The yield on bonds is significantly higher than the other categories.",
+	"description": "This chart shows the current rates on savings accounts, money markets, 12-month CD's, and bonds. The yield on bonds is significantly higher than the other categories.",
+	"width": 402,
+	"height": 452,
+	"marginAdjust": {
+		"left": 15,
+		"right": 15,
+		"top": 15
+	},
+	"xAxisConfig": {},
+	"yAxisConfig": {
+		"left": {
+			"domain": [0, 4.6],
+			"guideLines": false
+		}
+	},
+	"modules": [
+		{
+			"type": "barChart",
+			"series": 0,
+			"side": "left",
+			"color": "Blue",
+			"barWidth": 80,
+			"labels": {
+				"suffix": "%",
+				"decimals": 2,
+				"inside": true
+			},
+			"baseline": {
+				"value": 0,
+				"extend": 10
+			},
+			"legend": {
+				"text": "Interest rates",
+				"hide": true
+			}
+		}
+	]
+}

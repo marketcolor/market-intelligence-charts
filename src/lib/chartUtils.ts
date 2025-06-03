@@ -41,9 +41,22 @@ import type {
 	XAxisConfig,
 	QuantAxisConfig,
 	TimeAxisConfig,
+	BandAxisConfig,
+	Modules,
 } from '@types'
 
-import { ChartType, YAxisSide } from '@/enums'
+import { ChartType, ModuleType, YAxisSide } from '@/enums'
+
+export const numberFormatter = (decimals: number, prefix?: string, suffix?: string) => {
+	const d3Format = format(`.${decimals}f`)
+
+	return (number: number) => `${prefix || ''}${d3Format(number)}${suffix || ''}`
+}
+
+export const getXAxisBandwidth = (modules: Modules[]): number => {
+	const barChartModules = modules.filter((m) => m.type === ModuleType.BarChart)
+	return max(barChartModules, (m) => m.barWidth) || 0
+}
 
 export const getTimeDomain = (data: TimeChartDataEntry[], timeSeries: number) => {
 	return extent(data, (d) => d[timeSeries]) as [Date, Date]
@@ -75,17 +88,24 @@ export const getQuantScale = (
 
 export const getBandScale = (
 	data: BandChartDataEntry[],
-	range: [number, number]
+	range: [number, number],
+	bandwidth: number
 ): ScaleBand<string> => {
 	const domain = data.map((d) => d[0])
-	return scaleBand(domain, range)
+	const totalRange = Math.abs(range[1] - range[0])
+	const totalPaddingOuterSpace = totalRange - bandwidth
+
+	const paddingOuter = ((bandwidth / totalPaddingOuterSpace) * (domain.length - 1)) / 2
+
+	return scaleBand(domain, range).paddingInner(1).paddingOuter(paddingOuter).align(0.5)
 }
 
 export const getCartesianXScale = (
 	type: ChartType,
 	data: ChartDataEntry[],
 	range: [number, number],
-	config: XAxisConfig
+	config: XAxisConfig,
+	bandwidth: number
 ): CartesianXScales => {
 	switch (type) {
 		case ChartType.Time:
@@ -94,7 +114,9 @@ export const getCartesianXScale = (
 			const quantConfig = config as QuantAxisConfig
 			return getQuantScale(data as QuantChartDataEntry[], range, quantConfig.domain)
 		case ChartType.Band:
-			return getBandScale(data as BandChartDataEntry[], range)
+			const bandConfig = config as BandAxisConfig
+			const bandData = data as BandChartDataEntry[]
+			return getBandScale(bandData, range, bandwidth || 0)
 	}
 }
 
@@ -109,6 +131,10 @@ export const getQuantTicks = (config: QuantTicksConfig): TickObject<number>[] =>
 		const label = formatter(value)
 		return { value, label }
 	})
+}
+
+export const getBandTicks = (scale: ScaleBand<string>): TickObject<string>[] => {
+	return scale.domain().map((band: string) => ({ value: band, label: band }))
 }
 
 export function getTimeTicks(config: TimeTicksConfig): TickObject<Date>[] {
@@ -139,16 +165,19 @@ export function getTimeTicks(config: TimeTicksConfig): TickObject<Date>[] {
 	})
 }
 
-export function getXAxisTicks(type: ChartType, config: XAxisConfig) {
+export function getXAxisTicks(type: ChartType, config: XAxisConfig, scale: CartesianXScales) {
 	switch (type) {
 		case ChartType.Time:
 			const timeTicksConfig = config as TimeAxisConfig
 			return getTimeTicks(timeTicksConfig.ticksConfig)
 		case ChartType.Quant:
 			const quantTicksConfig = config as QuantAxisConfig
+			if (!quantTicksConfig.ticksConfig) {
+				throw new Error('Ticks are not configured')
+			}
 			return getQuantTicks(quantTicksConfig.ticksConfig)
 		case ChartType.Band:
-			return []
+			return getBandTicks(scale as ScaleBand<string>)
 	}
 }
 
