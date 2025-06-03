@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useObjectState } from '@uidotdev/usehooks'
 import { ChartColorOptions } from '@/lib/configUtils'
 
-import { Select, ColorSelect, CheckboxInput, TextInput } from '../Inputs'
+import { Select, ColorSelect, CheckboxInput, TextInput, NumberInput } from '../Inputs'
 
 import type { ScatterPlotConfig, ChartColorSchema } from '@/types'
 import { YAxisSide, ChartColor } from '@/enums'
@@ -17,6 +17,7 @@ type ScatterPlotProps = {
 const ScatterPlotEditor = ({ config, availableAxis, handleChange }: ScatterPlotProps) => {
 	const [side, setSide] = useState<YAxisSide>(config.side)
 	const [color, setColor] = useState<ChartColorSchema>(config.color)
+	const [size, setSize] = useState<number>(config.size)
 	const [legendText, setLegendText] = useState<string>(config.legend?.text || '')
 	const [showLegend, setShowLegend] = useState<boolean>(!config.legend?.hide)
 
@@ -30,6 +31,7 @@ const ScatterPlotEditor = ({ config, availableAxis, handleChange }: ScatterPlotP
 			...config,
 			side,
 			color,
+			size,
 			legend: {
 				text: legendText,
 				hide: !showLegend,
@@ -37,7 +39,7 @@ const ScatterPlotEditor = ({ config, availableAxis, handleChange }: ScatterPlotP
 			trendLine: trendLine.active,
 			trendLineColor: trendLine.trendLineColor,
 		})
-	}, [side, color, legendText, showLegend, trendLine])
+	}, [side, color, size, legendText, showLegend, trendLine])
 
 	return (
 		<>
@@ -55,6 +57,12 @@ const ScatterPlotEditor = ({ config, availableAxis, handleChange }: ScatterPlotP
 				//@ts-ignore
 				handleChange={(v) => setColor(v)}
 			></ColorSelect>
+			<NumberInput
+				label='Size'
+				value={config.size}
+				//@ts-ignore
+				handleChange={(v) => setSize(v)}
+			></NumberInput>
 			<CheckboxInput
 				label='Show legend'
 				value={showLegend}

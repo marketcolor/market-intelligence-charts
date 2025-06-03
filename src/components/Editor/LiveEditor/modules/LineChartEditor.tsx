@@ -46,14 +46,14 @@ const LineChartEditor = ({ config, availableAxis, handleChange }: LineChartProps
 		<>
 			<Select
 				label='Axis side'
-				value={config.side}
+				value={side}
 				options={availableAxis.map((s) => ({ value: s }))}
 				//@ts-ignore
 				handleChange={(v) => setSide(v)}
 			></Select>
 			<ColorSelect
 				label='Color'
-				value={config.color}
+				value={color}
 				options={ChartColorOptions}
 				//@ts-ignore
 				handleChange={(v) => setColor(v)}

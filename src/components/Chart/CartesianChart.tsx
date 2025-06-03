@@ -99,16 +99,14 @@ const CartesianChart = ({ data, config }: Props) => {
 
 	const legend =
 		modules &&
-		modules
-			.map(
-				(m) =>
-					({
-						text: m.legend.text,
-						color: m.type === ModuleType.PeriodAreas ? 'RecessionGrey' : m.color,
-						hide: m.legend.hide,
-					} as LegendConfig)
-			)
-			.filter((l) => !l.hide)
+		modules.map(
+			(m) =>
+				({
+					text: m.legend.text,
+					color: m.type === ModuleType.PeriodAreas ? 'RecessionGrey' : m.color,
+					hide: m.legend.hide,
+				} as LegendConfig)
+		)
 
 	return (
 		<div className='chart' style={style}>

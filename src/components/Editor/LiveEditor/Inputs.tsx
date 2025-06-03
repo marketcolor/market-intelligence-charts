@@ -74,7 +74,7 @@ export const NumberInput = ({
 				max={max}
 				min={min}
 				disabled={disabled}
-				onChange={(value) => handleChange(value)}
+				onChange={(value) => handleChange(Number(value))}
 			></InputNumber>
 		</VStack>
 	)
@@ -154,7 +154,7 @@ export const ColorSelect = ({
 			<label htmlFor={label}>{label}</label>
 			<RadioTileGroup
 				//@ts-ignore
-				defaultValue={ChartColor[value]}
+				defaultValue={value}
 				onChange={(value) => {
 					handleChange(value)
 				}}
@@ -178,14 +178,16 @@ export const ColorSelect = ({
 export const CheckboxInput = ({
 	label,
 	value,
+	disabled,
 	handleChange,
 }: {
 	label: string
 	value: boolean
+	disabled?: boolean
 	handleChange: Function
 }) => {
 	return (
-		<Checkbox checked={value} onChange={(_, checked) => handleChange(checked)}>
+		<Checkbox checked={value} disabled={disabled} onChange={(_, checked) => handleChange(checked)}>
 			{label}
 		</Checkbox>
 	)
