@@ -55,9 +55,14 @@ export const chartMarginsSchema = z.object({
 })
 ////////////////////////////////////////////////////////
 // Ticks
+
+export const baseTicksConfigSchema = z.object({
+	fontSize: z.union([z.literal('small'), z.literal('default'), z.literal('large')]).optional(),
+})
+
 export const timeIntervalSchema = z.union([z.literal('day'), z.literal('month'), z.literal('year')])
 
-export const timeTicksConfigSchema = z.object({
+export const timeTicksConfigSchema = baseTicksConfigSchema.extend({
 	startDate: z.union([z.date(), z.string()]),
 	numTicks: z.number(),
 	dateInterval: timeIntervalSchema,
@@ -65,7 +70,7 @@ export const timeTicksConfigSchema = z.object({
 	dateFormat: z.string().optional(),
 })
 
-export const quantTicksConfigSchema = z.object({
+export const quantTicksConfigSchema = baseTicksConfigSchema.extend({
 	startVal: z.number(),
 	numTicks: z.number(),
 	tickInterval: z.number(),
@@ -87,7 +92,9 @@ export const quantAxisConfigSchema = baseAxisConfigSchema.extend({
 	ticksConfig: quantTicksConfigSchema.optional(),
 })
 
-export const bandAxisConfigSchema = baseAxisConfigSchema
+export const bandAxisConfigSchema = baseAxisConfigSchema.extend({
+	ticksConfig: baseTicksConfigSchema.optional(),
+})
 
 export const xAxisConfigSchema = z.union([
 	timeAxisConfigSchema,

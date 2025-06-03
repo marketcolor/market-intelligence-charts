@@ -17,6 +17,7 @@ import type { Modules, ChartConfig, ChartDataEntry, QuantAxisConfig } from '@/ty
 import { ChartColor, ChartType, ModuleType, YAxisSide } from '@/enums'
 
 import './live-editor.scss'
+import BandAxisConfigPanel from './BandAxisConfigPanel'
 
 type Props = {
 	data: ChartDataEntry[]
@@ -68,13 +69,15 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		initialConfig.modules ? [...initialConfig.modules] : []
 	)
 
+	//@ts-ignore
 	const updatedConfig: ChartConfig = {
 		...initialConfig,
 		...info,
 		...size,
 		marginAdjust,
-		...(type === ChartType.Time && xAxisConfig),
-		...(type === ChartType.Quant && xAxisConfig),
+		...(type === ChartType.Time && { xAxisConfig }),
+		...(type === ChartType.Quant && { xAxisConfig }),
+		...(type === ChartType.Band && { xAxisConfig }),
 		yAxisConfig: yAxisConfig,
 		modules,
 	}
@@ -83,7 +86,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		(key) => yAxisConfig?.[key as YAxisSide]
 	) as YAxisSide[]
 
-	// console.log(updatedConfig.modules)
+	// console.log(updatedConfig.xAxisConfig)
 
 	return (
 		<div className='live-editor'>
@@ -158,7 +161,7 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 					</InputBlock>
 				</ControlTab>
 				{initialConfig.type === ChartType.Time && (
-					<ControlTab title='X Axis Ticks'>
+					<ControlTab title='X Axis'>
 						<TimeAxisConfigPanel
 							initialConfig={initialConfig.xAxisConfig}
 							handleChange={setXAxisConfig}
@@ -166,11 +169,19 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 					</ControlTab>
 				)}
 				{initialConfig.type === ChartType.Quant && (
-					<ControlTab title='X Axis Ticks'>
+					<ControlTab title='X Axis'>
 						<QuantAxisConfigPanel
 							initialConfig={initialConfig.xAxisConfig}
 							handleChange={setXAxisConfig}
 						></QuantAxisConfigPanel>
+					</ControlTab>
+				)}
+				{initialConfig.type === ChartType.Band && (
+					<ControlTab title='X Axis'>
+						<BandAxisConfigPanel
+							initialConfig={initialConfig.xAxisConfig}
+							handleChange={setXAxisConfig}
+						></BandAxisConfigPanel>
 					</ControlTab>
 				)}
 				<ControlTab title='Y Axis'>

@@ -9,7 +9,11 @@
 		"right": 15,
 		"top": 15
 	},
-	"xAxisConfig": {},
+	"xAxisConfig": {
+		"ticksConfig": {
+			"fontSize": "small"
+		}
+	},
 	"yAxisConfig": {
 		"left": {
 			"domain": [0, 4.6],

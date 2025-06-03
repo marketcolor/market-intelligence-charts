@@ -5,7 +5,7 @@ import { useMeasure } from '@uidotdev/usehooks'
 
 import { getXAxisTicks } from '@/lib/chartUtils'
 
-import { colors, fonts } from '@styles/theme'
+import { colors, fonts, fontSizes } from '@styles/theme'
 
 import type { CSSProperties } from 'react'
 
@@ -37,6 +37,7 @@ type SubProps = {
 	measures: ChartMeasures
 	updateTicksHeight?: Function
 	ticksHeight?: number
+	fontSize?: number
 }
 
 const XAxis = ({ type = ChartType.Time, config, scales, measures, htmlRef }: Props) => {
@@ -60,6 +61,7 @@ const XAxis = ({ type = ChartType.Time, config, scales, measures, htmlRef }: Pro
 				guides={!!guideLines}
 				label={label}
 				ticksHeight={tickHeight}
+				fontSize={fontSizes.ticks[config.ticksConfig?.fontSize || 'default']}
 			></Svg>
 			{htmlRef &&
 				createPortal(
@@ -70,6 +72,7 @@ const XAxis = ({ type = ChartType.Time, config, scales, measures, htmlRef }: Pro
 						measures={measures}
 						label={label}
 						updateTicksHeight={setTicksHeight}
+						fontSize={fontSizes.ticks[config.ticksConfig?.fontSize || 'default']}
 					></Html>,
 					htmlRef
 				)}
@@ -77,12 +80,13 @@ const XAxis = ({ type = ChartType.Time, config, scales, measures, htmlRef }: Pro
 	)
 }
 
-const Html = memo(({ ticks, scale, label, updateTicksHeight }: SubProps) => {
+const Html = memo(({ ticks, scale, label, fontSize, updateTicksHeight }: SubProps) => {
 	const [ticksRef, { height: ticksHeight }] = useMeasure()
 
 	const style = {
 		'--x-axis-tick-offset': `${tickAxisOffset}px`,
 		'--x-axis-label-offset': `${labelOffset}px`,
+		'--x-axis-tick-size': `${fontSizes}px`,
 	} as CSSProperties
 
 	useEffect(() => {
@@ -115,7 +119,7 @@ const Html = memo(({ ticks, scale, label, updateTicksHeight }: SubProps) => {
 	)
 })
 
-const Svg = memo(({ ticks, scale, guides, label, measures, ticksHeight }: SubProps) => {
+const Svg = memo(({ ticks, scale, guides, label, measures, fontSize, ticksHeight }: SubProps) => {
 	const { leftMargin, topMargin, plotHeight, plotWidth } = measures
 
 	return (
@@ -125,7 +129,7 @@ const Svg = memo(({ ticks, scale, guides, label, measures, ticksHeight }: SubPro
 					<text
 						y={tickAxisOffset}
 						fontFamily={fonts.manulife}
-						fontSize='18'
+						fontSize={fontSize}
 						textAnchor='middle'
 						dominantBaseline='text-before-edge'
 						fill={colors.darkNavy}

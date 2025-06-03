@@ -4,6 +4,7 @@ import { useObjectState } from '@uidotdev/usehooks'
 import { InputBlock, NumberInput, DateInput, Select, CheckboxInput, TextInput } from './Inputs'
 
 import type { TimeAxisConfig } from '@/types'
+import { TickFontSizesOptions } from '@/lib/configUtils'
 
 const TimeAxisConfigPanel = ({
 	initialConfig,
@@ -21,6 +22,7 @@ const TimeAxisConfigPanel = ({
 		dateInterval: initialConfig.ticksConfig.dateInterval,
 		intervalStep: initialConfig.ticksConfig.intervalStep,
 		dateFormat: initialConfig.ticksConfig.dateFormat || '%m/%y',
+		fontSize: initialConfig.ticksConfig.fontSize || 'default',
 	})
 
 	useEffect(() => {
@@ -84,6 +86,13 @@ const TimeAxisConfigPanel = ({
 				//@ts-ignore
 				handleChange={(v) => setLabel(v)}
 			></TextInput>
+			<Select
+				label='Font size'
+				value={ticksConfig.fontSize}
+				options={TickFontSizesOptions}
+				//@ts-ignore
+				handleChange={(v) => setTicksConfig(() => ({ fontSize: v }))}
+			></Select>
 		</InputBlock>
 	)
 }

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useObjectState } from '@uidotdev/usehooks'
 
-import { CheckboxInput, InputBlock, NumberInput, TextInput } from './Inputs'
+import { CheckboxInput, InputBlock, NumberInput, Select, TextInput } from './Inputs'
 
 import type { QuantAxisConfig } from '@/types'
+import { TickFontSizesOptions } from '@/lib/configUtils'
 
 type Props = {
 	initialConfig: QuantAxisConfig
@@ -24,6 +25,7 @@ const QuantAxisConfigPanel = ({ initialConfig, handleChange }: Props) => {
 		numTicks: initialConfig.ticksConfig?.numTicks,
 		tickInterval: initialConfig.ticksConfig?.tickInterval,
 		decimals: initialConfig.ticksConfig?.decimals,
+		fontSize: initialConfig.ticksConfig?.fontSize || 'default',
 	})
 
 	useEffect(() => {
@@ -37,63 +39,68 @@ const QuantAxisConfigPanel = ({ initialConfig, handleChange }: Props) => {
 	}, [domain, ticksConfig, guideLines, label])
 
 	return (
-		<div className='y-axis-side'>
-			<InputBlock numColumns='2'>
-				<NumberInput
-					label='From'
-					value={domain.start}
-					//@ts-ignore
-					handleChange={(v) => setDomain(() => ({ start: Number(v) }))}
-				></NumberInput>
-				<NumberInput
-					label='To'
-					value={domain.end}
-					//@ts-ignore
-					handleChange={(v) => setDomain(() => ({ end: Number(v) }))}
-				></NumberInput>
-				<NumberInput
-					label='Start value'
-					value={ticksConfig.startVal!}
-					// min={2}
-					//@ts-ignore
-					handleChange={(v) => setTicksConfig(() => ({ startVal: Number(v) }))}
-				></NumberInput>
-				<NumberInput
-					label='Ticks number'
-					value={ticksConfig.numTicks!}
-					min={0}
-					//@ts-ignore
-					handleChange={(v) => setTicksConfig(() => ({ numTicks: Number(v) }))}
-				></NumberInput>
-				<NumberInput
-					label='Step'
-					value={ticksConfig.tickInterval!}
-					min={0}
-					//@ts-ignore
-					handleChange={(v) => setTicksConfig(() => ({ tickInterval: Number(v) }))}
-				></NumberInput>
-				<NumberInput
-					label='Decimals'
-					value={ticksConfig.decimals!}
-					min={0}
-					max={3}
-					//@ts-ignore
-					handleChange={(v) => setTicksConfig(() => ({ decimals: Number(v) }))}
-				></NumberInput>
-				<CheckboxInput
-					label='Guide lines'
-					value={guideLines}
-					//@ts-ignore
-					handleChange={(v) => setGuideLines(v)}
-				></CheckboxInput>
-				<TextInput
-					label='Label'
-					value={label || ''}
-					//@ts-ignore
-					handleChange={(v) => setLabel(v)}
-				></TextInput>
-			</InputBlock>
-		</div>
+		<InputBlock numColumns='2'>
+			<NumberInput
+				label='From'
+				value={domain.start}
+				//@ts-ignore
+				handleChange={(v) => setDomain(() => ({ start: Number(v) }))}
+			></NumberInput>
+			<NumberInput
+				label='To'
+				value={domain.end}
+				//@ts-ignore
+				handleChange={(v) => setDomain(() => ({ end: Number(v) }))}
+			></NumberInput>
+			<NumberInput
+				label='Start value'
+				value={ticksConfig.startVal!}
+				// min={2}
+				//@ts-ignore
+				handleChange={(v) => setTicksConfig(() => ({ startVal: Number(v) }))}
+			></NumberInput>
+			<NumberInput
+				label='Ticks number'
+				value={ticksConfig.numTicks!}
+				min={0}
+				//@ts-ignore
+				handleChange={(v) => setTicksConfig(() => ({ numTicks: Number(v) }))}
+			></NumberInput>
+			<NumberInput
+				label='Step'
+				value={ticksConfig.tickInterval!}
+				min={0}
+				//@ts-ignore
+				handleChange={(v) => setTicksConfig(() => ({ tickInterval: Number(v) }))}
+			></NumberInput>
+			<NumberInput
+				label='Decimals'
+				value={ticksConfig.decimals!}
+				min={0}
+				max={3}
+				//@ts-ignore
+				handleChange={(v) => setTicksConfig(() => ({ decimals: Number(v) }))}
+			></NumberInput>
+			<CheckboxInput
+				label='Guide lines'
+				value={guideLines}
+				//@ts-ignore
+				handleChange={(v) => setGuideLines(v)}
+			></CheckboxInput>
+			<TextInput
+				label='Label'
+				value={label || ''}
+				//@ts-ignore
+				handleChange={(v) => setLabel(v)}
+			></TextInput>
+			<Select
+				label='Font size'
+				value={ticksConfig.fontSize}
+				options={TickFontSizesOptions}
+				//@ts-ignore
+				handleChange={(v) => setTicksConfig(() => ({ fontSize: v }))}
+			></Select>
+		</InputBlock>
 	)
 }
 

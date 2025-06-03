@@ -8,6 +8,14 @@ export const colors = {
 	recessionGrey: '#dbdbdb',
 }
 
+export const fontSizes = {
+	ticks: {
+		small: 16,
+		default: 18,
+		large: 20,
+	},
+}
+
 export const fonts = {
 	manulife: 'Manulife JH Sans Optimized',
 }
