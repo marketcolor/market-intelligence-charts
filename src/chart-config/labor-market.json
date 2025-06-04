@@ -20,7 +20,9 @@
 				"startVal": 100,
 				"numTicks": 7,
 				"tickInterval": 100,
-				"decimals": 0
+				"format": {
+					"decimals": 0
+				}
 			},
 			"guideLines": true
 		},
@@ -30,7 +32,9 @@
 				"startVal": 2,
 				"numTicks": 7,
 				"tickInterval": 3,
-				"decimals": 0
+				"format": {
+					"decimals": 0
+				}
 			}
 		}
 	},

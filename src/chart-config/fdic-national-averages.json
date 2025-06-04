@@ -29,8 +29,10 @@
 			"color": "Blue",
 			"barWidth": 80,
 			"labels": {
-				"suffix": "%",
-				"decimals": 2,
+				"format": {
+					"suffix": "%",
+					"decimals": 2
+				},
 				"inside": true
 			},
 			"baseline": {

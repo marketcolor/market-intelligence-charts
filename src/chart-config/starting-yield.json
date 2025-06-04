@@ -10,7 +10,9 @@
 			"startVal": 0,
 			"numTicks": 10,
 			"tickInterval": 2,
-			"decimals": 0
+			"format": {
+				"decimals": 0
+			}
 		},
 		"guideLines": true,
 		"label": "Bloomberg U.S. Aggregate Bond Index yield to maturity"
@@ -23,7 +25,9 @@
 				"startVal": -2,
 				"numTicks": 15,
 				"tickInterval": 2,
-				"decimals": 0
+				"format": {
+					"decimals": 0
+				}
 			},
 			"label": "5-year total return"
 		}

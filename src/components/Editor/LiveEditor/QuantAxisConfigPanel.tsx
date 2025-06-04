@@ -25,7 +25,7 @@ const QuantAxisConfigPanel = ({ initialConfig, handleChange }: Props) => {
 		startVal: initialConfig.ticksConfig?.startVal,
 		numTicks: initialConfig.ticksConfig?.numTicks,
 		tickInterval: initialConfig.ticksConfig?.tickInterval,
-		decimals: initialConfig.ticksConfig?.decimals,
+		decimals: initialConfig.ticksConfig?.format?.decimals,
 		fontSize: initialConfig.ticksConfig?.fontSize || 'default',
 	})
 
@@ -33,7 +33,13 @@ const QuantAxisConfigPanel = ({ initialConfig, handleChange }: Props) => {
 		handleChange({
 			...initialConfig,
 			domain: [domain.start, domain.end],
-			ticksConfig: ticksConfig,
+			ticksConfig: {
+				...ticksConfig,
+				format: {
+					...initialConfig.ticksConfig?.format,
+					decimals: ticksConfig.decimals,
+				},
+			},
 			guideLines,
 			hideTicks,
 			label,

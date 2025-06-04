@@ -23,6 +23,8 @@ import {
 	curveLinear,
 	curveNatural,
 	scaleBand,
+	formatLocale,
+	precisionFixed,
 } from 'd3'
 
 import type { ScaleBand, ScaleLinear, ScaleTime } from 'd3'
@@ -45,14 +47,31 @@ import type {
 	Modules,
 	CartesianYScales,
 	CartesianChartScales,
+	NumberFormatConfig,
+	ChartConfig,
 } from '@types'
 
 import { ChartType, ModuleType, YAxisSide } from '@/enums'
 
-export const numberFormatter = (decimals: number, prefix?: string, suffix?: string) => {
-	const d3Format = format(`.${decimals}f`)
+const localNumberFormatter = {
+	us: { format },
+	eu: formatLocale({
+		thousands: ' ',
+		decimal: ',',
+		grouping: [3],
+		currency: ['$', ''],
+	}),
+}
 
-	return (number: number) => `${prefix || ''}${d3Format(number)}${suffix || ''}`
+export const getNumberFormatter = (config: NumberFormatConfig | undefined) => {
+	if (!config) {
+		return (number: number) => number.toString()
+	}
+	const { decimals = 0, prefix = '', suffix = '', locale = 'us' } = config
+
+	const d3Format = localNumberFormatter[locale].format(`,.${decimals}f`)
+
+	return (number: number) => `${prefix}${d3Format(number)}${suffix}`
 }
 
 export const getXAxisBandwidth = (modules: Modules[]): number => {
@@ -127,11 +146,11 @@ export const getCartesianXScale = (
 }
 
 export const getQuantTicks = (config: QuantTicksConfig): TickObject<number>[] => {
-	const { startVal, tickInterval, numTicks = 0, decimals } = config
+	const { startVal, tickInterval, numTicks = 0, format } = config
 	const stopVal = startVal + tickInterval * numTicks
 	const tickValues = range(startVal, stopVal, tickInterval)
 
-	const formatter = format(decimals !== undefined ? `,.${decimals}f` : '')
+	const formatter = getNumberFormatter(format)
 
 	return tickValues.map((value, id) => {
 		const label = formatter(value)
@@ -343,7 +362,7 @@ export const getYAxisConfig = (
 	data: QuantChartDataEntry[],
 	series: { side: YAxisSide }[],
 	height = 500,
-	preset?: CartesianChartScales['y'],
+	preset?: ChartConfig['yAxisConfig'],
 	type?: ChartType
 ) => {
 	const sidesIndices = series.reduce((pv: { [key: string]: any }, s, id) => {
@@ -367,10 +386,12 @@ export const getYAxisConfig = (
 		const ticks = scale.ticks(numTicks)
 
 		const tickInterval = tickStep(ticks.at(0)!, ticks.at(-1)!, numTicks)
+
 		const intervalParts = tickInterval.toString().split('.')
 		const decimals = intervalParts.length === 1 ? 0 : intervalParts[1].length
 
 		const sidePreset = preset?.[key as YAxisSide] || {}
+
 		config[key as YAxisSide] = {
 			domain: niceDomain,
 			guideLines: key === 'left',
@@ -378,9 +399,12 @@ export const getYAxisConfig = (
 				startVal: ticks[0],
 				numTicks: ticks.length,
 				tickInterval: ticks[1] - ticks[0],
-				decimals,
+				...sidePreset.ticksConfig,
+				format: {
+					decimals,
+					...sidePreset?.ticksConfig?.format,
+				},
 			},
-			...sidePreset,
 		}
 	}
 

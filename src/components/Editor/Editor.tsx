@@ -91,7 +91,7 @@ const Editor = ({ propPreset }: { propPreset?: Partial<ChartConfig> }) => {
 					data as QuantChartDataEntry[],
 					seriesConfig.filter(({ type }) => type !== ModuleType.PeriodAreas),
 					chartSize.chartHeight,
-					preset?.yAxisConfig as CartesianChartScales['y'],
+					preset?.yAxisConfig as ChartConfig['yAxisConfig'],
 					preset?.type
 				),
 				//@ts-ignore
@@ -108,6 +108,8 @@ const Editor = ({ propPreset }: { propPreset?: Partial<ChartConfig> }) => {
 			generateChartConfig()
 		}
 	}, [data, seriesConfig, preset])
+
+	// console.log(templateConfig?.yAxisConfig.left?.ticksConfig)
 
 	return (
 		<div className='editor' data-live-editor={showLiveEditor}>

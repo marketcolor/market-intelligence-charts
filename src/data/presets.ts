@@ -41,8 +41,10 @@ export const presets: Presets = {
 				barWidth: 80,
 				labels: {
 					suffix: '%',
-					decimals: 2,
 					inside: true,
+					format: {
+						decimals: 2,
+					},
 				},
 				baseline: {
 					value: 0,
@@ -267,6 +269,59 @@ export const presets: Presets = {
 				dateFormat: '%Y',
 			},
 		},
+		yAxisConfig: {
+			left: {
+				ticksConfig: {
+					format: {
+						decimals: 1,
+					},
+				},
+			},
+		},
+		modules: [
+			{
+				type: ModuleType.LineChart,
+				series: 0,
+				side: YAxisSide.Left,
+				color: 'Blue',
+				showLegend: false,
+				threshold: {
+					value: 1.0,
+					bottomColor: 'Green',
+				},
+			},
+		],
+	},
+	's&p-midcap-fr': {
+		type: ChartType.Time,
+		title: 's&p-midcap',
+		description:
+			'This chart shows the S&P MidCap 400 Index P/E ratio relative to the S&P 500 Index P/E ratio. The chart shows that mid caps are trading at a substantial discount to large cap equities.',
+		width: 975,
+		height: 495,
+		marginAdjust: {
+			right: 14,
+			top: 12,
+		},
+		xAxisConfig: {
+			ticksConfig: {
+				startDate: '1999-01-01',
+				numTicks: 14,
+				dateInterval: 'year',
+				intervalStep: 2,
+				dateFormat: '%Y',
+			},
+		},
+		yAxisConfig: {
+			left: {
+				ticksConfig: {
+					format: {
+						decimals: 1,
+						locale: 'eu',
+					},
+				},
+			},
+		},
 		modules: [
 			{
 				type: ModuleType.LineChart,
@@ -307,7 +362,9 @@ export const presets: Presets = {
 					startVal: -2,
 					numTicks: 15,
 					tickInterval: 2,
-					decimals: 0,
+					format: {
+						decimals: 0,
+					},
 				},
 				label: '5-year total return',
 			},

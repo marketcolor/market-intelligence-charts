@@ -1,6 +1,6 @@
 'use client'
 
-import { numberFormatter } from '@/lib/chartUtils'
+import { getNumberFormatter } from '@/lib/chartUtils'
 
 import { fonts, colors as themeColors } from '@styles/theme'
 
@@ -81,7 +81,8 @@ const BarChart = ({ config, data, scales, measures }: Props) => {
 
 	const baselineValue = !!baseline ? yScale(baseline.value) : plotHeight
 	const baselineExtend = baseline?.extend || 0
-	const labelsFormatter = numberFormatter(labels?.decimals || 0, '', labels?.suffix)
+
+	const labelsFormatter = getNumberFormatter(labels?.format)
 
 	return (
 		<g>

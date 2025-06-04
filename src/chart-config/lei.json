@@ -20,7 +20,9 @@
 				"startVal": -25,
 				"numTicks": 9,
 				"tickInterval": 5,
-				"decimals": 0
+				"format": {
+					"decimals": 0
+				}
 			},
 			"guideLines": true
 		}

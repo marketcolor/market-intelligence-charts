@@ -54,6 +54,15 @@ export const chartMarginsSchema = z.object({
 	right: z.number().optional(),
 })
 ////////////////////////////////////////////////////////
+// Formatting
+export const numberFormattingSchema = z.object({
+	decimals: z.number().optional(),
+	prefix: z.string().optional(),
+	suffix: z.string().optional(),
+	locale: z.enum(['us', 'eu']).optional(),
+})
+
+////////////////////////////////////////////////////////
 // Ticks
 
 export const baseTicksConfigSchema = z.object({
@@ -74,7 +83,7 @@ export const quantTicksConfigSchema = baseTicksConfigSchema.extend({
 	startVal: z.number(),
 	numTicks: z.number(),
 	tickInterval: z.number(),
-	decimals: z.number().optional(),
+	format: numberFormattingSchema.optional(),
 })
 /////////////////////////////////////////////////////////
 // X axis config
@@ -139,9 +148,8 @@ export const barChartConfigSchema = baseModuleConfigSchema.extend({
 	labels: z
 		.object({
 			hide: z.boolean().optional(),
-			decimals: z.number().optional(),
-			suffix: z.string().optional(),
 			inside: z.boolean().optional(),
+			format: numberFormattingSchema.optional(),
 		})
 		.optional(),
 	baseline: z

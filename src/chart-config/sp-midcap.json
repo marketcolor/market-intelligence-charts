@@ -24,7 +24,9 @@
 				"startVal": 0.6,
 				"numTicks": 9,
 				"tickInterval": 0.1,
-				"decimals": 1
+				"format": {
+					"decimals": 1
+				}
 			},
 			"guideLines": true
 		}

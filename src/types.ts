@@ -22,7 +22,10 @@ import type {
 	xAxisConfigSchema,
 	scatterPlotConfigSchema,
 	chartColorSchema,
+	numberFormattingSchema,
 } from './chart-config-schema'
+
+export type NumberFormatConfig = z.infer<typeof numberFormattingSchema>
 
 export type PlotDimensions = z.infer<typeof plotDimensionsSchema>
 export type ChartSize = z.infer<typeof chartSizeSchema>

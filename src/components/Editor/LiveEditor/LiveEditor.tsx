@@ -31,7 +31,9 @@ const defaultYAxisConfig: QuantAxisConfig = {
 		startVal: 0,
 		numTicks: 11,
 		tickInterval: 10,
-		decimals: 0,
+		format: {
+			decimals: 0,
+		},
 	},
 	guideLines: false,
 	label: '',
