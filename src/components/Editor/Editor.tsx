@@ -1,29 +1,27 @@
 'use client'
 
 import { useCallback, useLayoutEffect, useState } from 'react'
-import Papa from 'papaparse'
-import { utcParse } from 'd3'
 import { useList, useObjectState } from '@uidotdev/usehooks'
 
 import UploadPanel from './UploadPanel'
-import ConfigurationPanel from './ConfigurationPanel'
 import LiveEditor from './LiveEditor'
 
 import { getXAxisConfig, getYAxisConfig } from '@/lib/chartUtils'
 
 import type { SeriesConfigProps } from './ConfigurationPanel'
 import type {
-	BandChartDataEntry,
 	CartesianChartScales,
 	ChartConfig,
 	ChartDataEntry,
 	QuantChartDataEntry,
 } from '@/types'
-import { ChartType, ModuleType } from '@/enums'
+import { ChartType, ModuleType, YAxisSide } from '@/enums'
 
 import './editor.scss'
 
-const dateParser = utcParse('%d/%m/%Y')
+import { chartColorSchema } from '@/chart-config-schema'
+
+const colorKeys = Object.keys(chartColorSchema.Values)
 
 // const tempSeriesConfig = [
 // 	{
@@ -36,88 +34,54 @@ const dateParser = utcParse('%d/%m/%Y')
 // 	},
 // ]
 
-const Editor = ({ preset }: { preset?: Partial<ChartConfig> }) => {
+const Editor = ({ propPreset }: { propPreset?: Partial<ChartConfig> }) => {
 	const [data, setData] = useState<ChartDataEntry[]>()
+	const [preset, setPreset] = useState<Partial<ChartConfig>>()
 
 	const [chartSize, setChartSize] = useObjectState<{ chartWidth: number; chartHeight: number }>({
-		chartWidth: preset?.width || 800,
-		chartHeight: preset?.height || 500,
+		chartWidth: propPreset?.width || 800,
+		chartHeight: propPreset?.height || 500,
 	})
 	const [info, setInfo] = useObjectState<{ title: string; description: string }>({
-		title: preset?.title || '',
-		description: preset?.description || '',
+		title: propPreset?.title || '',
+		description: propPreset?.description || '',
 	})
+
 	const [showLiveEditor, setShowLiveEditor] = useState<boolean>(false)
 	const [seriesConfig, { set, updateAt, clear }] = useList<SeriesConfigProps>()
 	const [templateConfig, setTemplateConfig] = useState<ChartConfig>()
 
-	const handleFileDrop = useCallback(
-		(file: File) => {
-			if (!!file) {
-				Papa.parse(file, {
-					dynamicTyping: true,
-					skipEmptyLines: true,
-					complete: ({ errors, data: parsedData }: { errors: any[]; data: any[] }) => {
-						if (errors.length) {
-							throw new Error(`Error parsing data: ${JSON.stringify(errors)}`)
-						}
-						if (parsedData.length > 0) {
-							const columns = parsedData[0]
-							const dataset = parsedData.slice(1)
-							const [dateKey, ...series] = columns
-							// const data: ChartDataEntry[] = dataset.map(([dateStr, ...values]) => [
-							// 	dateParser(dateStr)!,
-							// 	...values,
-							// ])
-
-							const presetType = preset?.type
-							const data: ChartDataEntry[] =
-								presetType === 'time'
-									? dataset.map(
-											([dateStr, ...values]) => [dateParser(dateStr)!, ...values] as ChartDataEntry
-									  )
-									: presetType === 'quant'
-									? (dataset as unknown as QuantChartDataEntry[])
-									: presetType === 'band'
-									? (dataset as unknown as BandChartDataEntry[])
-									: dataset
-
-							setData(data)
-							set(
-								series.map((s: string, id: number) => {
-									const seriesName = preset?.modules?.[id] ? series[preset.modules[id].series] : s
-									return {
-										name: seriesName,
-										series: id,
-										type: ModuleType.LineChart,
-										legend: {
-											text: seriesName,
-										},
-										...(preset?.modules?.[id]?.type !== 'periodAreas' && {
-											side: preset?.modules?.[id].side,
-										}),
-										...(preset?.modules?.[id]?.type !== 'periodAreas' && {
-											color: preset?.modules?.[id].color,
-										}),
-										...(preset?.modules?.[id] && { ...preset.modules[id] }),
-									}
-								})
-							)
-						}
+	const handleFileUpload = useCallback(
+		(data: ChartDataEntry[], uploadPreset: Partial<ChartConfig>, series: string[]) => {
+			const seriesCfg = series.map((s: string, id: number) => {
+				const presetModule = uploadPreset?.modules?.[id]
+				return {
+					series: id,
+					name: s,
+					type: ModuleType.LineChart,
+					color: colorKeys[id % colorKeys.length],
+					side: YAxisSide.Left,
+					legend: {
+						text: s,
 					},
-				})
-			}
+					...presetModule,
+				}
+			})
+			//@ts-ignore
+			set(seriesCfg)
+			setData(data)
+			setPreset(uploadPreset)
 		},
-		[preset]
+		[]
 	)
 
 	const generateChartConfig = useCallback(() => {
 		if (data) {
 			const chartConfig: ChartConfig = {
-				type: preset?.type || ChartType.Time,
-				...info,
+				type: ChartType.Time,
 				width: chartSize.chartWidth,
 				height: chartSize.chartHeight,
+				...preset,
 				marginAdjust: {
 					...preset?.marginAdjust,
 				},
@@ -137,31 +101,17 @@ const Editor = ({ preset }: { preset?: Partial<ChartConfig> }) => {
 			setTemplateConfig(chartConfig)
 			setShowLiveEditor(true)
 		}
-	}, [seriesConfig, chartSize, info, data, preset])
+	}, [seriesConfig, chartSize, preset])
 
 	useLayoutEffect(() => {
-		if (preset && data && seriesConfig.length) {
+		if (data && seriesConfig.length && preset) {
 			generateChartConfig()
 		}
-	}, [preset, data, seriesConfig])
-
-	// console.log(templateConfig?.xAxisConfig)
+	}, [data, seriesConfig, preset])
 
 	return (
 		<div className='editor' data-live-editor={showLiveEditor}>
-			{!seriesConfig.length && <UploadPanel handleUpload={handleFileDrop}></UploadPanel>}
-			{!!seriesConfig.length && !showLiveEditor && !preset && (
-				<ConfigurationPanel
-					seriesConfig={seriesConfig}
-					chartSize={chartSize}
-					updateChartSize={setChartSize}
-					info={info}
-					updateInfo={setInfo}
-					updateSeriesConfig={updateAt}
-					clearSeriesConfig={clear}
-					generateChartConfig={generateChartConfig}
-				></ConfigurationPanel>
-			)}
+			{!seriesConfig.length && <UploadPanel handleUpload={handleFileUpload}></UploadPanel>}
 
 			{showLiveEditor && data && templateConfig && (
 				<LiveEditor

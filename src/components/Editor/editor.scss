@@ -10,9 +10,17 @@
 }
 
 .upload-inner {
-	width: 50vw;
+	min-width: 600px;
+	width: 30vw;
 	height: 200px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.upload-footer-inner {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	align-items: flex-end;
 }

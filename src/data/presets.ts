@@ -1,8 +1,15 @@
-import { ModuleType, YAxisSide } from '@/enums'
+//@ts-nocheck
+import { ChartType, ModuleType, YAxisSide } from '@/enums'
+import type { ChartConfig } from '@/types'
 
-export const presets = {
+type Preset = Partial<ChartConfig>
+type Presets = {
+	[key: string]: Preset
+}
+
+export const presets: Presets = {
 	'fdic-national-averages': {
-		type: 'band',
+		type: ChartType.Band,
 		title: 'The yield on bonds is significantly higher than the other categories.',
 		description:
 			"This chart shows the current rates on savings accounts, money markets, 12-month CD's, and bonds. The yield on bonds is significantly higher than the other categories.",
@@ -27,9 +34,9 @@ export const presets = {
 		},
 		modules: [
 			{
-				type: 'barChart',
+				type: ModuleType.BarChart,
 				series: 0,
-				side: 'left',
+				side: YAxisSide.Left,
 				color: 'Blue',
 				barWidth: 80,
 				labels: {
@@ -49,7 +56,7 @@ export const presets = {
 		],
 	},
 	'fed-funds': {
-		type: 'time',
+		type: ChartType.Time,
 		title:
 			'The fed funds target rate tends to fall further than the 10-year U.S. Treasury yield once the Fed shifts policy',
 		description:
@@ -85,7 +92,7 @@ export const presets = {
 		],
 	},
 	'labor-market': {
-		type: 'time',
+		type: ChartType.Time,
 		title: 'A steady labor market and tight high-yield spreads suggest the economy remains resilient',
 		description:
 			'A steady labor market and tight high-yield spreads suggest the economy remains resilient',
@@ -116,7 +123,7 @@ export const presets = {
 		],
 	},
 	lei: {
-		type: 'time',
+		type: ChartType.Time,
 		title: 'YoY change in the LEI (%)',
 		description:
 			'The graph shows the year-over-year change in LEI since 1970. Currently, the year-over-year change in LEI has been negative since July 2022, indicating economic growth may slow.',
@@ -124,9 +131,9 @@ export const presets = {
 		height: 495,
 		modules: [
 			{
-				type: 'areaChart',
+				type: ModuleType.AreaChart,
 				series: 0,
-				side: 'left',
+				side: YAxisSide.Left,
 				color: 'Green',
 				baseline: {
 					value: 0,
@@ -139,7 +146,7 @@ export const presets = {
 				curve: 'step',
 			},
 			{
-				type: 'periodAreas',
+				type: ModuleType.PeriodAreas,
 				series: 1,
 				legend: {
 					text: 'Recessions',
@@ -149,7 +156,7 @@ export const presets = {
 	},
 
 	'mega-cap': {
-		type: 'time',
+		type: ChartType.Time,
 		title:
 			'Mega-cap tech stocks have recently reversed course, decreasing the market concentration within these names',
 		description:
@@ -178,7 +185,7 @@ export const presets = {
 		],
 	},
 	'money-market': {
-		type: 'time',
+		type: ChartType.Time,
 		title: 'Money market assets remain at all-time highs, with balances nearing $7 trillion',
 		description:
 			'This chart shows how money market assets have tended to peak near recessions and stock market bottoms. Currently, these assets have been rising since the start of the pandemic and remain elevated.',
@@ -210,7 +217,7 @@ export const presets = {
 		],
 	},
 	'non-us-earnings': {
-		type: 'time',
+		type: ChartType.Time,
 		title: 'Non-U.S. earnings estimates and stock prices have typically moved together over time',
 		description:
 			'This graph shows the MSCI EAFE Index price and the MSCI EAFE Index EPS forecast, which tend to move together over time.',
@@ -241,7 +248,7 @@ export const presets = {
 		],
 	},
 	's&p-midcap': {
-		type: 'time',
+		type: ChartType.Time,
 		title: 's&p-midcap',
 		description:
 			'This chart shows the S&P MidCap 400 Index P/E ratio relative to the S&P 500 Index P/E ratio. The chart shows that mid caps are trading at a substantial discount to large cap equities.',
@@ -275,7 +282,7 @@ export const presets = {
 		],
 	},
 	'starting-yield': {
-		type: 'quant',
+		type: ChartType.Quant,
 		title: 'Correlation between five-year total return and starting yield',
 		description:
 			"This chart shows the correlation between five-year total return and starting yield to maturity for the Bloomberg U.S. Aggregate bond index. The two measures are linked, with starting yield explaining 89% of a bond's performance.",
@@ -307,9 +314,9 @@ export const presets = {
 		},
 		modules: [
 			{
-				type: 'scatterPlot',
+				type: ModuleType.ScatterPlot,
 				series: 0,
-				side: 'left',
+				side: YAxisSide.Left,
 				color: 'Green',
 				size: 12,
 				trendLine: true,
@@ -323,7 +330,7 @@ export const presets = {
 	},
 
 	'stock-prices': {
-		type: 'time',
+		type: ChartType.Time,
 		title: 'Stock prices and earnings',
 		description:
 			'This graph shows the S&P 500 Index price and the S&P 500 Index EPS forecast, which tend to move together over time.',

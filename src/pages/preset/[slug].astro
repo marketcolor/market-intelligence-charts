@@ -17,6 +17,6 @@ const { slug } = Astro.params
 
 <Layout>
 	<RSuiteProvider client:load>
-		<Editor client:load preset={presets[slug]} />
+		<Editor client:load propPreset={presets[slug]} />
 	</RSuiteProvider>
 </Layout>

@@ -110,7 +110,7 @@ export const Select = ({
 	handleChange,
 }: {
 	label: string
-	value: string
+	value?: string
 	options: { label?: string; value: string }[]
 	disabled?: boolean
 	handleChange: Function
