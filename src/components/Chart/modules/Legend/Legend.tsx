@@ -55,7 +55,9 @@ const Html = memo(({ config, handleOffsets }: HtmlProps) => {
 		}
 	}, [size, handleOffsets])
 
-	return (
+	const showLegend = config.filter((l) => !l.hide).length > 0
+
+	return showLegend ? (
 		<div className='legend' style={{ '--bottom-offset': `${bottomOffset}px` } as CSSProperties}>
 			<div className='legend-inner' ref={ref}>
 				{config.map(({ text, color, hide }, id) => (
@@ -71,7 +73,7 @@ const Html = memo(({ config, handleOffsets }: HtmlProps) => {
 				))}
 			</div>
 		</div>
-	)
+	) : null
 })
 
 const Svg = memo(({ config, offsets }: SvgProps) => {

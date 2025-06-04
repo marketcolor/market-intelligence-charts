@@ -17,7 +17,8 @@
 	"yAxisConfig": {
 		"left": {
 			"domain": [0, 4.6],
-			"guideLines": false
+			"guideLines": false,
+			"hideTicks": true
 		}
 	},
 	"modules": [

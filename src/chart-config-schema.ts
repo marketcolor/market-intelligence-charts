@@ -81,6 +81,7 @@ export const quantTicksConfigSchema = baseTicksConfigSchema.extend({
 export const baseAxisConfigSchema = z.object({
 	label: z.string().optional(),
 	guideLines: z.boolean().optional(),
+	hideTicks: z.boolean().optional(),
 })
 
 export const timeAxisConfigSchema = baseAxisConfigSchema.extend({

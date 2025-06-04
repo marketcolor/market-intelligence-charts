@@ -14,6 +14,7 @@ type Props = {
 const QuantAxisConfigPanel = ({ initialConfig, handleChange }: Props) => {
 	const [guideLines, setGuideLines] = useState<boolean>(!!initialConfig.guideLines)
 	const [label, setLabel] = useState<string | undefined>(initialConfig.label)
+	const [hideTicks, setHideTicks] = useState<boolean>(!!initialConfig.hideTicks)
 
 	const [domain, setDomain] = useObjectState({
 		start: initialConfig.domain![0],
@@ -34,9 +35,10 @@ const QuantAxisConfigPanel = ({ initialConfig, handleChange }: Props) => {
 			domain: [domain.start, domain.end],
 			ticksConfig: ticksConfig,
 			guideLines,
+			hideTicks,
 			label,
 		})
-	}, [domain, ticksConfig, guideLines, label])
+	}, [domain, ticksConfig, guideLines, hideTicks, label])
 
 	return (
 		<InputBlock numColumns='2'>
@@ -86,6 +88,12 @@ const QuantAxisConfigPanel = ({ initialConfig, handleChange }: Props) => {
 				value={guideLines}
 				//@ts-ignore
 				handleChange={(v) => setGuideLines(v)}
+			></CheckboxInput>
+			<CheckboxInput
+				label='Hide ticks'
+				value={hideTicks}
+				//@ts-ignore
+				handleChange={(v) => setHideTicks(v)}
 			></CheckboxInput>
 			<TextInput
 				label='Label'

@@ -12,7 +12,13 @@ import LiveEditor from './LiveEditor'
 import { getXAxisConfig, getYAxisConfig } from '@/lib/chartUtils'
 
 import type { SeriesConfigProps } from './ConfigurationPanel'
-import type { ChartConfig, ChartDataEntry, QuantChartDataEntry } from '@/types'
+import type {
+	BandChartDataEntry,
+	CartesianChartScales,
+	ChartConfig,
+	ChartDataEntry,
+	QuantChartDataEntry,
+} from '@/types'
 import { ChartType, ModuleType } from '@/enums'
 
 import './editor.scss'
@@ -63,7 +69,8 @@ const Editor = ({ preset }: { preset?: Partial<ChartConfig> }) => {
 							// 	dateParser(dateStr)!,
 							// 	...values,
 							// ])
-							const presetType = preset?.type || ChartType.Time
+
+							const presetType = preset?.type
 							const data: ChartDataEntry[] =
 								presetType === 'time'
 									? dataset.map(
@@ -71,7 +78,10 @@ const Editor = ({ preset }: { preset?: Partial<ChartConfig> }) => {
 									  )
 									: presetType === 'quant'
 									? (dataset as unknown as QuantChartDataEntry[])
+									: presetType === 'band'
+									? (dataset as unknown as BandChartDataEntry[])
 									: dataset
+
 							setData(data)
 							set(
 								series.map((s: string, id: number) => {
@@ -108,12 +118,17 @@ const Editor = ({ preset }: { preset?: Partial<ChartConfig> }) => {
 				...info,
 				width: chartSize.chartWidth,
 				height: chartSize.chartHeight,
+				marginAdjust: {
+					...preset?.marginAdjust,
+				},
 				//@ts-ignore
-				xAxisConfig: getXAxisConfig(data, preset?.xAxisConfig, preset?.type),
+				xAxisConfig: getXAxisConfig(data, chartSize.chartWidth, preset?.xAxisConfig, preset?.type),
 				yAxisConfig: getYAxisConfig(
 					data as QuantChartDataEntry[],
 					seriesConfig.filter(({ type }) => type !== ModuleType.PeriodAreas),
-					chartSize.chartHeight
+					chartSize.chartHeight,
+					preset?.yAxisConfig as CartesianChartScales['y'],
+					preset?.type
 				),
 				//@ts-ignore
 				modules: seriesConfig,
@@ -130,7 +145,7 @@ const Editor = ({ preset }: { preset?: Partial<ChartConfig> }) => {
 		}
 	}, [preset, data, seriesConfig])
 
-	// console.log(seriesConfig)
+	// console.log(templateConfig?.xAxisConfig)
 
 	return (
 		<div className='editor' data-live-editor={showLiveEditor}>

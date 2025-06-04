@@ -1,0 +1,55 @@
+{
+	"type": "time",
+	"title": "Non-U.S. earnings estimates and stock prices have typically moved together over time",
+	"description": "This graph shows the MSCI EAFE Index price and the MSCI EAFE Index EPS forecast, which tend to move together over time.",
+	"width": 975,
+	"height": 452,
+	"xAxisConfig": {
+		"ticksConfig": {
+			"startDate": "2016-03-01",
+			"numTicks": 10,
+			"dateInterval": "year",
+			"intervalStep": 1,
+			"dateFormat": "%m/%y"
+		}
+	},
+	"yAxisConfig": {
+		"left": {
+			"domain": [1200, 2600],
+			"guideLines": true,
+			"ticksConfig": {
+				"startVal": 1200,
+				"tickInterval": 200,
+				"numTicks": 9
+			}
+		},
+		"right": {
+			"domain": [100, 180],
+			"ticksConfig": {
+				"startVal": 100,
+				"tickInterval": 10,
+				"numTicks": 9
+			}
+		}
+	},
+	"modules": [
+		{
+			"type": "lineChart",
+			"series": 0,
+			"side": "left",
+			"color": "Green",
+			"legend": {
+				"text": "MSCI EAFE Price in USD"
+			}
+		},
+		{
+			"type": "lineChart",
+			"series": 1,
+			"side": "right",
+			"color": "Blue",
+			"legend": {
+				"text": "MSCI EAFE - EPS - NTM"
+			}
+		}
+	]
+}

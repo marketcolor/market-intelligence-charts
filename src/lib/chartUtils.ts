@@ -43,6 +43,8 @@ import type {
 	TimeAxisConfig,
 	BandAxisConfig,
 	Modules,
+	CartesianYScales,
+	CartesianChartScales,
 } from '@types'
 
 import { ChartType, ModuleType, YAxisSide } from '@/enums'
@@ -60,6 +62,10 @@ export const getXAxisBandwidth = (modules: Modules[]): number => {
 
 export const getTimeDomain = (data: TimeChartDataEntry[], timeSeries: number) => {
 	return extent(data, (d) => d[timeSeries]) as [Date, Date]
+}
+
+export const getBandDomain = (data: BandChartDataEntry[]) => {
+	return data.map((d) => d[0])
 }
 
 export const getLinearScale = (
@@ -276,12 +282,36 @@ export const getTimeTicksConfig = (domain: [Date, Date], preset?: Partial<TimeTi
 	return config
 }
 
+export const getQuantTicksConfig = (domain: [number, number], range: [number, number]) => {
+	const rangeVal = Math.abs(range[1] - range[0])
+	const numTicks = Math.round(rangeVal / 100)
+
+	const scale = scaleLinear(domain, range).nice(numTicks)
+	const niceDomain = scale.domain() as [number, number]
+	const ticks = scale.ticks(numTicks)
+
+	const tickInterval = tickStep(ticks.at(0)!, ticks.at(-1)!, numTicks)
+	const intervalParts = tickInterval.toString().split('.')
+	const decimals = intervalParts.length === 1 ? 0 : intervalParts[1].length
+
+	return {
+		domain: niceDomain,
+		ticksConfig: {
+			startVal: ticks[0],
+			numTicks: ticks.length,
+			tickInterval: ticks[1] - ticks[0],
+			decimals,
+		},
+	}
+}
+
 export const getXAxisConfig = (
 	data: ChartDataEntry[],
+	width = 900,
 	preset?: Partial<XAxisConfig>,
 	type?: ChartType
 ) => {
-	const configType = type || ChartType.Time
+	const configType = type
 	switch (configType) {
 		case ChartType.Time: {
 			const timeData = data as TimeChartDataEntry[]
@@ -291,13 +321,30 @@ export const getXAxisConfig = (
 			const ticksConfig = getTimeTicksConfig(domain, timePreset.ticksConfig)
 			return { domain, ticksConfig }
 		}
+		case ChartType.Quant: {
+			const quantData = data as QuantChartDataEntry[]
+			const domain = extent(quantData, (d) => d[0]) as [number, number]
+
+			const ticksConfig = getQuantTicksConfig(domain, [0, width])
+			return { domain, ticksConfig, ...preset }
+		}
+		case ChartType.Band: {
+			const bandPreset = (preset as BandAxisConfig) || {}
+			return {
+				...bandPreset,
+				...(bandPreset.ticksConfig && { ticksConfig: { ...bandPreset.ticksConfig } }),
+			}
+		}
 	}
+	throw new Error(`Chart type ${configType} is not defined`)
 }
 
 export const getYAxisConfig = (
 	data: QuantChartDataEntry[],
 	series: { side: YAxisSide }[],
-	height = 500
+	height = 500,
+	preset?: CartesianChartScales['y'],
+	type?: ChartType
 ) => {
 	const sidesIndices = series.reduce((pv: { [key: string]: any }, s, id) => {
 		if (!Object.hasOwn(pv, s.side)) {
@@ -323,6 +370,7 @@ export const getYAxisConfig = (
 		const intervalParts = tickInterval.toString().split('.')
 		const decimals = intervalParts.length === 1 ? 0 : intervalParts[1].length
 
+		const sidePreset = preset?.[key as YAxisSide] || {}
 		config[key as YAxisSide] = {
 			domain: niceDomain,
 			guideLines: key === 'left',
@@ -332,6 +380,7 @@ export const getYAxisConfig = (
 				tickInterval: ticks[1] - ticks[0],
 				decimals,
 			},
+			...sidePreset,
 		}
 	}
 
