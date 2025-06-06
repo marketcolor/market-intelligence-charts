@@ -24,8 +24,6 @@ const BarChartEditor = ({ config, availableAxis, handleChange }: Props) => {
 
 	const [labels, setLabels] = useObjectState({
 		show: !config.labels?.hide,
-		decimals: config.labels?.decimals || 0,
-		suffix: config.labels?.suffix || '',
 		inside: config.labels?.inside || false,
 	})
 
@@ -54,6 +52,7 @@ const BarChartEditor = ({ config, availableAxis, handleChange }: Props) => {
 				  }
 				: null,
 			labels: {
+				...config.labels,
 				...labels,
 				hide: !labels.show,
 			},

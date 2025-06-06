@@ -29,6 +29,8 @@ const QuantAxisConfigPanel = ({ initialConfig, handleChange }: Props) => {
 		fontSize: initialConfig.ticksConfig?.fontSize || 'default',
 	})
 
+	// console.log(initialConfig.ticksConfig?.format?.decimals)
+
 	useEffect(() => {
 		handleChange({
 			...initialConfig,

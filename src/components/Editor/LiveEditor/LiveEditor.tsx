@@ -88,8 +88,6 @@ const LiveEditor = ({ data, initialConfig, series }: Props) => {
 		(key) => yAxisConfig?.[key as YAxisSide]
 	) as YAxisSide[]
 
-	// console.log(updatedConfig.xAxisConfig)
-
 	return (
 		<div className='live-editor'>
 			<Toolbar chartTitle={info.title}></Toolbar>

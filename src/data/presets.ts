@@ -40,10 +40,10 @@ export const presets: Presets = {
 				color: 'Blue',
 				barWidth: 80,
 				labels: {
-					suffix: '%',
 					inside: true,
 					format: {
 						decimals: 2,
+						suffix: '%',
 					},
 				},
 				baseline: {

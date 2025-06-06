@@ -301,24 +301,38 @@ export const getTimeTicksConfig = (domain: [Date, Date], preset?: Partial<TimeTi
 	return config
 }
 
-export const getQuantTicksConfig = (domain: [number, number], range: [number, number]) => {
+const getTicksPrecision = (ticks: number[]) => {
+	return max(ticks, (tick) => precisionFixed(tick)) as number
+}
+
+const roundToDecimals = (value: number, decimals: number): number => {
+	if (!Number.isFinite(value) || !Number.isFinite(decimals)) return value
+	const factor = Math.pow(10, decimals)
+	return Math.round(value * factor) / factor
+}
+
+export const getQuantTicksConfig = (
+	domain: [number, number],
+	range: [number, number],
+	tickDistance = 100
+) => {
 	const rangeVal = Math.abs(range[1] - range[0])
-	const numTicks = Math.round(rangeVal / 100)
+	const numTicks = Math.round(rangeVal / tickDistance)
 
 	const scale = scaleLinear(domain, range).nice(numTicks)
+
 	const niceDomain = scale.domain() as [number, number]
 	const ticks = scale.ticks(numTicks)
+	const decimals = getTicksPrecision(ticks)
 
-	const tickInterval = tickStep(ticks.at(0)!, ticks.at(-1)!, numTicks)
-	const intervalParts = tickInterval.toString().split('.')
-	const decimals = intervalParts.length === 1 ? 0 : intervalParts[1].length
+	const tickInterval = roundToDecimals(tickStep(ticks.at(0)!, ticks.at(-1)!, numTicks), decimals)
 
 	return {
 		domain: niceDomain,
 		ticksConfig: {
 			startVal: ticks[0],
 			numTicks: ticks.length,
-			tickInterval: ticks[1] - ticks[0],
+			tickInterval,
 			decimals,
 		},
 	}
@@ -381,27 +395,17 @@ export const getYAxisConfig = (
 			min(data, (d) => min(d.filter((e, id) => dataIndices.includes(id)))) as number,
 			max(data, (d) => max(d.filter((e, id) => dataIndices.includes(id)))) as number,
 		]
-		const scale = scaleLinear(domain, [height, 0]).nice(numTicks)
-		const niceDomain = scale.domain() as [number, number]
-		const ticks = scale.ticks(numTicks)
-
-		const tickInterval = tickStep(ticks.at(0)!, ticks.at(-1)!, numTicks)
-
-		const intervalParts = tickInterval.toString().split('.')
-		const decimals = intervalParts.length === 1 ? 0 : intervalParts[1].length
-
+		const { domain: niceDomain, ticksConfig } = getQuantTicksConfig(domain, [height, 0], 75)
 		const sidePreset = preset?.[key as YAxisSide] || {}
 
 		config[key as YAxisSide] = {
 			domain: niceDomain,
 			guideLines: key === 'left',
 			ticksConfig: {
-				startVal: ticks[0],
-				numTicks: ticks.length,
-				tickInterval: ticks[1] - ticks[0],
+				...ticksConfig,
 				...sidePreset.ticksConfig,
 				format: {
-					decimals,
+					decimals: ticksConfig.decimals,
 					...sidePreset?.ticksConfig?.format,
 				},
 			},
